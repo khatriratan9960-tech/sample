@@ -22,6 +22,24 @@ function to12Hour(hhmm) {
   return `${String(h12).padStart(2, '0')}:${String(m).padStart(2, '0')} ${h < 12 ? 'AM' : 'PM'}`;
 }
 
+/**
+ * Normalise the closed-days list the admin sends.
+ *
+ * `offDays` is the set of days the market is CLOSED on (0=Sun..6=Sat). Any
+ * day NOT in the list is open. Passing an EMPTY array therefore means the
+ * market runs all 7 days - this MUST be preserved, not replaced by the
+ * [0, 6] default. We only drop non-integers / out-of-range values, de-dup,
+ * and sort. When the field is missing entirely (non-array), fall back to the
+ * traditional Sun+Sat schedule.
+ */
+function sanitizeOffDays(offDays) {
+  if (!Array.isArray(offDays)) return [0, 6];
+  const cleaned = offDays
+    .map((n) => Number(n))
+    .filter((n) => Number.isInteger(n) && n >= 0 && n <= 6);
+  return [...new Set(cleaned)].sort((a, b) => a - b);
+}
+
 /** GET /api/admin/markets - list custom markets, newest first. */
 router.get('/markets', async (req, res) => {
   // A normal admin manages their OWN markets, but must ALSO see the
@@ -67,7 +85,7 @@ router.get('/markets', async (req, res) => {
 
 /** POST /api/admin/markets - create a market. */
 router.post('/markets', async (req, res) => {
-  const { name, openTime, closeTime, category, note, active } = req.body ?? {};
+  const { name, openTime, closeTime, category, note, active, offDays } = req.body ?? {};
 
   if (!name || !String(name).trim()) {
     return res.status(400).json({ ok: false, error: 'Market name is required' });
@@ -94,7 +112,7 @@ router.post('/markets', async (req, res) => {
       category: category?.trim() || 'Custom',
       note: note?.trim() || '',
       active: active !== false,
-      offDays: Array.isArray(offDays) ? offDays.map((n) => Number(n)) : [0, 6],
+      offDays: sanitizeOffDays(offDays),
       createdBy: req.user._id,
     });
 
@@ -175,25 +193,13 @@ router.put('/markets/:id', async (req, res) => {
   if (note !== undefined) market.note = String(note).trim();
   if (active !== undefined) market.active = Boolean(active);
 
-  // Off-days: 0 = Sunday, 1 = Monday, ... 6 = Saturday. Default [0, 6] closes
-  // Sun + Sat. Values outside 0..6 are ignored but logged.
+  // Off-days: 0 = Sunday, 1 = Monday, ... 6 = Saturday. Any day NOT listed is
+  // open, so an empty array = open all 7 days. Values outside 0..6 (or
+  // non-integers) are dropped, duplicates removed, and the list sorted.
+  // sanitizeOffDays preserves [] (all-days-on) and only falls back to [0, 6]
+  // when the field is absent/non-array.
   if (offDays !== undefined) {
-    const parsed = Array.isArray(offDays)
-      ? offDays
-          .map((n) => Number(n))
-          .filter((n) => Number.isInteger(n) && n >= 0 && n <= 6)
-      : [];
-    if (parsed.length !== offDays.length) {
-      // Drop any non-integer / out-of-range entries silently.
-      const accepted = new Set(parsed);
-      const filtered = offDays.filter((n) => {
-        const num = Number(n);
-        return Number.isInteger(num) && num >= 0 && num <= 6;
-      });
-      market.offDays = filtered.map((n) => Number(n));
-    } else {
-      market.offDays = parsed;
-    }
+    market.offDays = sanitizeOffDays(offDays);
   }
 
   await market.save();
