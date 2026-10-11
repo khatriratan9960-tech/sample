@@ -3,7 +3,14 @@
   "contact": "490-39-270",
   "panel_record": {
     "title": "KALYAN MATKA PANEL RECORD 2012 - 2026",
-    "columns": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    "columns": [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat"
+    ],
     "day_format": {
       "open_panna": "3 digits",
       "jodi": "2 digits",
@@ -12,730 +19,3425 @@
     "weeks": [
       {
         "date_range": "17/10/2022 to 22/10/2022",
-        "Mon": { "open_panna": "780", "jodi": "51", "close_panna": "489" },
-        "Tue": { "open_panna": "190", "jodi": "07", "close_panna": "115" },
-        "Wed": { "open_panna": "367", "jodi": "63", "close_panna": "599" },
-        "Thu": { "open_panna": "790", "jodi": "69", "close_panna": "289" },
-        "Fri": { "open_panna": "279", "jodi": "83", "close_panna": "355" },
-        "Sat": { "open_panna": "258", "jodi": "54", "close_panna": "158" }
+        "Mon": {
+          "open_panna": "780",
+          "jodi": "51",
+          "close_panna": "489"
+        },
+        "Tue": {
+          "open_panna": "190",
+          "jodi": "07",
+          "close_panna": "115"
+        },
+        "Wed": {
+          "open_panna": "367",
+          "jodi": "63",
+          "close_panna": "599"
+        },
+        "Thu": {
+          "open_panna": "790",
+          "jodi": "69",
+          "close_panna": "289"
+        },
+        "Fri": {
+          "open_panna": "279",
+          "jodi": "83",
+          "close_panna": "355"
+        },
+        "Sat": {
+          "open_panna": "258",
+          "jodi": "54",
+          "close_panna": "158"
+        }
       },
       {
         "date_range": "24/10/2022 to 29/10/2022",
-        "Mon": { "open_panna": "***", "jodi": "**", "close_panna": "***" },
-        "Tue": { "open_panna": "***", "jodi": "**", "close_panna": "***" },
-        "Wed": { "open_panna": "***", "jodi": "**", "close_panna": "***" },
-        "Thu": { "open_panna": "***", "jodi": "**", "close_panna": "***" },
-        "Fri": { "open_panna": "***", "jodi": "**", "close_panna": "***" },
-        "Sat": { "open_panna": "***", "jodi": "**", "close_panna": "***" }
+        "Mon": {
+          "open_panna": "***",
+          "jodi": "**",
+          "close_panna": "***"
+        },
+        "Tue": {
+          "open_panna": "***",
+          "jodi": "**",
+          "close_panna": "***"
+        },
+        "Wed": {
+          "open_panna": "***",
+          "jodi": "**",
+          "close_panna": "***"
+        },
+        "Thu": {
+          "open_panna": "***",
+          "jodi": "**",
+          "close_panna": "***"
+        },
+        "Fri": {
+          "open_panna": "***",
+          "jodi": "**",
+          "close_panna": "***"
+        },
+        "Sat": {
+          "open_panna": "***",
+          "jodi": "**",
+          "close_panna": "***"
+        }
       },
       {
         "date_range": "31/10/2022 to 05/11/2022",
-        "Mon": { "open_panna": "357", "jodi": "51", "close_panna": "137" },
-        "Tue": { "open_panna": "470", "jodi": "10", "close_panna": "190" },
-        "Wed": { "open_panna": "479", "jodi": "02", "close_panna": "156" },
-        "Thu": { "open_panna": "156", "jodi": "51", "close_panna": "468" },
-        "Fri": { "open_panna": "368", "jodi": "05", "close_panna": "146" },
-        "Sat": { "open_panna": "235", "jodi": "74", "close_panna": "356" }
+        "Mon": {
+          "open_panna": "357",
+          "jodi": "51",
+          "close_panna": "137"
+        },
+        "Tue": {
+          "open_panna": "470",
+          "jodi": "10",
+          "close_panna": "190"
+        },
+        "Wed": {
+          "open_panna": "479",
+          "jodi": "02",
+          "close_panna": "156"
+        },
+        "Thu": {
+          "open_panna": "156",
+          "jodi": "51",
+          "close_panna": "468"
+        },
+        "Fri": {
+          "open_panna": "368",
+          "jodi": "05",
+          "close_panna": "146"
+        },
+        "Sat": {
+          "open_panna": "235",
+          "jodi": "74",
+          "close_panna": "356"
+        }
       },
       {
         "date_range": "07/11/2022 to 12/11/2022",
-        "Mon": { "open_panna": "270", "jodi": "99", "close_panna": "568" },
-        "Tue": { "open_panna": "889", "jodi": "58", "close_panna": "558" },
-        "Wed": { "open_panna": "168", "jodi": "52", "close_panna": "228" },
-        "Thu": { "open_panna": "580", "jodi": "30", "close_panna": "488" },
-        "Fri": { "open_panna": "357", "jodi": "56", "close_panna": "169" },
-        "Sat": { "open_panna": "126", "jodi": "92", "close_panna": "679" }
+        "Mon": {
+          "open_panna": "270",
+          "jodi": "99",
+          "close_panna": "568"
+        },
+        "Tue": {
+          "open_panna": "889",
+          "jodi": "58",
+          "close_panna": "558"
+        },
+        "Wed": {
+          "open_panna": "168",
+          "jodi": "52",
+          "close_panna": "228"
+        },
+        "Thu": {
+          "open_panna": "580",
+          "jodi": "30",
+          "close_panna": "488"
+        },
+        "Fri": {
+          "open_panna": "357",
+          "jodi": "56",
+          "close_panna": "169"
+        },
+        "Sat": {
+          "open_panna": "126",
+          "jodi": "92",
+          "close_panna": "679"
+        }
       },
       {
         "date_range": "14/11/2022 to 19/11/2022",
-        "Mon": { "open_panna": "368", "jodi": "70", "close_panna": "550" },
-        "Tue": { "open_panna": "228", "jodi": "24", "close_panna": "158" },
-        "Wed": { "open_panna": "600", "jodi": "64", "close_panna": "158" },
-        "Thu": { "open_panna": "177", "jodi": "51", "close_panna": "669" },
-        "Fri": { "open_panna": "150", "jodi": "67", "close_panna": "368" },
-        "Sat": { "open_panna": "236", "jodi": "12", "close_panna": "147" }
+        "Mon": {
+          "open_panna": "368",
+          "jodi": "70",
+          "close_panna": "550"
+        },
+        "Tue": {
+          "open_panna": "228",
+          "jodi": "24",
+          "close_panna": "158"
+        },
+        "Wed": {
+          "open_panna": "600",
+          "jodi": "64",
+          "close_panna": "158"
+        },
+        "Thu": {
+          "open_panna": "177",
+          "jodi": "51",
+          "close_panna": "669"
+        },
+        "Fri": {
+          "open_panna": "150",
+          "jodi": "67",
+          "close_panna": "368"
+        },
+        "Sat": {
+          "open_panna": "236",
+          "jodi": "12",
+          "close_panna": "147"
+        }
       },
       {
         "date_range": "21/11/2022 to 26/11/2022",
-        "Mon": { "open_panna": "268", "jodi": "68", "close_panna": "288" },
-        "Tue": { "open_panna": "268", "jodi": "62", "close_panna": "345" },
-        "Wed": { "open_panna": "237", "jodi": "20", "close_panna": "145" },
-        "Thu": { "open_panna": "378", "jodi": "81", "close_panna": "579" },
-        "Fri": { "open_panna": "368", "jodi": "74", "close_panna": "130" },
-        "Sat": { "open_panna": "248", "jodi": "49", "close_panna": "135" }
+        "Mon": {
+          "open_panna": "268",
+          "jodi": "68",
+          "close_panna": "288"
+        },
+        "Tue": {
+          "open_panna": "268",
+          "jodi": "62",
+          "close_panna": "345"
+        },
+        "Wed": {
+          "open_panna": "237",
+          "jodi": "20",
+          "close_panna": "145"
+        },
+        "Thu": {
+          "open_panna": "378",
+          "jodi": "81",
+          "close_panna": "579"
+        },
+        "Fri": {
+          "open_panna": "368",
+          "jodi": "74",
+          "close_panna": "130"
+        },
+        "Sat": {
+          "open_panna": "248",
+          "jodi": "49",
+          "close_panna": "135"
+        }
       },
       {
         "date_range": "28/11/2022 to 03/12/2022",
-        "Mon": { "open_panna": "479", "jodi": "06", "close_panna": "466" },
-        "Tue": { "open_panna": "455", "jodi": "44", "close_panna": "590" },
-        "Wed": { "open_panna": "145", "jodi": "01", "close_panna": "470" },
-        "Thu": { "open_panna": "300", "jodi": "38", "close_panna": "170" },
-        "Fri": { "open_panna": "129", "jodi": "25", "close_panna": "690" },
-        "Sat": { "open_panna": "557", "jodi": "72", "close_panna": "589" }
+        "Mon": {
+          "open_panna": "479",
+          "jodi": "06",
+          "close_panna": "466"
+        },
+        "Tue": {
+          "open_panna": "455",
+          "jodi": "44",
+          "close_panna": "590"
+        },
+        "Wed": {
+          "open_panna": "145",
+          "jodi": "01",
+          "close_panna": "470"
+        },
+        "Thu": {
+          "open_panna": "300",
+          "jodi": "38",
+          "close_panna": "170"
+        },
+        "Fri": {
+          "open_panna": "129",
+          "jodi": "25",
+          "close_panna": "690"
+        },
+        "Sat": {
+          "open_panna": "557",
+          "jodi": "72",
+          "close_panna": "589"
+        }
       },
       {
         "date_range": "05/12/2022 to 10/12/2022",
-        "Mon": { "open_panna": "115", "jodi": "79", "close_panna": "388" },
-        "Tue": { "open_panna": "900", "jodi": "91", "close_panna": "227" },
-        "Wed": { "open_panna": "178", "jodi": "63", "close_panna": "490" },
-        "Thu": { "open_panna": "469", "jodi": "99", "close_panna": "180" },
-        "Fri": { "open_panna": "789", "jodi": "44", "close_panna": "239" },
-        "Sat": { "open_panna": "457", "jodi": "64", "close_panna": "167" }
+        "Mon": {
+          "open_panna": "115",
+          "jodi": "79",
+          "close_panna": "388"
+        },
+        "Tue": {
+          "open_panna": "900",
+          "jodi": "91",
+          "close_panna": "227"
+        },
+        "Wed": {
+          "open_panna": "178",
+          "jodi": "63",
+          "close_panna": "490"
+        },
+        "Thu": {
+          "open_panna": "469",
+          "jodi": "99",
+          "close_panna": "180"
+        },
+        "Fri": {
+          "open_panna": "789",
+          "jodi": "44",
+          "close_panna": "239"
+        },
+        "Sat": {
+          "open_panna": "457",
+          "jodi": "64",
+          "close_panna": "167"
+        }
       },
       {
         "date_range": "12/12/2022 to 17/12/2022",
-        "Mon": { "open_panna": "570", "jodi": "25", "close_panna": "267" },
-        "Tue": { "open_panna": "149", "jodi": "42", "close_panna": "156" },
-        "Wed": { "open_panna": "350", "jodi": "87", "close_panna": "269" },
-        "Thu": { "open_panna": "279", "jodi": "87", "close_panna": "449" },
-        "Fri": { "open_panna": "258", "jodi": "58", "close_panna": "125" },
-        "Sat": { "open_panna": "499", "jodi": "28", "close_panna": "134" }
+        "Mon": {
+          "open_panna": "570",
+          "jodi": "25",
+          "close_panna": "267"
+        },
+        "Tue": {
+          "open_panna": "149",
+          "jodi": "42",
+          "close_panna": "156"
+        },
+        "Wed": {
+          "open_panna": "350",
+          "jodi": "87",
+          "close_panna": "269"
+        },
+        "Thu": {
+          "open_panna": "279",
+          "jodi": "87",
+          "close_panna": "449"
+        },
+        "Fri": {
+          "open_panna": "258",
+          "jodi": "58",
+          "close_panna": "125"
+        },
+        "Sat": {
+          "open_panna": "499",
+          "jodi": "28",
+          "close_panna": "134"
+        }
       },
       {
         "date_range": "19/12/2022 to 24/12/2022",
-        "Mon": { "open_panna": "300", "jodi": "31", "close_panna": "290" },
-        "Tue": { "open_panna": "360", "jodi": "94", "close_panna": "112" },
-        "Wed": { "open_panna": "240", "jodi": "61", "close_panna": "227" },
-        "Thu": { "open_panna": "100", "jodi": "18", "close_panna": "170" },
-        "Fri": { "open_panna": "379", "jodi": "98", "close_panna": "134" },
-        "Sat": { "open_panna": "248", "jodi": "46", "close_panna": "367" }
+        "Mon": {
+          "open_panna": "300",
+          "jodi": "31",
+          "close_panna": "290"
+        },
+        "Tue": {
+          "open_panna": "360",
+          "jodi": "94",
+          "close_panna": "112"
+        },
+        "Wed": {
+          "open_panna": "240",
+          "jodi": "61",
+          "close_panna": "227"
+        },
+        "Thu": {
+          "open_panna": "100",
+          "jodi": "18",
+          "close_panna": "170"
+        },
+        "Fri": {
+          "open_panna": "379",
+          "jodi": "98",
+          "close_panna": "134"
+        },
+        "Sat": {
+          "open_panna": "248",
+          "jodi": "46",
+          "close_panna": "367"
+        }
       },
       {
         "date_range": "26/12/2022 to 31/12/2022",
-        "Mon": { "open_panna": "478", "jodi": "94", "close_panna": "680" },
-        "Tue": { "open_panna": "260", "jodi": "81", "close_panna": "236" },
-        "Wed": { "open_panna": "140", "jodi": "55", "close_panna": "690" },
-        "Thu": { "open_panna": "360", "jodi": "90", "close_panna": "145" },
-        "Fri": { "open_panna": "267", "jodi": "58", "close_panna": "260" },
-        "Sat": { "open_panna": "169", "jodi": "61", "close_panna": "137" }
+        "Mon": {
+          "open_panna": "478",
+          "jodi": "94",
+          "close_panna": "680"
+        },
+        "Tue": {
+          "open_panna": "260",
+          "jodi": "81",
+          "close_panna": "236"
+        },
+        "Wed": {
+          "open_panna": "140",
+          "jodi": "55",
+          "close_panna": "690"
+        },
+        "Thu": {
+          "open_panna": "360",
+          "jodi": "90",
+          "close_panna": "145"
+        },
+        "Fri": {
+          "open_panna": "267",
+          "jodi": "58",
+          "close_panna": "260"
+        },
+        "Sat": {
+          "open_panna": "169",
+          "jodi": "61",
+          "close_panna": "137"
+        }
       },
       {
         "date_range": "02/01/2023 to 07/01/2023",
-        "Mon": { "open_panna": "260", "jodi": "87", "close_panna": "359" },
-        "Tue": { "open_panna": "137", "jodi": "11", "close_panna": "588" },
-        "Wed": { "open_panna": "678", "jodi": "11", "close_panna": "380" },
-        "Thu": { "open_panna": "567", "jodi": "85", "close_panna": "348" },
-        "Fri": { "open_panna": "579", "jodi": "17", "close_panna": "467" },
-        "Sat": { "open_panna": "470", "jodi": "19", "close_panna": "126" }
+        "Mon": {
+          "open_panna": "260",
+          "jodi": "87",
+          "close_panna": "359"
+        },
+        "Tue": {
+          "open_panna": "137",
+          "jodi": "11",
+          "close_panna": "588"
+        },
+        "Wed": {
+          "open_panna": "678",
+          "jodi": "11",
+          "close_panna": "380"
+        },
+        "Thu": {
+          "open_panna": "567",
+          "jodi": "85",
+          "close_panna": "348"
+        },
+        "Fri": {
+          "open_panna": "579",
+          "jodi": "17",
+          "close_panna": "467"
+        },
+        "Sat": {
+          "open_panna": "470",
+          "jodi": "19",
+          "close_panna": "126"
+        }
       },
       {
         "date_range": "09/01/2023 to 14/01/2023",
-        "Mon": { "open_panna": "469", "jodi": "97", "close_panna": "368" },
-        "Tue": { "open_panna": "247", "jodi": "35", "close_panna": "230" },
-        "Wed": { "open_panna": "359", "jodi": "79", "close_panna": "180" },
-        "Thu": { "open_panna": "690", "jodi": "57", "close_panna": "124" },
-        "Fri": { "open_panna": "179", "jodi": "72", "close_panna": "246" },
-        "Sat": { "open_panna": "247", "jodi": "33", "close_panna": "670" }
+        "Mon": {
+          "open_panna": "469",
+          "jodi": "97",
+          "close_panna": "368"
+        },
+        "Tue": {
+          "open_panna": "247",
+          "jodi": "35",
+          "close_panna": "230"
+        },
+        "Wed": {
+          "open_panna": "359",
+          "jodi": "79",
+          "close_panna": "180"
+        },
+        "Thu": {
+          "open_panna": "690",
+          "jodi": "57",
+          "close_panna": "124"
+        },
+        "Fri": {
+          "open_panna": "179",
+          "jodi": "72",
+          "close_panna": "246"
+        },
+        "Sat": {
+          "open_panna": "247",
+          "jodi": "33",
+          "close_panna": "670"
+        }
       },
       {
         "date_range": "16/01/2023 to 21/01/2023",
-        "Mon": { "open_panna": "460", "jodi": "02", "close_panna": "110" },
-        "Tue": { "open_panna": "669", "jodi": "15", "close_panna": "122" },
-        "Wed": { "open_panna": "245", "jodi": "15", "close_panna": "168" },
-        "Thu": { "open_panna": "899", "jodi": "69", "close_panna": "450" },
-        "Fri": { "open_panna": "360", "jodi": "96", "close_panna": "790" },
-        "Sat": { "open_panna": "459", "jodi": "82", "close_panna": "246" }
+        "Mon": {
+          "open_panna": "460",
+          "jodi": "02",
+          "close_panna": "110"
+        },
+        "Tue": {
+          "open_panna": "669",
+          "jodi": "15",
+          "close_panna": "122"
+        },
+        "Wed": {
+          "open_panna": "245",
+          "jodi": "15",
+          "close_panna": "168"
+        },
+        "Thu": {
+          "open_panna": "899",
+          "jodi": "69",
+          "close_panna": "450"
+        },
+        "Fri": {
+          "open_panna": "360",
+          "jodi": "96",
+          "close_panna": "790"
+        },
+        "Sat": {
+          "open_panna": "459",
+          "jodi": "82",
+          "close_panna": "246"
+        }
       },
       {
         "date_range": "23/01/2023 to 28/01/2023",
-        "Mon": { "open_panna": "225", "jodi": "94", "close_panna": "167" },
-        "Tue": { "open_panna": "177", "jodi": "56", "close_panna": "123" },
-        "Wed": { "open_panna": "378", "jodi": "80", "close_panna": "389" },
-        "Thu": { "open_panna": "***", "jodi": "**", "close_panna": "***" },
-        "Fri": { "open_panna": "279", "jodi": "89", "close_panna": "568" },
-        "Sat": { "open_panna": "137", "jodi": "15", "close_panna": "230" }
+        "Mon": {
+          "open_panna": "225",
+          "jodi": "94",
+          "close_panna": "167"
+        },
+        "Tue": {
+          "open_panna": "177",
+          "jodi": "56",
+          "close_panna": "123"
+        },
+        "Wed": {
+          "open_panna": "378",
+          "jodi": "80",
+          "close_panna": "389"
+        },
+        "Thu": {
+          "open_panna": "***",
+          "jodi": "**",
+          "close_panna": "***"
+        },
+        "Fri": {
+          "open_panna": "279",
+          "jodi": "89",
+          "close_panna": "568"
+        },
+        "Sat": {
+          "open_panna": "137",
+          "jodi": "15",
+          "close_panna": "230"
+        }
       },
       {
         "date_range": "30/01/2023 to 04/02/2023",
-        "Mon": { "open_panna": "338", "jodi": "48", "close_panna": "170" },
-        "Tue": { "open_panna": "256", "jodi": "38", "close_panna": "125" },
-        "Wed": { "open_panna": "130", "jodi": "48", "close_panna": "378" },
-        "Thu": { "open_panna": "580", "jodi": "30", "close_panna": "569" },
-        "Fri": { "open_panna": "400", "jodi": "47", "close_panna": "368" },
-        "Sat": { "open_panna": "236", "jodi": "12", "close_panna": "570" }
+        "Mon": {
+          "open_panna": "338",
+          "jodi": "48",
+          "close_panna": "170"
+        },
+        "Tue": {
+          "open_panna": "256",
+          "jodi": "38",
+          "close_panna": "125"
+        },
+        "Wed": {
+          "open_panna": "130",
+          "jodi": "48",
+          "close_panna": "378"
+        },
+        "Thu": {
+          "open_panna": "580",
+          "jodi": "30",
+          "close_panna": "569"
+        },
+        "Fri": {
+          "open_panna": "400",
+          "jodi": "47",
+          "close_panna": "368"
+        },
+        "Sat": {
+          "open_panna": "236",
+          "jodi": "12",
+          "close_panna": "570"
+        }
       },
       {
         "date_range": "06/02/2023 to 11/02/2023",
-        "Mon": { "open_panna": "266", "jodi": "44", "close_panna": "130" },
-        "Tue": { "open_panna": "199", "jodi": "95", "close_panna": "168" },
-        "Wed": { "open_panna": "780", "jodi": "53", "close_panna": "238" },
-        "Thu": { "open_panna": "100", "jodi": "11", "close_panna": "470" },
-        "Fri": { "open_panna": "129", "jodi": "22", "close_panna": "679" },
-        "Sat": { "open_panna": "270", "jodi": "92", "close_panna": "589" }
+        "Mon": {
+          "open_panna": "266",
+          "jodi": "44",
+          "close_panna": "130"
+        },
+        "Tue": {
+          "open_panna": "199",
+          "jodi": "95",
+          "close_panna": "168"
+        },
+        "Wed": {
+          "open_panna": "780",
+          "jodi": "53",
+          "close_panna": "238"
+        },
+        "Thu": {
+          "open_panna": "100",
+          "jodi": "11",
+          "close_panna": "470"
+        },
+        "Fri": {
+          "open_panna": "129",
+          "jodi": "22",
+          "close_panna": "679"
+        },
+        "Sat": {
+          "open_panna": "270",
+          "jodi": "92",
+          "close_panna": "589"
+        }
       },
       {
         "date_range": "13/02/2023 to 18/02/2023",
-        "Mon": { "open_panna": "279", "jodi": "80", "close_panna": "127" },
-        "Tue": { "open_panna": "599", "jodi": "39", "close_panna": "469" },
-        "Wed": { "open_panna": "889", "jodi": "52", "close_panna": "336" },
-        "Thu": { "open_panna": "330", "jodi": "68", "close_panna": "189" },
-        "Fri": { "open_panna": "790", "jodi": "67", "close_panna": "566" },
-        "Sat": { "open_panna": "700", "jodi": "73", "close_panna": "355" }
+        "Mon": {
+          "open_panna": "279",
+          "jodi": "80",
+          "close_panna": "127"
+        },
+        "Tue": {
+          "open_panna": "599",
+          "jodi": "39",
+          "close_panna": "469"
+        },
+        "Wed": {
+          "open_panna": "889",
+          "jodi": "52",
+          "close_panna": "336"
+        },
+        "Thu": {
+          "open_panna": "330",
+          "jodi": "68",
+          "close_panna": "189"
+        },
+        "Fri": {
+          "open_panna": "790",
+          "jodi": "67",
+          "close_panna": "566"
+        },
+        "Sat": {
+          "open_panna": "700",
+          "jodi": "73",
+          "close_panna": "355"
+        }
       },
       {
         "date_range": "20/02/2023 to 25/02/2023",
-        "Mon": { "open_panna": "680", "jodi": "43", "close_panna": "670" },
-        "Tue": { "open_panna": "137", "jodi": "11", "close_panna": "579" },
-        "Wed": { "open_panna": "780", "jodi": "50", "close_panna": "244" },
-        "Thu": { "open_panna": "380", "jodi": "12", "close_panna": "336" },
-        "Fri": { "open_panna": "589", "jodi": "26", "close_panna": "268" },
-        "Sat": { "open_panna": "113", "jodi": "56", "close_panna": "240" }
+        "Mon": {
+          "open_panna": "680",
+          "jodi": "43",
+          "close_panna": "670"
+        },
+        "Tue": {
+          "open_panna": "137",
+          "jodi": "11",
+          "close_panna": "579"
+        },
+        "Wed": {
+          "open_panna": "780",
+          "jodi": "50",
+          "close_panna": "244"
+        },
+        "Thu": {
+          "open_panna": "380",
+          "jodi": "12",
+          "close_panna": "336"
+        },
+        "Fri": {
+          "open_panna": "589",
+          "jodi": "26",
+          "close_panna": "268"
+        },
+        "Sat": {
+          "open_panna": "113",
+          "jodi": "56",
+          "close_panna": "240"
+        }
       },
       {
         "date_range": "27/02/2023 to 04/03/2023",
-        "Mon": { "open_panna": "168", "jodi": "51", "close_panna": "489" },
-        "Tue": { "open_panna": "199", "jodi": "94", "close_panna": "130" },
-        "Wed": { "open_panna": "567", "jodi": "85", "close_panna": "366" },
-        "Thu": { "open_panna": "259", "jodi": "60", "close_panna": "334" },
-        "Fri": { "open_panna": "256", "jodi": "37", "close_panna": "467" },
-        "Sat": { "open_panna": "579", "jodi": "16", "close_panna": "259" }
+        "Mon": {
+          "open_panna": "168",
+          "jodi": "51",
+          "close_panna": "489"
+        },
+        "Tue": {
+          "open_panna": "199",
+          "jodi": "94",
+          "close_panna": "130"
+        },
+        "Wed": {
+          "open_panna": "567",
+          "jodi": "85",
+          "close_panna": "366"
+        },
+        "Thu": {
+          "open_panna": "259",
+          "jodi": "60",
+          "close_panna": "334"
+        },
+        "Fri": {
+          "open_panna": "256",
+          "jodi": "37",
+          "close_panna": "467"
+        },
+        "Sat": {
+          "open_panna": "579",
+          "jodi": "16",
+          "close_panna": "259"
+        }
       },
       {
         "date_range": "06/03/2023 to 11/03/2023",
-        "Mon": { "open_panna": "227", "jodi": "14", "close_panna": "590" },
-        "Tue": { "open_panna": "229", "jodi": "34", "close_panna": "590" },
-        "Wed": { "open_panna": "***", "jodi": "**", "close_panna": "***" },
-        "Thu": { "open_panna": "568", "jodi": "93", "close_panna": "238" },
-        "Fri": { "open_panna": "367", "jodi": "61", "close_panna": "470" },
-        "Sat": { "open_panna": "358", "jodi": "64", "close_panna": "248" }
+        "Mon": {
+          "open_panna": "227",
+          "jodi": "14",
+          "close_panna": "590"
+        },
+        "Tue": {
+          "open_panna": "229",
+          "jodi": "34",
+          "close_panna": "590"
+        },
+        "Wed": {
+          "open_panna": "***",
+          "jodi": "**",
+          "close_panna": "***"
+        },
+        "Thu": {
+          "open_panna": "568",
+          "jodi": "93",
+          "close_panna": "238"
+        },
+        "Fri": {
+          "open_panna": "367",
+          "jodi": "61",
+          "close_panna": "470"
+        },
+        "Sat": {
+          "open_panna": "358",
+          "jodi": "64",
+          "close_panna": "248"
+        }
       },
       {
         "date_range": "13/03/2023 to 18/03/2023",
-        "Mon": { "open_panna": "135", "jodi": "96", "close_panna": "169" },
-        "Tue": { "open_panna": "479", "jodi": "00", "close_panna": "145" },
-        "Wed": { "open_panna": "157", "jodi": "30", "close_panna": "145" },
-        "Thu": { "open_panna": "599", "jodi": "38", "close_panna": "378" },
-        "Fri": { "open_panna": "567", "jodi": "89", "close_panna": "450" },
-        "Sat": { "open_panna": "459", "jodi": "83", "close_panna": "256" }
+        "Mon": {
+          "open_panna": "135",
+          "jodi": "96",
+          "close_panna": "169"
+        },
+        "Tue": {
+          "open_panna": "479",
+          "jodi": "00",
+          "close_panna": "145"
+        },
+        "Wed": {
+          "open_panna": "157",
+          "jodi": "30",
+          "close_panna": "145"
+        },
+        "Thu": {
+          "open_panna": "599",
+          "jodi": "38",
+          "close_panna": "378"
+        },
+        "Fri": {
+          "open_panna": "567",
+          "jodi": "89",
+          "close_panna": "450"
+        },
+        "Sat": {
+          "open_panna": "459",
+          "jodi": "83",
+          "close_panna": "256"
+        }
       },
       {
         "date_range": "20/03/2023 to 25/03/2023",
-        "Mon": { "open_panna": "124", "jodi": "76", "close_panna": "150" },
-        "Tue": { "open_panna": "570", "jodi": "22", "close_panna": "679" },
-        "Wed": { "open_panna": "550", "jodi": "07", "close_panna": "566" },
-        "Thu": { "open_panna": "126", "jodi": "97", "close_panna": "340" },
-        "Fri": { "open_panna": "280", "jodi": "01", "close_panna": "380" },
-        "Sat": { "open_panna": "456", "jodi": "58", "close_panna": "134" }
+        "Mon": {
+          "open_panna": "124",
+          "jodi": "76",
+          "close_panna": "150"
+        },
+        "Tue": {
+          "open_panna": "570",
+          "jodi": "22",
+          "close_panna": "679"
+        },
+        "Wed": {
+          "open_panna": "550",
+          "jodi": "07",
+          "close_panna": "566"
+        },
+        "Thu": {
+          "open_panna": "126",
+          "jodi": "97",
+          "close_panna": "340"
+        },
+        "Fri": {
+          "open_panna": "280",
+          "jodi": "01",
+          "close_panna": "380"
+        },
+        "Sat": {
+          "open_panna": "456",
+          "jodi": "58",
+          "close_panna": "134"
+        }
       },
       {
         "date_range": "27/03/2023 to 02/04/2023",
-        "Mon": { "open_panna": "779", "jodi": "36", "close_panna": "169" },
-        "Tue": { "open_panna": "567", "jodi": "87", "close_panna": "359" },
-        "Wed": { "open_panna": "247", "jodi": "37", "close_panna": "700" },
-        "Thu": { "open_panna": "450", "jodi": "95", "close_panna": "168" },
-        "Fri": { "open_panna": "448", "jodi": "68", "close_panna": "350" },
-        "Sat": { "open_panna": "145", "jodi": "07", "close_panna": "160" }
+        "Mon": {
+          "open_panna": "779",
+          "jodi": "36",
+          "close_panna": "169"
+        },
+        "Tue": {
+          "open_panna": "567",
+          "jodi": "87",
+          "close_panna": "359"
+        },
+        "Wed": {
+          "open_panna": "247",
+          "jodi": "37",
+          "close_panna": "700"
+        },
+        "Thu": {
+          "open_panna": "450",
+          "jodi": "95",
+          "close_panna": "168"
+        },
+        "Fri": {
+          "open_panna": "448",
+          "jodi": "68",
+          "close_panna": "350"
+        },
+        "Sat": {
+          "open_panna": "145",
+          "jodi": "07",
+          "close_panna": "160"
+        }
       },
       {
         "date_range": "03/04/2023 to 08/04/2023",
-        "Mon": { "open_panna": "150", "jodi": "60", "close_panna": "127" },
-        "Tue": { "open_panna": "369", "jodi": "81", "close_panna": "137" },
-        "Wed": { "open_panna": "257", "jodi": "43", "close_panna": "355" },
-        "Thu": { "open_panna": "269", "jodi": "72", "close_panna": "660" },
-        "Fri": { "open_panna": "390", "jodi": "26", "close_panna": "150" },
-        "Sat": { "open_panna": "126", "jodi": "98", "close_panna": "567" }
+        "Mon": {
+          "open_panna": "150",
+          "jodi": "60",
+          "close_panna": "127"
+        },
+        "Tue": {
+          "open_panna": "369",
+          "jodi": "81",
+          "close_panna": "137"
+        },
+        "Wed": {
+          "open_panna": "257",
+          "jodi": "43",
+          "close_panna": "355"
+        },
+        "Thu": {
+          "open_panna": "269",
+          "jodi": "72",
+          "close_panna": "660"
+        },
+        "Fri": {
+          "open_panna": "390",
+          "jodi": "26",
+          "close_panna": "150"
+        },
+        "Sat": {
+          "open_panna": "126",
+          "jodi": "98",
+          "close_panna": "567"
+        }
       },
       {
         "date_range": "10/04/2023 to 15/04/2023",
-        "Mon": { "open_panna": "278", "jodi": "70", "close_panna": "460" },
-        "Tue": { "open_panna": "235", "jodi": "04", "close_panna": "590" },
-        "Wed": { "open_panna": "248", "jodi": "42", "close_panna": "679" },
-        "Thu": { "open_panna": "236", "jodi": "17", "close_panna": "250" },
-        "Fri": { "open_panna": "230", "jodi": "58", "close_panna": "567" },
-        "Sat": { "open_panna": "300", "jodi": "35", "close_panna": "780" }
+        "Mon": {
+          "open_panna": "278",
+          "jodi": "70",
+          "close_panna": "460"
+        },
+        "Tue": {
+          "open_panna": "235",
+          "jodi": "04",
+          "close_panna": "590"
+        },
+        "Wed": {
+          "open_panna": "248",
+          "jodi": "42",
+          "close_panna": "679"
+        },
+        "Thu": {
+          "open_panna": "236",
+          "jodi": "17",
+          "close_panna": "250"
+        },
+        "Fri": {
+          "open_panna": "230",
+          "jodi": "58",
+          "close_panna": "567"
+        },
+        "Sat": {
+          "open_panna": "300",
+          "jodi": "35",
+          "close_panna": "780"
+        }
       },
       {
         "date_range": "17/04/2023 to 22/04/2023",
-        "Mon": { "open_panna": "236", "jodi": "12", "close_panna": "345" },
-        "Tue": { "open_panna": "359", "jodi": "76", "close_panna": "169" },
-        "Wed": { "open_panna": "366", "jodi": "51", "close_panna": "560" },
-        "Thu": { "open_panna": "589", "jodi": "27", "close_panna": "368" },
-        "Fri": { "open_panna": "780", "jodi": "52", "close_panna": "345" },
-        "Sat": { "open_panna": "389", "jodi": "04", "close_panna": "257" }
+        "Mon": {
+          "open_panna": "236",
+          "jodi": "12",
+          "close_panna": "345"
+        },
+        "Tue": {
+          "open_panna": "359",
+          "jodi": "76",
+          "close_panna": "169"
+        },
+        "Wed": {
+          "open_panna": "366",
+          "jodi": "51",
+          "close_panna": "560"
+        },
+        "Thu": {
+          "open_panna": "589",
+          "jodi": "27",
+          "close_panna": "368"
+        },
+        "Fri": {
+          "open_panna": "780",
+          "jodi": "52",
+          "close_panna": "345"
+        },
+        "Sat": {
+          "open_panna": "389",
+          "jodi": "04",
+          "close_panna": "257"
+        }
       },
       {
         "date_range": "24/04/2023 to 29/04/2023",
-        "Mon": { "open_panna": "160", "jodi": "71", "close_panna": "560" },
-        "Tue": { "open_panna": "266", "jodi": "41", "close_panna": "128" },
-        "Wed": { "open_panna": "480", "jodi": "28", "close_panna": "378" },
-        "Thu": { "open_panna": "170", "jodi": "83", "close_panna": "139" },
-        "Fri": { "open_panna": "580", "jodi": "38", "close_panna": "378" },
-        "Sat": { "open_panna": "280", "jodi": "00", "close_panna": "127" }
+        "Mon": {
+          "open_panna": "160",
+          "jodi": "71",
+          "close_panna": "560"
+        },
+        "Tue": {
+          "open_panna": "266",
+          "jodi": "41",
+          "close_panna": "128"
+        },
+        "Wed": {
+          "open_panna": "480",
+          "jodi": "28",
+          "close_panna": "378"
+        },
+        "Thu": {
+          "open_panna": "170",
+          "jodi": "83",
+          "close_panna": "139"
+        },
+        "Fri": {
+          "open_panna": "580",
+          "jodi": "38",
+          "close_panna": "378"
+        },
+        "Sat": {
+          "open_panna": "280",
+          "jodi": "00",
+          "close_panna": "127"
+        }
       },
       {
         "date_range": "01/05/2023 to 06/05/2023",
-        "Mon": { "open_panna": "288", "jodi": "88", "close_panna": "170" },
-        "Tue": { "open_panna": "249", "jodi": "55", "close_panna": "456" },
-        "Wed": { "open_panna": "880", "jodi": "63", "close_panna": "148" },
-        "Thu": { "open_panna": "557", "jodi": "79", "close_panna": "469" },
-        "Fri": { "open_panna": "368", "jodi": "71", "close_panna": "489" },
-        "Sat": { "open_panna": "240", "jodi": "62", "close_panna": "589" }
+        "Mon": {
+          "open_panna": "288",
+          "jodi": "88",
+          "close_panna": "170"
+        },
+        "Tue": {
+          "open_panna": "249",
+          "jodi": "55",
+          "close_panna": "456"
+        },
+        "Wed": {
+          "open_panna": "880",
+          "jodi": "63",
+          "close_panna": "148"
+        },
+        "Thu": {
+          "open_panna": "557",
+          "jodi": "79",
+          "close_panna": "469"
+        },
+        "Fri": {
+          "open_panna": "368",
+          "jodi": "71",
+          "close_panna": "489"
+        },
+        "Sat": {
+          "open_panna": "240",
+          "jodi": "62",
+          "close_panna": "589"
+        }
       },
       {
         "date_range": "08/05/2023 to 13/05/2023",
-        "Mon": { "open_panna": "247", "jodi": "38", "close_panna": "459" },
-        "Tue": { "open_panna": "229", "jodi": "37", "close_panna": "124" },
-        "Wed": { "open_panna": "229", "jodi": "35", "close_panna": "267" },
-        "Thu": { "open_panna": "899", "jodi": "63", "close_panna": "670" },
-        "Fri": { "open_panna": "390", "jodi": "22", "close_panna": "570" },
-        "Sat": { "open_panna": "456", "jodi": "51", "close_panna": "137" }
+        "Mon": {
+          "open_panna": "247",
+          "jodi": "38",
+          "close_panna": "459"
+        },
+        "Tue": {
+          "open_panna": "229",
+          "jodi": "37",
+          "close_panna": "124"
+        },
+        "Wed": {
+          "open_panna": "229",
+          "jodi": "35",
+          "close_panna": "267"
+        },
+        "Thu": {
+          "open_panna": "899",
+          "jodi": "63",
+          "close_panna": "670"
+        },
+        "Fri": {
+          "open_panna": "390",
+          "jodi": "22",
+          "close_panna": "570"
+        },
+        "Sat": {
+          "open_panna": "456",
+          "jodi": "51",
+          "close_panna": "137"
+        }
       },
       {
         "date_range": "15/05/2023 to 20/05/2023",
-        "Mon": { "open_panna": "566", "jodi": "71", "close_panna": "669" },
-        "Tue": { "open_panna": "399", "jodi": "15", "close_panna": "357" },
-        "Wed": { "open_panna": "389", "jodi": "00", "close_panna": "145" },
-        "Thu": { "open_panna": "239", "jodi": "42", "close_panna": "129" },
-        "Fri": { "open_panna": "389", "jodi": "06", "close_panna": "358" },
-        "Sat": { "open_panna": "149", "jodi": "45", "close_panna": "456" }
+        "Mon": {
+          "open_panna": "566",
+          "jodi": "71",
+          "close_panna": "669"
+        },
+        "Tue": {
+          "open_panna": "399",
+          "jodi": "15",
+          "close_panna": "357"
+        },
+        "Wed": {
+          "open_panna": "389",
+          "jodi": "00",
+          "close_panna": "145"
+        },
+        "Thu": {
+          "open_panna": "239",
+          "jodi": "42",
+          "close_panna": "129"
+        },
+        "Fri": {
+          "open_panna": "389",
+          "jodi": "06",
+          "close_panna": "358"
+        },
+        "Sat": {
+          "open_panna": "149",
+          "jodi": "45",
+          "close_panna": "456"
+        }
       },
       {
         "date_range": "22/05/2023 to 27/05/2023",
-        "Mon": { "open_panna": "668", "jodi": "05", "close_panna": "357" },
-        "Tue": { "open_panna": "337", "jodi": "36", "close_panna": "178" },
-        "Wed": { "open_panna": "569", "jodi": "06", "close_panna": "367" },
-        "Thu": { "open_panna": "799", "jodi": "56", "close_panna": "240" },
-        "Fri": { "open_panna": "348", "jodi": "56", "close_panna": "169" },
-        "Sat": { "open_panna": "569", "jodi": "06", "close_panna": "349" }
+        "Mon": {
+          "open_panna": "668",
+          "jodi": "05",
+          "close_panna": "357"
+        },
+        "Tue": {
+          "open_panna": "337",
+          "jodi": "36",
+          "close_panna": "178"
+        },
+        "Wed": {
+          "open_panna": "569",
+          "jodi": "06",
+          "close_panna": "367"
+        },
+        "Thu": {
+          "open_panna": "799",
+          "jodi": "56",
+          "close_panna": "240"
+        },
+        "Fri": {
+          "open_panna": "348",
+          "jodi": "56",
+          "close_panna": "169"
+        },
+        "Sat": {
+          "open_panna": "569",
+          "jodi": "06",
+          "close_panna": "349"
+        }
       },
       {
         "date_range": "29/05/2023 to 03/06/2023",
-        "Mon": { "open_panna": "122", "jodi": "54", "close_panna": "257" },
-        "Tue": { "open_panna": "889", "jodi": "58", "close_panna": "459" },
-        "Wed": { "open_panna": "345", "jodi": "20", "close_panna": "479" },
-        "Thu": { "open_panna": "459", "jodi": "86", "close_panna": "240" },
-        "Fri": { "open_panna": "157", "jodi": "37", "close_panna": "179" },
-        "Sat": { "open_panna": "346", "jodi": "32", "close_panna": "138" }
+        "Mon": {
+          "open_panna": "122",
+          "jodi": "54",
+          "close_panna": "257"
+        },
+        "Tue": {
+          "open_panna": "889",
+          "jodi": "58",
+          "close_panna": "459"
+        },
+        "Wed": {
+          "open_panna": "345",
+          "jodi": "20",
+          "close_panna": "479"
+        },
+        "Thu": {
+          "open_panna": "459",
+          "jodi": "86",
+          "close_panna": "240"
+        },
+        "Fri": {
+          "open_panna": "157",
+          "jodi": "37",
+          "close_panna": "179"
+        },
+        "Sat": {
+          "open_panna": "346",
+          "jodi": "32",
+          "close_panna": "138"
+        }
       },
       {
         "date_range": "05/06/2023 to 10/06/2023",
-        "Mon": { "open_panna": "447", "jodi": "58", "close_panna": "800" },
-        "Tue": { "open_panna": "267", "jodi": "58", "close_panna": "224" },
-        "Wed": { "open_panna": "499", "jodi": "20", "close_panna": "460" },
-        "Thu": { "open_panna": "336", "jodi": "24", "close_panna": "248" },
-        "Fri": { "open_panna": "569", "jodi": "00", "close_panna": "479" },
-        "Sat": { "open_panna": "237", "jodi": "29", "close_panna": "270" }
+        "Mon": {
+          "open_panna": "447",
+          "jodi": "58",
+          "close_panna": "800"
+        },
+        "Tue": {
+          "open_panna": "267",
+          "jodi": "58",
+          "close_panna": "224"
+        },
+        "Wed": {
+          "open_panna": "499",
+          "jodi": "20",
+          "close_panna": "460"
+        },
+        "Thu": {
+          "open_panna": "336",
+          "jodi": "24",
+          "close_panna": "248"
+        },
+        "Fri": {
+          "open_panna": "569",
+          "jodi": "00",
+          "close_panna": "479"
+        },
+        "Sat": {
+          "open_panna": "237",
+          "jodi": "29",
+          "close_panna": "270"
+        }
       },
       {
         "date_range": "12/06/2023 to 17/06/2023",
-        "Mon": { "open_panna": "469", "jodi": "92", "close_panna": "688" },
-        "Tue": { "open_panna": "368", "jodi": "78", "close_panna": "459" },
-        "Wed": { "open_panna": "778", "jodi": "24", "close_panna": "158" },
-        "Thu": { "open_panna": "137", "jodi": "19", "close_panna": "360" },
-        "Fri": { "open_panna": "677", "jodi": "01", "close_panna": "588" },
-        "Sat": { "open_panna": "690", "jodi": "52", "close_panna": "200" }
+        "Mon": {
+          "open_panna": "469",
+          "jodi": "92",
+          "close_panna": "688"
+        },
+        "Tue": {
+          "open_panna": "368",
+          "jodi": "78",
+          "close_panna": "459"
+        },
+        "Wed": {
+          "open_panna": "778",
+          "jodi": "24",
+          "close_panna": "158"
+        },
+        "Thu": {
+          "open_panna": "137",
+          "jodi": "19",
+          "close_panna": "360"
+        },
+        "Fri": {
+          "open_panna": "677",
+          "jodi": "01",
+          "close_panna": "588"
+        },
+        "Sat": {
+          "open_panna": "690",
+          "jodi": "52",
+          "close_panna": "200"
+        }
       },
       {
         "date_range": "19/06/2023 to 24/06/2023",
-        "Mon": { "open_panna": "445", "jodi": "30", "close_panna": "550" },
-        "Tue": { "open_panna": "179", "jodi": "76", "close_panna": "448" },
-        "Wed": { "open_panna": "280", "jodi": "03", "close_panna": "346" },
-        "Thu": { "open_panna": "259", "jodi": "61", "close_panna": "588" },
-        "Fri": { "open_panna": "346", "jodi": "33", "close_panna": "139" },
-        "Sat": { "open_panna": "359", "jodi": "73", "close_panna": "490" }
+        "Mon": {
+          "open_panna": "445",
+          "jodi": "30",
+          "close_panna": "550"
+        },
+        "Tue": {
+          "open_panna": "179",
+          "jodi": "76",
+          "close_panna": "448"
+        },
+        "Wed": {
+          "open_panna": "280",
+          "jodi": "03",
+          "close_panna": "346"
+        },
+        "Thu": {
+          "open_panna": "259",
+          "jodi": "61",
+          "close_panna": "588"
+        },
+        "Fri": {
+          "open_panna": "346",
+          "jodi": "33",
+          "close_panna": "139"
+        },
+        "Sat": {
+          "open_panna": "359",
+          "jodi": "73",
+          "close_panna": "490"
+        }
       },
       {
         "date_range": "26/06/2023 to 01/07/2023",
-        "Mon": { "open_panna": "122", "jodi": "55", "close_panna": "889" },
-        "Tue": { "open_panna": "167", "jodi": "41", "close_panna": "344" },
-        "Wed": { "open_panna": "457", "jodi": "24", "close_panna": "167" },
-        "Thu": { "open_panna": "345", "jodi": "20", "close_panna": "190" },
-        "Fri": { "open_panna": "237", "jodi": "26", "close_panna": "240" },
-        "Sat": { "open_panna": "580", "jodi": "31", "close_panna": "128" }
+        "Mon": {
+          "open_panna": "122",
+          "jodi": "55",
+          "close_panna": "889"
+        },
+        "Tue": {
+          "open_panna": "167",
+          "jodi": "41",
+          "close_panna": "344"
+        },
+        "Wed": {
+          "open_panna": "457",
+          "jodi": "24",
+          "close_panna": "167"
+        },
+        "Thu": {
+          "open_panna": "345",
+          "jodi": "20",
+          "close_panna": "190"
+        },
+        "Fri": {
+          "open_panna": "237",
+          "jodi": "26",
+          "close_panna": "240"
+        },
+        "Sat": {
+          "open_panna": "580",
+          "jodi": "31",
+          "close_panna": "128"
+        }
       },
       {
         "date_range": "03/07/2023 to 08/07/2023",
-        "Mon": { "open_panna": "690", "jodi": "53", "close_panna": "256" },
-        "Tue": { "open_panna": "167", "jodi": "43", "close_panna": "689" },
-        "Wed": { "open_panna": "168", "jodi": "56", "close_panna": "123" },
-        "Thu": { "open_panna": "168", "jodi": "51", "close_panna": "146" },
-        "Fri": { "open_panna": "568", "jodi": "95", "close_panna": "230" },
-        "Sat": { "open_panna": "567", "jodi": "80", "close_panna": "460" }
+        "Mon": {
+          "open_panna": "690",
+          "jodi": "53",
+          "close_panna": "256"
+        },
+        "Tue": {
+          "open_panna": "167",
+          "jodi": "43",
+          "close_panna": "689"
+        },
+        "Wed": {
+          "open_panna": "168",
+          "jodi": "56",
+          "close_panna": "123"
+        },
+        "Thu": {
+          "open_panna": "168",
+          "jodi": "51",
+          "close_panna": "146"
+        },
+        "Fri": {
+          "open_panna": "568",
+          "jodi": "95",
+          "close_panna": "230"
+        },
+        "Sat": {
+          "open_panna": "567",
+          "jodi": "80",
+          "close_panna": "460"
+        }
       },
       {
         "date_range": "10/07/2023 to 15/07/2023",
-        "Mon": { "open_panna": "570", "jodi": "27", "close_panna": "278" },
-        "Tue": { "open_panna": "159", "jodi": "53", "close_panna": "157" },
-        "Wed": { "open_panna": "178", "jodi": "61", "close_panna": "470" },
-        "Thu": { "open_panna": "568", "jodi": "94", "close_panna": "167" },
-        "Fri": { "open_panna": "150", "jodi": "61", "close_panna": "236" },
-        "Sat": { "open_panna": "130", "jodi": "46", "close_panna": "899" }
+        "Mon": {
+          "open_panna": "570",
+          "jodi": "27",
+          "close_panna": "278"
+        },
+        "Tue": {
+          "open_panna": "159",
+          "jodi": "53",
+          "close_panna": "157"
+        },
+        "Wed": {
+          "open_panna": "178",
+          "jodi": "61",
+          "close_panna": "470"
+        },
+        "Thu": {
+          "open_panna": "568",
+          "jodi": "94",
+          "close_panna": "167"
+        },
+        "Fri": {
+          "open_panna": "150",
+          "jodi": "61",
+          "close_panna": "236"
+        },
+        "Sat": {
+          "open_panna": "130",
+          "jodi": "46",
+          "close_panna": "899"
+        }
       },
       {
         "date_range": "17/07/2023 to 22/07/2023",
-        "Mon": { "open_panna": "469", "jodi": "92", "close_panna": "480" },
-        "Tue": { "open_panna": "700", "jodi": "74", "close_panna": "266" },
-        "Wed": { "open_panna": "399", "jodi": "14", "close_panna": "590" },
-        "Thu": { "open_panna": "149", "jodi": "43", "close_panna": "490" },
-        "Fri": { "open_panna": "689", "jodi": "31", "close_panna": "137" },
-        "Sat": { "open_panna": "488", "jodi": "03", "close_panna": "139" }
+        "Mon": {
+          "open_panna": "469",
+          "jodi": "92",
+          "close_panna": "480"
+        },
+        "Tue": {
+          "open_panna": "700",
+          "jodi": "74",
+          "close_panna": "266"
+        },
+        "Wed": {
+          "open_panna": "399",
+          "jodi": "14",
+          "close_panna": "590"
+        },
+        "Thu": {
+          "open_panna": "149",
+          "jodi": "43",
+          "close_panna": "490"
+        },
+        "Fri": {
+          "open_panna": "689",
+          "jodi": "31",
+          "close_panna": "137"
+        },
+        "Sat": {
+          "open_panna": "488",
+          "jodi": "03",
+          "close_panna": "139"
+        }
       },
       {
         "date_range": "24/07/2023 to 29/07/2023",
-        "Mon": { "open_panna": "600", "jodi": "63", "close_panna": "779" },
-        "Tue": { "open_panna": "379", "jodi": "92", "close_panna": "237" },
-        "Wed": { "open_panna": "224", "jodi": "83", "close_panna": "157" },
-        "Thu": { "open_panna": "700", "jodi": "74", "close_panna": "239" },
-        "Fri": { "open_panna": "459", "jodi": "86", "close_panna": "880" },
-        "Sat": { "open_panna": "789", "jodi": "40", "close_panna": "668" }
+        "Mon": {
+          "open_panna": "600",
+          "jodi": "63",
+          "close_panna": "779"
+        },
+        "Tue": {
+          "open_panna": "379",
+          "jodi": "92",
+          "close_panna": "237"
+        },
+        "Wed": {
+          "open_panna": "224",
+          "jodi": "83",
+          "close_panna": "157"
+        },
+        "Thu": {
+          "open_panna": "700",
+          "jodi": "74",
+          "close_panna": "239"
+        },
+        "Fri": {
+          "open_panna": "459",
+          "jodi": "86",
+          "close_panna": "880"
+        },
+        "Sat": {
+          "open_panna": "789",
+          "jodi": "40",
+          "close_panna": "668"
+        }
       },
       {
         "date_range": "31/07/2023 to 05/08/2023",
-        "Mon": { "open_panna": "770", "jodi": "41", "close_panna": "588" },
-        "Tue": { "open_panna": "300", "jodi": "39", "close_panna": "388" },
-        "Wed": { "open_panna": "157", "jodi": "35", "close_panna": "456" },
-        "Thu": { "open_panna": "599", "jodi": "30", "close_panna": "136" },
-        "Fri": { "open_panna": "489", "jodi": "18", "close_panna": "288" },
-        "Sat": { "open_panna": "778", "jodi": "26", "close_panna": "259" }
+        "Mon": {
+          "open_panna": "770",
+          "jodi": "41",
+          "close_panna": "588"
+        },
+        "Tue": {
+          "open_panna": "300",
+          "jodi": "39",
+          "close_panna": "388"
+        },
+        "Wed": {
+          "open_panna": "157",
+          "jodi": "35",
+          "close_panna": "456"
+        },
+        "Thu": {
+          "open_panna": "599",
+          "jodi": "30",
+          "close_panna": "136"
+        },
+        "Fri": {
+          "open_panna": "489",
+          "jodi": "18",
+          "close_panna": "288"
+        },
+        "Sat": {
+          "open_panna": "778",
+          "jodi": "26",
+          "close_panna": "259"
+        }
       },
       {
         "date_range": "07/08/2023 to 12/08/2023",
-        "Mon": { "open_panna": "450", "jodi": "96", "close_panna": "178" },
-        "Tue": { "open_panna": "789", "jodi": "48", "close_panna": "170" },
-        "Wed": { "open_panna": "380", "jodi": "10", "close_panna": "488" },
-        "Thu": { "open_panna": "140", "jodi": "59", "close_panna": "450" },
-        "Fri": { "open_panna": "269", "jodi": "78", "close_panna": "990" },
-        "Sat": { "open_panna": "348", "jodi": "57", "close_panna": "359" }
+        "Mon": {
+          "open_panna": "450",
+          "jodi": "96",
+          "close_panna": "178"
+        },
+        "Tue": {
+          "open_panna": "789",
+          "jodi": "48",
+          "close_panna": "170"
+        },
+        "Wed": {
+          "open_panna": "380",
+          "jodi": "10",
+          "close_panna": "488"
+        },
+        "Thu": {
+          "open_panna": "140",
+          "jodi": "59",
+          "close_panna": "450"
+        },
+        "Fri": {
+          "open_panna": "269",
+          "jodi": "78",
+          "close_panna": "990"
+        },
+        "Sat": {
+          "open_panna": "348",
+          "jodi": "57",
+          "close_panna": "359"
+        }
       },
       {
         "date_range": "14/08/2023 to 19/08/2023",
-        "Mon": { "open_panna": "469", "jodi": "95", "close_panna": "339" },
-        "Tue": { "open_panna": "***", "jodi": "**", "close_panna": "***" },
-        "Wed": { "open_panna": "270", "jodi": "98", "close_panna": "125" },
-        "Thu": { "open_panna": "278", "jodi": "74", "close_panna": "248" },
-        "Fri": { "open_panna": "367", "jodi": "64", "close_panna": "248" },
-        "Sat": { "open_panna": "233", "jodi": "84", "close_panna": "167" }
+        "Mon": {
+          "open_panna": "469",
+          "jodi": "95",
+          "close_panna": "339"
+        },
+        "Tue": {
+          "open_panna": "***",
+          "jodi": "**",
+          "close_panna": "***"
+        },
+        "Wed": {
+          "open_panna": "270",
+          "jodi": "98",
+          "close_panna": "125"
+        },
+        "Thu": {
+          "open_panna": "278",
+          "jodi": "74",
+          "close_panna": "248"
+        },
+        "Fri": {
+          "open_panna": "367",
+          "jodi": "64",
+          "close_panna": "248"
+        },
+        "Sat": {
+          "open_panna": "233",
+          "jodi": "84",
+          "close_panna": "167"
+        }
       },
       {
         "date_range": "21/08/2023 to 26/08/2023",
-        "Mon": { "open_panna": "236", "jodi": "13", "close_panna": "229" },
-        "Tue": { "open_panna": "136", "jodi": "00", "close_panna": "578" },
-        "Wed": { "open_panna": "135", "jodi": "92", "close_panna": "679" },
-        "Thu": { "open_panna": "578", "jodi": "01", "close_panna": "344" },
-        "Fri": { "open_panna": "269", "jodi": "76", "close_panna": "367" },
-        "Sat": { "open_panna": "240", "jodi": "67", "close_panna": "269" }
+        "Mon": {
+          "open_panna": "236",
+          "jodi": "13",
+          "close_panna": "229"
+        },
+        "Tue": {
+          "open_panna": "136",
+          "jodi": "00",
+          "close_panna": "578"
+        },
+        "Wed": {
+          "open_panna": "135",
+          "jodi": "92",
+          "close_panna": "679"
+        },
+        "Thu": {
+          "open_panna": "578",
+          "jodi": "01",
+          "close_panna": "344"
+        },
+        "Fri": {
+          "open_panna": "269",
+          "jodi": "76",
+          "close_panna": "367"
+        },
+        "Sat": {
+          "open_panna": "240",
+          "jodi": "67",
+          "close_panna": "269"
+        }
       },
       {
         "date_range": "28/08/2023 to 02/09/2023",
-        "Mon": { "open_panna": "899", "jodi": "62", "close_panna": "336" },
-        "Wed": { "open_panna": "589", "jodi": "22", "close_panna": "480" },
-        "Thu": { "open_panna": "128", "jodi": "12", "close_panna": "246" },
-        "Fri": { "open_panna": "559", "jodi": "99", "close_panna": "289" },
-        "Sat": { "open_panna": "790", "jodi": "60", "close_panna": "578" }
+        "Mon": {
+          "open_panna": "899",
+          "jodi": "62",
+          "close_panna": "336"
+        },
+        "Wed": {
+          "open_panna": "589",
+          "jodi": "22",
+          "close_panna": "480"
+        },
+        "Thu": {
+          "open_panna": "128",
+          "jodi": "12",
+          "close_panna": "246"
+        },
+        "Fri": {
+          "open_panna": "559",
+          "jodi": "99",
+          "close_panna": "289"
+        },
+        "Sat": {
+          "open_panna": "790",
+          "jodi": "60",
+          "close_panna": "578"
+        }
       },
       {
         "date_range": "04/09/2023 to 09/09/2023",
-        "Mon": { "open_panna": "290", "jodi": "18", "close_panna": "459" },
-        "Tue": { "open_panna": "345", "jodi": "29", "close_panna": "559" },
-        "Wed": { "open_panna": "336", "jodi": "25", "close_panna": "889" },
-        "Thu": { "open_panna": "380", "jodi": "19", "close_panna": "234" },
-        "Fri": { "open_panna": "246", "jodi": "18", "close_panna": "468" },
-        "Sat": { "open_panna": "780", "jodi": "51", "close_panna": "236" }
+        "Mon": {
+          "open_panna": "290",
+          "jodi": "18",
+          "close_panna": "459"
+        },
+        "Tue": {
+          "open_panna": "345",
+          "jodi": "29",
+          "close_panna": "559"
+        },
+        "Wed": {
+          "open_panna": "336",
+          "jodi": "25",
+          "close_panna": "889"
+        },
+        "Thu": {
+          "open_panna": "380",
+          "jodi": "19",
+          "close_panna": "234"
+        },
+        "Fri": {
+          "open_panna": "246",
+          "jodi": "18",
+          "close_panna": "468"
+        },
+        "Sat": {
+          "open_panna": "780",
+          "jodi": "51",
+          "close_panna": "236"
+        }
       },
       {
         "date_range": "11/09/2023 to 16/09/2023",
-        "Mon": { "open_panna": "568", "jodi": "95", "close_panna": "357" },
-        "Tue": { "open_panna": "188", "jodi": "77", "close_panna": "890" },
-        "Wed": { "open_panna": "600", "jodi": "69", "close_panna": "568" },
-        "Thu": { "open_panna": "346", "jodi": "37", "close_panna": "700" },
-        "Fri": { "open_panna": "567", "jodi": "81", "close_panna": "560" },
-        "Sat": { "open_panna": "290", "jodi": "12", "close_panna": "237" }
+        "Mon": {
+          "open_panna": "568",
+          "jodi": "95",
+          "close_panna": "357"
+        },
+        "Tue": {
+          "open_panna": "188",
+          "jodi": "77",
+          "close_panna": "890"
+        },
+        "Wed": {
+          "open_panna": "600",
+          "jodi": "69",
+          "close_panna": "568"
+        },
+        "Thu": {
+          "open_panna": "346",
+          "jodi": "37",
+          "close_panna": "700"
+        },
+        "Fri": {
+          "open_panna": "567",
+          "jodi": "81",
+          "close_panna": "560"
+        },
+        "Sat": {
+          "open_panna": "290",
+          "jodi": "12",
+          "close_panna": "237"
+        }
       },
       {
         "date_range": "18/09/2023 to 23/09/2023",
-        "Mon": { "open_panna": "230", "jodi": "57", "close_panna": "467" },
-        "Tue": { "open_panna": "580", "jodi": "32", "close_panna": "480" },
-        "Wed": { "open_panna": "136", "jodi": "03", "close_panna": "247" },
-        "Thu": { "open_panna": "368", "jodi": "70", "close_panna": "136" },
-        "Fri": { "open_panna": "144", "jodi": "95", "close_panna": "159" },
-        "Sat": { "open_panna": "249", "jodi": "54", "close_panna": "789" }
+        "Mon": {
+          "open_panna": "230",
+          "jodi": "57",
+          "close_panna": "467"
+        },
+        "Tue": {
+          "open_panna": "580",
+          "jodi": "32",
+          "close_panna": "480"
+        },
+        "Wed": {
+          "open_panna": "136",
+          "jodi": "03",
+          "close_panna": "247"
+        },
+        "Thu": {
+          "open_panna": "368",
+          "jodi": "70",
+          "close_panna": "136"
+        },
+        "Fri": {
+          "open_panna": "144",
+          "jodi": "95",
+          "close_panna": "159"
+        },
+        "Sat": {
+          "open_panna": "249",
+          "jodi": "54",
+          "close_panna": "789"
+        }
       },
       {
         "date_range": "25/09/2023 to 30/09/2023",
-        "Mon": { "open_panna": "368", "jodi": "78", "close_panna": "990" },
-        "Tue": { "open_panna": "367", "jodi": "60", "close_panna": "235" },
-        "Wed": { "open_panna": "399", "jodi": "10", "close_panna": "145" },
-        "Thu": { "open_panna": "677", "jodi": "06", "close_panna": "790" },
-        "Fri": { "open_panna": "570", "jodi": "28", "close_panna": "288" },
-        "Sat": { "open_panna": "148", "jodi": "39", "close_panna": "450" }
+        "Mon": {
+          "open_panna": "368",
+          "jodi": "78",
+          "close_panna": "990"
+        },
+        "Tue": {
+          "open_panna": "367",
+          "jodi": "60",
+          "close_panna": "235"
+        },
+        "Wed": {
+          "open_panna": "399",
+          "jodi": "10",
+          "close_panna": "145"
+        },
+        "Thu": {
+          "open_panna": "677",
+          "jodi": "06",
+          "close_panna": "790"
+        },
+        "Fri": {
+          "open_panna": "570",
+          "jodi": "28",
+          "close_panna": "288"
+        },
+        "Sat": {
+          "open_panna": "148",
+          "jodi": "39",
+          "close_panna": "450"
+        }
       },
       {
         "date_range": "02/10/2023 to 07/10/2023",
-        "Mon": { "open_panna": "114", "jodi": "68", "close_panna": "170" },
-        "Tue": { "open_panna": "355", "jodi": "33", "close_panna": "256" },
-        "Wed": { "open_panna": "460", "jodi": "00", "close_panna": "226" },
-        "Thu": { "open_panna": "266", "jodi": "45", "close_panna": "168" },
-        "Fri": { "open_panna": "690", "jodi": "52", "close_panna": "255" },
-        "Sat": { "open_panna": "479", "jodi": "01", "close_panna": "236" }
+        "Mon": {
+          "open_panna": "114",
+          "jodi": "68",
+          "close_panna": "170"
+        },
+        "Tue": {
+          "open_panna": "355",
+          "jodi": "33",
+          "close_panna": "256"
+        },
+        "Wed": {
+          "open_panna": "460",
+          "jodi": "00",
+          "close_panna": "226"
+        },
+        "Thu": {
+          "open_panna": "266",
+          "jodi": "45",
+          "close_panna": "168"
+        },
+        "Fri": {
+          "open_panna": "690",
+          "jodi": "52",
+          "close_panna": "255"
+        },
+        "Sat": {
+          "open_panna": "479",
+          "jodi": "01",
+          "close_panna": "236"
+        }
       },
       {
         "date_range": "09/10/2023 to 14/10/2023",
-        "Mon": { "open_panna": "368", "jodi": "75", "close_panna": "456" },
-        "Tue": { "open_panna": "490", "jodi": "37", "close_panna": "133" },
-        "Wed": { "open_panna": "178", "jodi": "67", "close_panna": "467" },
-        "Thu": { "open_panna": "156", "jodi": "26", "close_panna": "367" },
-        "Fri": { "open_panna": "180", "jodi": "90", "close_panna": "136" },
-        "Sat": { "open_panna": "459", "jodi": "89", "close_panna": "180" }
+        "Mon": {
+          "open_panna": "368",
+          "jodi": "75",
+          "close_panna": "456"
+        },
+        "Tue": {
+          "open_panna": "490",
+          "jodi": "37",
+          "close_panna": "133"
+        },
+        "Wed": {
+          "open_panna": "178",
+          "jodi": "67",
+          "close_panna": "467"
+        },
+        "Thu": {
+          "open_panna": "156",
+          "jodi": "26",
+          "close_panna": "367"
+        },
+        "Fri": {
+          "open_panna": "180",
+          "jodi": "90",
+          "close_panna": "136"
+        },
+        "Sat": {
+          "open_panna": "459",
+          "jodi": "89",
+          "close_panna": "180"
+        }
       },
       {
         "date_range": "16/10/2023 to 21/10/2023",
-        "Mon": { "open_panna": "268", "jodi": "67", "close_panna": "179" },
-        "Tue": { "open_panna": "667", "jodi": "90", "close_panna": "145" },
-        "Wed": { "open_panna": "199", "jodi": "95", "close_panna": "357" },
-        "Thu": { "open_panna": "680", "jodi": "44", "close_panna": "158" },
-        "Fri": { "open_panna": "229", "jodi": "35", "close_panna": "447" },
-        "Sat": { "open_panna": "566", "jodi": "72", "close_panna": "237" }
+        "Mon": {
+          "open_panna": "268",
+          "jodi": "67",
+          "close_panna": "179"
+        },
+        "Tue": {
+          "open_panna": "667",
+          "jodi": "90",
+          "close_panna": "145"
+        },
+        "Wed": {
+          "open_panna": "199",
+          "jodi": "95",
+          "close_panna": "357"
+        },
+        "Thu": {
+          "open_panna": "680",
+          "jodi": "44",
+          "close_panna": "158"
+        },
+        "Fri": {
+          "open_panna": "229",
+          "jodi": "35",
+          "close_panna": "447"
+        },
+        "Sat": {
+          "open_panna": "566",
+          "jodi": "72",
+          "close_panna": "237"
+        }
       },
       {
         "date_range": "23/10/2023 to 28/10/2023",
-        "Mon": { "open_panna": "880", "jodi": "67", "close_panna": "566" },
-        "Tue": { "open_panna": "223", "jodi": "75", "close_panna": "799" },
-        "Wed": { "open_panna": "689", "jodi": "39", "close_panna": "379" },
-        "Thu": { "open_panna": "160", "jodi": "73", "close_panna": "779" },
-        "Fri": { "open_panna": "368", "jodi": "77", "close_panna": "278" },
-        "Sat": { "open_panna": "135", "jodi": "93", "close_panna": "580" }
+        "Mon": {
+          "open_panna": "880",
+          "jodi": "67",
+          "close_panna": "566"
+        },
+        "Tue": {
+          "open_panna": "223",
+          "jodi": "75",
+          "close_panna": "799"
+        },
+        "Wed": {
+          "open_panna": "689",
+          "jodi": "39",
+          "close_panna": "379"
+        },
+        "Thu": {
+          "open_panna": "160",
+          "jodi": "73",
+          "close_panna": "779"
+        },
+        "Fri": {
+          "open_panna": "368",
+          "jodi": "77",
+          "close_panna": "278"
+        },
+        "Sat": {
+          "open_panna": "135",
+          "jodi": "93",
+          "close_panna": "580"
+        }
       },
       {
         "date_range": "30/10/2023 to 04/11/2023",
-        "Mon": { "open_panna": "479", "jodi": "04", "close_panna": "158" },
-        "Tue": { "open_panna": "468", "jodi": "83", "close_panna": "337" },
-        "Wed": { "open_panna": "668", "jodi": "08", "close_panna": "288" },
-        "Thu": { "open_panna": "113", "jodi": "51", "close_panna": "470" },
-        "Fri": { "open_panna": "167", "jodi": "41", "close_panna": "380" },
-        "Sat": { "open_panna": "460", "jodi": "00", "close_panna": "370" }
+        "Mon": {
+          "open_panna": "479",
+          "jodi": "04",
+          "close_panna": "158"
+        },
+        "Tue": {
+          "open_panna": "468",
+          "jodi": "83",
+          "close_panna": "337"
+        },
+        "Wed": {
+          "open_panna": "668",
+          "jodi": "08",
+          "close_panna": "288"
+        },
+        "Thu": {
+          "open_panna": "113",
+          "jodi": "51",
+          "close_panna": "470"
+        },
+        "Fri": {
+          "open_panna": "167",
+          "jodi": "41",
+          "close_panna": "380"
+        },
+        "Sat": {
+          "open_panna": "460",
+          "jodi": "00",
+          "close_panna": "370"
+        }
       },
       {
         "date_range": "06/11/2023 to 11/11/2023",
-        "Mon": { "open_panna": "269", "jodi": "74", "close_panna": "167" },
-        "Tue": { "open_panna": "156", "jodi": "28", "close_panna": "189" },
-        "Wed": { "open_panna": "148", "jodi": "31", "close_panna": "489" },
-        "Thu": { "open_panna": "257", "jodi": "40", "close_panna": "479" },
-        "Fri": { "open_panna": "***", "jodi": "**", "close_panna": "***" },
-        "Sat": { "open_panna": "***", "jodi": "**", "close_panna": "***" }
+        "Mon": {
+          "open_panna": "269",
+          "jodi": "74",
+          "close_panna": "167"
+        },
+        "Tue": {
+          "open_panna": "156",
+          "jodi": "28",
+          "close_panna": "189"
+        },
+        "Wed": {
+          "open_panna": "148",
+          "jodi": "31",
+          "close_panna": "489"
+        },
+        "Thu": {
+          "open_panna": "257",
+          "jodi": "40",
+          "close_panna": "479"
+        },
+        "Fri": {
+          "open_panna": "***",
+          "jodi": "**",
+          "close_panna": "***"
+        },
+        "Sat": {
+          "open_panna": "***",
+          "jodi": "**",
+          "close_panna": "***"
+        }
       },
       {
         "date_range": "13/11/2023 to 18/11/2023",
-        "Mon": { "open_panna": "***", "jodi": "**", "close_panna": "***" },
-        "Tue": { "open_panna": "***", "jodi": "**", "close_panna": "***" },
-        "Wed": { "open_panna": "***", "jodi": "**", "close_panna": "***" },
-        "Thu": { "open_panna": "***", "jodi": "**", "close_panna": "***" },
-        "Fri": { "open_panna": "***", "jodi": "**", "close_panna": "***" },
-        "Sat": { "open_panna": "***", "jodi": "**", "close_panna": "***" }
+        "Mon": {
+          "open_panna": "***",
+          "jodi": "**",
+          "close_panna": "***"
+        },
+        "Tue": {
+          "open_panna": "***",
+          "jodi": "**",
+          "close_panna": "***"
+        },
+        "Wed": {
+          "open_panna": "***",
+          "jodi": "**",
+          "close_panna": "***"
+        },
+        "Thu": {
+          "open_panna": "***",
+          "jodi": "**",
+          "close_panna": "***"
+        },
+        "Fri": {
+          "open_panna": "***",
+          "jodi": "**",
+          "close_panna": "***"
+        },
+        "Sat": {
+          "open_panna": "***",
+          "jodi": "**",
+          "close_panna": "***"
+        }
       },
       {
         "date_range": "20/11/2023 to 25/11/2023",
-        "Mon": { "open_panna": "159", "jodi": "53", "close_panna": "148" },
-        "Tue": { "open_panna": "348", "jodi": "53", "close_panna": "120" },
-        "Wed": { "open_panna": "357", "jodi": "51", "close_panna": "137" },
-        "Thu": { "open_panna": "289", "jodi": "98", "close_panna": "378" },
-        "Fri": { "open_panna": "257", "jodi": "48", "close_panna": "260" },
-        "Sat": { "open_panna": "179", "jodi": "70", "close_panna": "389" }
+        "Mon": {
+          "open_panna": "159",
+          "jodi": "53",
+          "close_panna": "148"
+        },
+        "Tue": {
+          "open_panna": "348",
+          "jodi": "53",
+          "close_panna": "120"
+        },
+        "Wed": {
+          "open_panna": "357",
+          "jodi": "51",
+          "close_panna": "137"
+        },
+        "Thu": {
+          "open_panna": "289",
+          "jodi": "98",
+          "close_panna": "378"
+        },
+        "Fri": {
+          "open_panna": "257",
+          "jodi": "48",
+          "close_panna": "260"
+        },
+        "Sat": {
+          "open_panna": "179",
+          "jodi": "70",
+          "close_panna": "389"
+        }
       },
       {
         "date_range": "27/11/2023 to 02/12/2023",
-        "Mon": { "open_panna": "269", "jodi": "76", "close_panna": "268" },
-        "Tue": { "open_panna": "146", "jodi": "13", "close_panna": "390" },
-        "Wed": { "open_panna": "230", "jodi": "56", "close_panna": "169" },
-        "Thu": { "open_panna": "235", "jodi": "06", "close_panna": "790" },
-        "Fri": { "open_panna": "580", "jodi": "33", "close_panna": "139" },
-        "Sat": { "open_panna": "120", "jodi": "31", "close_panna": "489" }
+        "Mon": {
+          "open_panna": "269",
+          "jodi": "76",
+          "close_panna": "268"
+        },
+        "Tue": {
+          "open_panna": "146",
+          "jodi": "13",
+          "close_panna": "390"
+        },
+        "Wed": {
+          "open_panna": "230",
+          "jodi": "56",
+          "close_panna": "169"
+        },
+        "Thu": {
+          "open_panna": "235",
+          "jodi": "06",
+          "close_panna": "790"
+        },
+        "Fri": {
+          "open_panna": "580",
+          "jodi": "33",
+          "close_panna": "139"
+        },
+        "Sat": {
+          "open_panna": "120",
+          "jodi": "31",
+          "close_panna": "489"
+        }
       },
       {
         "date_range": "04/12/2023 to 09/12/2023",
-        "Mon": { "open_panna": "469", "jodi": "90", "close_panna": "460" },
-        "Tue": { "open_panna": "270", "jodi": "97", "close_panna": "340" },
-        "Wed": { "open_panna": "256", "jodi": "35", "close_panna": "447" },
-        "Thu": { "open_panna": "690", "jodi": "56", "close_panna": "178" },
-        "Fri": { "open_panna": "588", "jodi": "13", "close_panna": "445" },
-        "Sat": { "open_panna": "124", "jodi": "72", "close_panna": "129" }
+        "Mon": {
+          "open_panna": "469",
+          "jodi": "90",
+          "close_panna": "460"
+        },
+        "Tue": {
+          "open_panna": "270",
+          "jodi": "97",
+          "close_panna": "340"
+        },
+        "Wed": {
+          "open_panna": "256",
+          "jodi": "35",
+          "close_panna": "447"
+        },
+        "Thu": {
+          "open_panna": "690",
+          "jodi": "56",
+          "close_panna": "178"
+        },
+        "Fri": {
+          "open_panna": "588",
+          "jodi": "13",
+          "close_panna": "445"
+        },
+        "Sat": {
+          "open_panna": "124",
+          "jodi": "72",
+          "close_panna": "129"
+        }
       },
       {
         "date_range": "11/12/2023 to 16/12/2023",
-        "Mon": { "open_panna": "259", "jodi": "69", "close_panna": "234" },
-        "Tue": { "open_panna": "257", "jodi": "46", "close_panna": "600" },
-        "Wed": { "open_panna": "450", "jodi": "96", "close_panna": "349" },
-        "Thu": { "open_panna": "120", "jodi": "38", "close_panna": "224" },
-        "Fri": { "open_panna": "112", "jodi": "48", "close_panna": "134" },
-        "Sat": { "open_panna": "150", "jodi": "65", "close_panna": "230" }
+        "Mon": {
+          "open_panna": "259",
+          "jodi": "69",
+          "close_panna": "234"
+        },
+        "Tue": {
+          "open_panna": "257",
+          "jodi": "46",
+          "close_panna": "600"
+        },
+        "Wed": {
+          "open_panna": "450",
+          "jodi": "96",
+          "close_panna": "349"
+        },
+        "Thu": {
+          "open_panna": "120",
+          "jodi": "38",
+          "close_panna": "224"
+        },
+        "Fri": {
+          "open_panna": "112",
+          "jodi": "48",
+          "close_panna": "134"
+        },
+        "Sat": {
+          "open_panna": "150",
+          "jodi": "65",
+          "close_panna": "230"
+        }
       },
       {
         "date_range": "18/12/2023 to 23/12/2023",
-        "Mon": { "open_panna": "138", "jodi": "22", "close_panna": "237" },
-        "Tue": { "open_panna": "249", "jodi": "59", "close_panna": "379" },
-        "Wed": { "open_panna": "589", "jodi": "29", "close_panna": "478" },
-        "Thu": { "open_panna": "248", "jodi": "44", "close_panna": "356" },
-        "Fri": { "open_panna": "470", "jodi": "14", "close_panna": "680" },
-        "Sat": { "open_panna": "678", "jodi": "16", "close_panna": "349" }
+        "Mon": {
+          "open_panna": "138",
+          "jodi": "22",
+          "close_panna": "237"
+        },
+        "Tue": {
+          "open_panna": "249",
+          "jodi": "59",
+          "close_panna": "379"
+        },
+        "Wed": {
+          "open_panna": "589",
+          "jodi": "29",
+          "close_panna": "478"
+        },
+        "Thu": {
+          "open_panna": "248",
+          "jodi": "44",
+          "close_panna": "356"
+        },
+        "Fri": {
+          "open_panna": "470",
+          "jodi": "14",
+          "close_panna": "680"
+        },
+        "Sat": {
+          "open_panna": "678",
+          "jodi": "16",
+          "close_panna": "349"
+        }
       },
       {
         "date_range": "25/12/2023 to 30/12/2023",
-        "Mon": { "open_panna": "158", "jodi": "48", "close_panna": "288" },
-        "Tue": { "open_panna": "677", "jodi": "02", "close_panna": "589" },
-        "Wed": { "open_panna": "589", "jodi": "24", "close_panna": "455" },
-        "Thu": { "open_panna": "267", "jodi": "53", "close_panna": "580" },
-        "Fri": { "open_panna": "690", "jodi": "54", "close_panna": "347" },
-        "Sat": { "open_panna": "135", "jodi": "97", "close_panna": "250" }
+        "Mon": {
+          "open_panna": "158",
+          "jodi": "48",
+          "close_panna": "288"
+        },
+        "Tue": {
+          "open_panna": "677",
+          "jodi": "02",
+          "close_panna": "589"
+        },
+        "Wed": {
+          "open_panna": "589",
+          "jodi": "24",
+          "close_panna": "455"
+        },
+        "Thu": {
+          "open_panna": "267",
+          "jodi": "53",
+          "close_panna": "580"
+        },
+        "Fri": {
+          "open_panna": "690",
+          "jodi": "54",
+          "close_panna": "347"
+        },
+        "Sat": {
+          "open_panna": "135",
+          "jodi": "97",
+          "close_panna": "250"
+        }
       },
       {
         "date_range": "01/01/2024 to 06/01/2024",
-        "Mon": { "open_panna": "446", "jodi": "41", "close_panna": "560" },
-        "Tue": { "open_panna": "169", "jodi": "60", "close_panna": "280" },
-        "Wed": { "open_panna": "135", "jodi": "95", "close_panna": "267" },
-        "Thu": { "open_panna": "240", "jodi": "63", "close_panna": "355" },
-        "Fri": { "open_panna": "480", "jodi": "25", "close_panna": "690" },
-        "Sat": { "open_panna": "245", "jodi": "15", "close_panna": "140" }
+        "Mon": {
+          "open_panna": "446",
+          "jodi": "41",
+          "close_panna": "560"
+        },
+        "Tue": {
+          "open_panna": "169",
+          "jodi": "60",
+          "close_panna": "280"
+        },
+        "Wed": {
+          "open_panna": "135",
+          "jodi": "95",
+          "close_panna": "267"
+        },
+        "Thu": {
+          "open_panna": "240",
+          "jodi": "63",
+          "close_panna": "355"
+        },
+        "Fri": {
+          "open_panna": "480",
+          "jodi": "25",
+          "close_panna": "690"
+        },
+        "Sat": {
+          "open_panna": "245",
+          "jodi": "15",
+          "close_panna": "140"
+        }
       },
       {
         "date_range": "08/01/2024 to 13/01/2024",
-        "Mon": { "open_panna": "467", "jodi": "73", "close_panna": "238" },
-        "Tue": { "open_panna": "112", "jodi": "42", "close_panna": "138" },
-        "Wed": { "open_panna": "200", "jodi": "29", "close_panna": "577" },
-        "Thu": { "open_panna": "790", "jodi": "63", "close_panna": "355" },
-        "Fri": { "open_panna": "256", "jodi": "38", "close_panna": "134" },
-        "Sat": { "open_panna": "290", "jodi": "12", "close_panna": "345" }
+        "Mon": {
+          "open_panna": "467",
+          "jodi": "73",
+          "close_panna": "238"
+        },
+        "Tue": {
+          "open_panna": "112",
+          "jodi": "42",
+          "close_panna": "138"
+        },
+        "Wed": {
+          "open_panna": "200",
+          "jodi": "29",
+          "close_panna": "577"
+        },
+        "Thu": {
+          "open_panna": "790",
+          "jodi": "63",
+          "close_panna": "355"
+        },
+        "Fri": {
+          "open_panna": "256",
+          "jodi": "38",
+          "close_panna": "134"
+        },
+        "Sat": {
+          "open_panna": "290",
+          "jodi": "12",
+          "close_panna": "345"
+        }
       },
       {
         "date_range": "15/01/2024 to 20/01/2024",
-        "Mon": { "open_panna": "449", "jodi": "75", "close_panna": "339" },
-        "Tue": { "open_panna": "890", "jodi": "75", "close_panna": "140" },
-        "Wed": { "open_panna": "345", "jodi": "27", "close_panna": "890" },
-        "Thu": { "open_panna": "280", "jodi": "05", "close_panna": "690" },
-        "Fri": { "open_panna": "589", "jodi": "25", "close_panna": "339" },
-        "Sat": { "open_panna": "490", "jodi": "37", "close_panna": "160" }
+        "Mon": {
+          "open_panna": "449",
+          "jodi": "75",
+          "close_panna": "339"
+        },
+        "Tue": {
+          "open_panna": "890",
+          "jodi": "75",
+          "close_panna": "140"
+        },
+        "Wed": {
+          "open_panna": "345",
+          "jodi": "27",
+          "close_panna": "890"
+        },
+        "Thu": {
+          "open_panna": "280",
+          "jodi": "05",
+          "close_panna": "690"
+        },
+        "Fri": {
+          "open_panna": "589",
+          "jodi": "25",
+          "close_panna": "339"
+        },
+        "Sat": {
+          "open_panna": "490",
+          "jodi": "37",
+          "close_panna": "160"
+        }
       },
       {
         "date_range": "22/01/2024 to 27/01/2024",
-        "Mon": { "open_panna": "689", "jodi": "30", "close_panna": "226" },
-        "Tue": { "open_panna": "300", "jodi": "37", "close_panna": "269" },
-        "Wed": { "open_panna": "230", "jodi": "51", "close_panna": "380" },
-        "Thu": { "open_panna": "137", "jodi": "14", "close_panna": "680" },
-        "Fri": { "open_panna": "***", "jodi": "**", "close_panna": "***" },
-        "Sat": { "open_panna": "237", "jodi": "20", "close_panna": "145" }
+        "Mon": {
+          "open_panna": "689",
+          "jodi": "30",
+          "close_panna": "226"
+        },
+        "Tue": {
+          "open_panna": "300",
+          "jodi": "37",
+          "close_panna": "269"
+        },
+        "Wed": {
+          "open_panna": "230",
+          "jodi": "51",
+          "close_panna": "380"
+        },
+        "Thu": {
+          "open_panna": "137",
+          "jodi": "14",
+          "close_panna": "680"
+        },
+        "Fri": {
+          "open_panna": "***",
+          "jodi": "**",
+          "close_panna": "***"
+        },
+        "Sat": {
+          "open_panna": "237",
+          "jodi": "20",
+          "close_panna": "145"
+        }
       },
       {
         "date_range": "29/01/2024 to 03/02/2024",
-        "Mon": { "open_panna": "568", "jodi": "91", "close_panna": "489" },
-        "Tue": { "open_panna": "124", "jodi": "72", "close_panna": "589" },
-        "Wed": { "open_panna": "139", "jodi": "30", "close_panna": "668" },
-        "Thu": { "open_panna": "167", "jodi": "45", "close_panna": "690" },
-        "Fri": { "open_panna": "334", "jodi": "04", "close_panna": "149" },
-        "Sat": { "open_panna": "455", "jodi": "48", "close_panna": "378" }
+        "Mon": {
+          "open_panna": "568",
+          "jodi": "91",
+          "close_panna": "489"
+        },
+        "Tue": {
+          "open_panna": "124",
+          "jodi": "72",
+          "close_panna": "589"
+        },
+        "Wed": {
+          "open_panna": "139",
+          "jodi": "30",
+          "close_panna": "668"
+        },
+        "Thu": {
+          "open_panna": "167",
+          "jodi": "45",
+          "close_panna": "690"
+        },
+        "Fri": {
+          "open_panna": "334",
+          "jodi": "04",
+          "close_panna": "149"
+        },
+        "Sat": {
+          "open_panna": "455",
+          "jodi": "48",
+          "close_panna": "378"
+        }
       },
       {
         "date_range": "05/02/2024 to 10/02/2024",
-        "Mon": { "open_panna": "137", "jodi": "16", "close_panna": "268" },
-        "Tue": { "open_panna": "556", "jodi": "62", "close_panna": "688" },
-        "Wed": { "open_panna": "770", "jodi": "45", "close_panna": "159" },
-        "Thu": { "open_panna": "368", "jodi": "72", "close_panna": "499" },
-        "Fri": { "open_panna": "189", "jodi": "87", "close_panna": "700" },
-        "Sat": { "open_panna": "379", "jodi": "98", "close_panna": "170" }
+        "Mon": {
+          "open_panna": "137",
+          "jodi": "16",
+          "close_panna": "268"
+        },
+        "Tue": {
+          "open_panna": "556",
+          "jodi": "62",
+          "close_panna": "688"
+        },
+        "Wed": {
+          "open_panna": "770",
+          "jodi": "45",
+          "close_panna": "159"
+        },
+        "Thu": {
+          "open_panna": "368",
+          "jodi": "72",
+          "close_panna": "499"
+        },
+        "Fri": {
+          "open_panna": "189",
+          "jodi": "87",
+          "close_panna": "700"
+        },
+        "Sat": {
+          "open_panna": "379",
+          "jodi": "98",
+          "close_panna": "170"
+        }
       },
       {
         "date_range": "12/02/2024 to 17/02/2024",
-        "Mon": { "open_panna": "578", "jodi": "01", "close_panna": "344" },
-        "Tue": { "open_panna": "126", "jodi": "97", "close_panna": "124" },
-        "Wed": { "open_panna": "578", "jodi": "06", "close_panna": "150" },
-        "Thu": { "open_panna": "226", "jodi": "07", "close_panna": "278" },
-        "Fri": { "open_panna": "447", "jodi": "52", "close_panna": "237" },
-        "Sat": { "open_panna": "390", "jodi": "25", "close_panna": "168" }
+        "Mon": {
+          "open_panna": "578",
+          "jodi": "01",
+          "close_panna": "344"
+        },
+        "Tue": {
+          "open_panna": "126",
+          "jodi": "97",
+          "close_panna": "124"
+        },
+        "Wed": {
+          "open_panna": "578",
+          "jodi": "06",
+          "close_panna": "150"
+        },
+        "Thu": {
+          "open_panna": "226",
+          "jodi": "07",
+          "close_panna": "278"
+        },
+        "Fri": {
+          "open_panna": "447",
+          "jodi": "52",
+          "close_panna": "237"
+        },
+        "Sat": {
+          "open_panna": "390",
+          "jodi": "25",
+          "close_panna": "168"
+        }
       },
       {
         "date_range": "19/02/2024 to 24/02/2024",
-        "Mon": { "open_panna": "446", "jodi": "44", "close_panna": "266" },
-        "Tue": { "open_panna": "479", "jodi": "04", "close_panna": "257" },
-        "Wed": { "open_panna": "159", "jodi": "52", "close_panna": "129" },
-        "Thu": { "open_panna": "112", "jodi": "40", "close_panna": "460" },
-        "Fri": { "open_panna": "569", "jodi": "03", "close_panna": "779" },
-        "Sat": { "open_panna": "558", "jodi": "89", "close_panna": "478" }
+        "Mon": {
+          "open_panna": "446",
+          "jodi": "44",
+          "close_panna": "266"
+        },
+        "Tue": {
+          "open_panna": "479",
+          "jodi": "04",
+          "close_panna": "257"
+        },
+        "Wed": {
+          "open_panna": "159",
+          "jodi": "52",
+          "close_panna": "129"
+        },
+        "Thu": {
+          "open_panna": "112",
+          "jodi": "40",
+          "close_panna": "460"
+        },
+        "Fri": {
+          "open_panna": "569",
+          "jodi": "03",
+          "close_panna": "779"
+        },
+        "Sat": {
+          "open_panna": "558",
+          "jodi": "89",
+          "close_panna": "478"
+        }
       },
       {
         "date_range": "26/02/2024 to 02/03/2024",
-        "Mon": { "open_panna": "779", "jodi": "32", "close_panna": "390" },
-        "Tue": { "open_panna": "668", "jodi": "08", "close_panna": "378" },
-        "Wed": { "open_panna": "348", "jodi": "58", "close_panna": "170" },
-        "Thu": { "open_panna": "168", "jodi": "56", "close_panna": "457" },
-        "Fri": { "open_panna": "699", "jodi": "47", "close_panna": "340" },
-        "Sat": { "open_panna": "450", "jodi": "96", "close_panna": "178" }
+        "Mon": {
+          "open_panna": "779",
+          "jodi": "32",
+          "close_panna": "390"
+        },
+        "Tue": {
+          "open_panna": "668",
+          "jodi": "08",
+          "close_panna": "378"
+        },
+        "Wed": {
+          "open_panna": "348",
+          "jodi": "58",
+          "close_panna": "170"
+        },
+        "Thu": {
+          "open_panna": "168",
+          "jodi": "56",
+          "close_panna": "457"
+        },
+        "Fri": {
+          "open_panna": "699",
+          "jodi": "47",
+          "close_panna": "340"
+        },
+        "Sat": {
+          "open_panna": "450",
+          "jodi": "96",
+          "close_panna": "178"
+        }
       },
       {
         "date_range": "04/03/2024 to 09/03/2024",
-        "Mon": { "open_panna": "234", "jodi": "93", "close_panna": "670" },
-        "Tue": { "open_panna": "467", "jodi": "76", "close_panna": "358" },
-        "Wed": { "open_panna": "120", "jodi": "37", "close_panna": "467" },
-        "Thu": { "open_panna": "124", "jodi": "72", "close_panna": "110" },
-        "Fri": { "open_panna": "226", "jodi": "03", "close_panna": "689" },
-        "Sat": { "open_panna": "479", "jodi": "03", "close_panna": "256" }
+        "Mon": {
+          "open_panna": "234",
+          "jodi": "93",
+          "close_panna": "670"
+        },
+        "Tue": {
+          "open_panna": "467",
+          "jodi": "76",
+          "close_panna": "358"
+        },
+        "Wed": {
+          "open_panna": "120",
+          "jodi": "37",
+          "close_panna": "467"
+        },
+        "Thu": {
+          "open_panna": "124",
+          "jodi": "72",
+          "close_panna": "110"
+        },
+        "Fri": {
+          "open_panna": "226",
+          "jodi": "03",
+          "close_panna": "689"
+        },
+        "Sat": {
+          "open_panna": "479",
+          "jodi": "03",
+          "close_panna": "256"
+        }
       },
       {
         "date_range": "11/03/2024 to 16/03/2024",
-        "Mon": { "open_panna": "599", "jodi": "39", "close_panna": "360" },
-        "Wed": { "open_panna": "580", "jodi": "39", "close_panna": "225" },
-        "Thu": { "open_panna": "145", "jodi": "08", "close_panna": "288" },
-        "Fri": { "open_panna": "589", "jodi": "28", "close_panna": "189" },
-        "Sat": { "open_panna": "289", "jodi": "96", "close_panna": "457" }
+        "Mon": {
+          "open_panna": "599",
+          "jodi": "39",
+          "close_panna": "360"
+        },
+        "Wed": {
+          "open_panna": "580",
+          "jodi": "39",
+          "close_panna": "225"
+        },
+        "Thu": {
+          "open_panna": "145",
+          "jodi": "08",
+          "close_panna": "288"
+        },
+        "Fri": {
+          "open_panna": "589",
+          "jodi": "28",
+          "close_panna": "189"
+        },
+        "Sat": {
+          "open_panna": "289",
+          "jodi": "96",
+          "close_panna": "457"
+        }
       },
       {
         "date_range": "18/03/2024 to 23/03/2024",
-        "Mon": { "open_panna": "267", "jodi": "59", "close_panna": "568" },
-        "Tue": { "open_panna": "790", "jodi": "60", "close_panna": "370" },
-        "Wed": { "open_panna": "237", "jodi": "27", "close_panna": "359" },
-        "Thu": { "open_panna": "580", "jodi": "33", "close_panna": "256" },
-        "Fri": { "open_panna": "123", "jodi": "66", "close_panna": "790" },
-        "Sat": { "open_panna": "446", "jodi": "40", "close_panna": "235" }
+        "Mon": {
+          "open_panna": "267",
+          "jodi": "59",
+          "close_panna": "568"
+        },
+        "Tue": {
+          "open_panna": "790",
+          "jodi": "60",
+          "close_panna": "370"
+        },
+        "Wed": {
+          "open_panna": "237",
+          "jodi": "27",
+          "close_panna": "359"
+        },
+        "Thu": {
+          "open_panna": "580",
+          "jodi": "33",
+          "close_panna": "256"
+        },
+        "Fri": {
+          "open_panna": "123",
+          "jodi": "66",
+          "close_panna": "790"
+        },
+        "Sat": {
+          "open_panna": "446",
+          "jodi": "40",
+          "close_panna": "235"
+        }
       },
       {
         "date_range": "25/03/2024 to 30/03/2024",
-        "Mon": { "open_panna": "***", "jodi": "**", "close_panna": "***" },
-        "Tue": { "open_panna": "577", "jodi": "97", "close_panna": "250" },
-        "Wed": { "open_panna": "348", "jodi": "55", "close_panna": "249" },
-        "Thu": { "open_panna": "256", "jodi": "39", "close_panna": "234" },
-        "Fri": { "open_panna": "677", "jodi": "08", "close_panna": "990" },
-        "Sat": { "open_panna": "478", "jodi": "91", "close_panna": "560" }
+        "Mon": {
+          "open_panna": "***",
+          "jodi": "**",
+          "close_panna": "***"
+        },
+        "Tue": {
+          "open_panna": "577",
+          "jodi": "97",
+          "close_panna": "250"
+        },
+        "Wed": {
+          "open_panna": "348",
+          "jodi": "55",
+          "close_panna": "249"
+        },
+        "Thu": {
+          "open_panna": "256",
+          "jodi": "39",
+          "close_panna": "234"
+        },
+        "Fri": {
+          "open_panna": "677",
+          "jodi": "08",
+          "close_panna": "990"
+        },
+        "Sat": {
+          "open_panna": "478",
+          "jodi": "91",
+          "close_panna": "560"
+        }
       },
       {
         "date_range": "01/04/2024 to 06/04/2024",
-        "Mon": { "open_panna": "900", "jodi": "96", "close_panna": "448" },
-        "Tue": { "open_panna": "880", "jodi": "64", "close_panna": "338" },
-        "Wed": { "open_panna": "667", "jodi": "97", "close_panna": "359" },
-        "Thu": { "open_panna": "455", "jodi": "41", "close_panna": "470" },
-        "Fri": { "open_panna": "680", "jodi": "49", "close_panna": "289" },
-        "Sat": { "open_panna": "148", "jodi": "36", "close_panna": "123" }
+        "Mon": {
+          "open_panna": "900",
+          "jodi": "96",
+          "close_panna": "448"
+        },
+        "Tue": {
+          "open_panna": "880",
+          "jodi": "64",
+          "close_panna": "338"
+        },
+        "Wed": {
+          "open_panna": "667",
+          "jodi": "97",
+          "close_panna": "359"
+        },
+        "Thu": {
+          "open_panna": "455",
+          "jodi": "41",
+          "close_panna": "470"
+        },
+        "Fri": {
+          "open_panna": "680",
+          "jodi": "49",
+          "close_panna": "289"
+        },
+        "Sat": {
+          "open_panna": "148",
+          "jodi": "36",
+          "close_panna": "123"
+        }
       },
       {
         "date_range": "08/04/2024 to 13/04/2024",
-        "Mon": { "open_panna": "347", "jodi": "44", "close_panna": "338" },
-        "Tue": { "open_panna": "355", "jodi": "32", "close_panna": "555" },
-        "Wed": { "open_panna": "233", "jodi": "88", "close_panna": "558" },
-        "Thu": { "open_panna": "170", "jodi": "83", "close_panna": "229" },
-        "Fri": { "open_panna": "600", "jodi": "64", "close_panna": "447" },
-        "Sat": { "open_panna": "367", "jodi": "67", "close_panna": "223" }
+        "Mon": {
+          "open_panna": "347",
+          "jodi": "44",
+          "close_panna": "338"
+        },
+        "Tue": {
+          "open_panna": "355",
+          "jodi": "32",
+          "close_panna": "555"
+        },
+        "Wed": {
+          "open_panna": "233",
+          "jodi": "88",
+          "close_panna": "558"
+        },
+        "Thu": {
+          "open_panna": "170",
+          "jodi": "83",
+          "close_panna": "229"
+        },
+        "Fri": {
+          "open_panna": "600",
+          "jodi": "64",
+          "close_panna": "447"
+        },
+        "Sat": {
+          "open_panna": "367",
+          "jodi": "67",
+          "close_panna": "223"
+        }
       },
       {
         "date_range": "15/04/2024 to 20/04/2024",
-        "Mon": { "open_panna": "112", "jodi": "46", "close_panna": "790" },
-        "Tue": { "open_panna": "270", "jodi": "97", "close_panna": "160" },
-        "Wed": { "open_panna": "357", "jodi": "52", "close_panna": "679" },
-        "Thu": { "open_panna": "990", "jodi": "81", "close_panna": "137" },
-        "Fri": { "open_panna": "370", "jodi": "02", "close_panna": "345" },
-        "Sat": { "open_panna": "235", "jodi": "04", "close_panna": "680" }
+        "Mon": {
+          "open_panna": "112",
+          "jodi": "46",
+          "close_panna": "790"
+        },
+        "Tue": {
+          "open_panna": "270",
+          "jodi": "97",
+          "close_panna": "160"
+        },
+        "Wed": {
+          "open_panna": "357",
+          "jodi": "52",
+          "close_panna": "679"
+        },
+        "Thu": {
+          "open_panna": "990",
+          "jodi": "81",
+          "close_panna": "137"
+        },
+        "Fri": {
+          "open_panna": "370",
+          "jodi": "02",
+          "close_panna": "345"
+        },
+        "Sat": {
+          "open_panna": "235",
+          "jodi": "04",
+          "close_panna": "680"
+        }
       },
       {
         "date_range": "22/04/2024 to 27/04/2024",
-        "Mon": { "open_panna": "569", "jodi": "03", "close_panna": "256" },
-        "Tue": { "open_panna": "248", "jodi": "49", "close_panna": "577" },
-        "Wed": { "open_panna": "257", "jodi": "42", "close_panna": "147" },
-        "Thu": { "open_panna": "160", "jodi": "78", "close_panna": "468" },
-        "Fri": { "open_panna": "358", "jodi": "67", "close_panna": "890" },
-        "Sat": { "open_panna": "569", "jodi": "02", "close_panna": "390" }
+        "Mon": {
+          "open_panna": "569",
+          "jodi": "03",
+          "close_panna": "256"
+        },
+        "Tue": {
+          "open_panna": "248",
+          "jodi": "49",
+          "close_panna": "577"
+        },
+        "Wed": {
+          "open_panna": "257",
+          "jodi": "42",
+          "close_panna": "147"
+        },
+        "Thu": {
+          "open_panna": "160",
+          "jodi": "78",
+          "close_panna": "468"
+        },
+        "Fri": {
+          "open_panna": "358",
+          "jodi": "67",
+          "close_panna": "890"
+        },
+        "Sat": {
+          "open_panna": "569",
+          "jodi": "02",
+          "close_panna": "390"
+        }
       },
       {
         "date_range": "29/04/2024 to 04/05/2024",
-        "Mon": { "open_panna": "779", "jodi": "33", "close_panna": "580" },
-        "Tue": { "open_panna": "568", "jodi": "92", "close_panna": "138" },
-        "Wed": { "open_panna": "230", "jodi": "58", "close_panna": "189" },
-        "Thu": { "open_panna": "349", "jodi": "60", "close_panna": "136" },
-        "Fri": { "open_panna": "145", "jodi": "08", "close_panna": "468" },
-        "Sat": { "open_panna": "390", "jodi": "24", "close_panna": "257" }
+        "Mon": {
+          "open_panna": "779",
+          "jodi": "33",
+          "close_panna": "580"
+        },
+        "Tue": {
+          "open_panna": "568",
+          "jodi": "92",
+          "close_panna": "138"
+        },
+        "Wed": {
+          "open_panna": "230",
+          "jodi": "58",
+          "close_panna": "189"
+        },
+        "Thu": {
+          "open_panna": "349",
+          "jodi": "60",
+          "close_panna": "136"
+        },
+        "Fri": {
+          "open_panna": "145",
+          "jodi": "08",
+          "close_panna": "468"
+        },
+        "Sat": {
+          "open_panna": "390",
+          "jodi": "24",
+          "close_panna": "257"
+        }
+      },
+      {
+        "date_range": "04/05/2026 to 09/05/2026",
+        "Mon": {
+          "open_panna": "180",
+          "jodi": "95",
+          "close_panna": "339"
+        },
+        "Tue": {
+          "open_panna": "137",
+          "jodi": "13",
+          "close_panna": "148"
+        },
+        "Wed": {
+          "open_panna": "568",
+          "jodi": "95",
+          "close_panna": "168"
+        },
+        "Thu": {
+          "open_panna": "690",
+          "jodi": "51",
+          "close_panna": "236"
+        },
+        "Fri": {
+          "open_panna": "355",
+          "jodi": "34",
+          "close_panna": "167"
+        },
+        "Sat": {
+          "open_panna": "137",
+          "jodi": "18",
+          "close_panna": "288"
+        }
+      },
+      {
+        "date_range": "11/05/2026 to 16/05/2026",
+        "Mon": {
+          "open_panna": "588",
+          "jodi": "14",
+          "close_panna": "770"
+        },
+        "Tue": {
+          "open_panna": "579",
+          "jodi": "14",
+          "close_panna": "590"
+        },
+        "Wed": {
+          "open_panna": "670",
+          "jodi": "32",
+          "close_panna": "679"
+        },
+        "Thu": {
+          "open_panna": "679",
+          "jodi": "20",
+          "close_panna": "479"
+        },
+        "Fri": {
+          "open_panna": "234",
+          "jodi": "93",
+          "close_panna": "256"
+        },
+        "Sat": {
+          "open_panna": "368",
+          "jodi": "78",
+          "close_panna": "279"
+        }
+      },
+      {
+        "date_range": "18/05/2026 to 23/05/2026",
+        "Mon": {
+          "open_panna": "567",
+          "jodi": "89",
+          "close_panna": "126"
+        },
+        "Tue": {
+          "open_panna": "330",
+          "jodi": "64",
+          "close_panna": "347"
+        },
+        "Wed": {
+          "open_panna": "689",
+          "jodi": "31",
+          "close_panna": "678"
+        },
+        "Thu": {
+          "open_panna": "156",
+          "jodi": "24",
+          "close_panna": "130"
+        },
+        "Fri": {
+          "open_panna": "127",
+          "jodi": "00",
+          "close_panna": "190"
+        },
+        "Sat": {
+          "open_panna": "678",
+          "jodi": "13",
+          "close_panna": "238"
+        }
+      },
+      {
+        "date_range": "25/05/2026 to 30/05/2026",
+        "Mon": {
+          "open_panna": "557",
+          "jodi": "72",
+          "close_panna": "255"
+        },
+        "Tue": {
+          "open_panna": "890",
+          "jodi": "71",
+          "close_panna": "128"
+        },
+        "Wed": {
+          "open_panna": "679",
+          "jodi": "21",
+          "close_panna": "290"
+        },
+        "Thu": {
+          "open_panna": "124",
+          "jodi": "75",
+          "close_panna": "357"
+        },
+        "Fri": {
+          "open_panna": "136",
+          "jodi": "01",
+          "close_panna": "399"
+        },
+        "Sat": {
+          "open_panna": "144",
+          "jodi": "95",
+          "close_panna": "780"
+        }
+      },
+      {
+        "date_range": "01/06/2026 to 06/06/2026",
+        "Mon": {
+          "open_panna": "226",
+          "jodi": "02",
+          "close_panna": "156"
+        },
+        "Tue": {
+          "open_panna": "599",
+          "jodi": "38",
+          "close_panna": "189"
+        },
+        "Wed": {
+          "open_panna": "139",
+          "jodi": "31",
+          "close_panna": "380"
+        },
+        "Thu": {
+          "open_panna": "800",
+          "jodi": "83",
+          "close_panna": "247"
+        },
+        "Fri": {
+          "open_panna": "459",
+          "jodi": "80",
+          "close_panna": "479"
+        },
+        "Sat": {
+          "open_panna": "456",
+          "jodi": "50",
+          "close_panna": "280"
+        }
+      },
+      {
+        "date_range": "08/06/2026 to 13/06/2026",
+        "Mon": {
+          "open_panna": "450",
+          "jodi": "92",
+          "close_panna": "679"
+        },
+        "Tue": {
+          "open_panna": "240",
+          "jodi": "62",
+          "close_panna": "390"
+        },
+        "Wed": {
+          "open_panna": "225",
+          "jodi": "95",
+          "close_panna": "456"
+        },
+        "Thu": {
+          "open_panna": "788",
+          "jodi": "30",
+          "close_panna": "677"
+        },
+        "Fri": {
+          "open_panna": "250",
+          "jodi": "78",
+          "close_panna": "468"
+        },
+        "Sat": {
+          "open_panna": "579",
+          "jodi": "17",
+          "close_panna": "449"
+        }
+      },
+      {
+        "date_range": "15/06/2026 to 20/06/2026",
+        "Mon": {
+          "open_panna": "159",
+          "jodi": "50",
+          "close_panna": "280"
+        },
+        "Tue": {
+          "open_panna": "345",
+          "jodi": "23",
+          "close_panna": "689"
+        },
+        "Wed": {
+          "open_panna": "127",
+          "jodi": "02",
+          "close_panna": "778"
+        },
+        "Thu": {
+          "open_panna": "380",
+          "jodi": "13",
+          "close_panna": "157"
+        },
+        "Fri": {
+          "open_panna": "559",
+          "jodi": "96",
+          "close_panna": "169"
+        },
+        "Sat": {
+          "open_panna": "469",
+          "jodi": "92",
+          "close_panna": "156"
+        }
+      },
+      {
+        "date_range": "22/06/2026 to 27/06/2026",
+        "Mon": {
+          "open_panna": "479",
+          "jodi": "08",
+          "close_panna": "260"
+        },
+        "Tue": {
+          "open_panna": "120",
+          "jodi": "34",
+          "close_panna": "167"
+        },
+        "Wed": {
+          "open_panna": "456",
+          "jodi": "57",
+          "close_panna": "890"
+        },
+        "Thu": {
+          "open_panna": "228",
+          "jodi": "21",
+          "close_panna": "588"
+        },
+        "Fri": {
+          "open_panna": "225",
+          "jodi": "93",
+          "close_panna": "120"
+        },
+        "Sat": {
+          "open_panna": "135",
+          "jodi": "97",
+          "close_panna": "566"
+        }
+      },
+      {
+        "date_range": "29/06/2026 to 04/07/2026",
+        "Mon": {
+          "open_panna": "256",
+          "jodi": "34",
+          "close_panna": "248"
+        },
+        "Tue": {
+          "open_panna": "226",
+          "jodi": "06",
+          "close_panna": "880"
+        },
+        "Wed": {
+          "open_panna": "289",
+          "jodi": "94",
+          "close_panna": "446"
+        },
+        "Thu": {
+          "open_panna": "389",
+          "jodi": "06",
+          "close_panna": "448"
+        },
+        "Fri": {
+          "open_panna": "145",
+          "jodi": "03",
+          "close_panna": "120"
+        },
+        "Sat": {
+          "open_panna": "347",
+          "jodi": "49",
+          "close_panna": "117"
+        }
+      },
+      {
+        "date_range": "06/07/2026 to 11/07/2026",
+        "Mon": {
+          "open_panna": "478",
+          "jodi": "95",
+          "close_panna": "249"
+        },
+        "Tue": {
+          "open_panna": "566",
+          "jodi": "75",
+          "close_panna": "357"
+        },
+        "Wed": {
+          "open_panna": "277",
+          "jodi": "69",
+          "close_panna": "478"
+        },
+        "Thu": {
+          "open_panna": "579",
+          "jodi": "14",
+          "close_panna": "347"
+        },
+        "Fri": {
+          "open_panna": "790",
+          "jodi": "64",
+          "close_panna": "239"
+        },
+        "Sat": {
+          "open_panna": "289",
+          "jodi": "96",
+          "close_panna": "790"
+        }
+      },
+      {
+        "date_range": "13/07/2026 to 18/07/2026",
+        "Mon": {
+          "open_panna": "124",
+          "jodi": "74",
+          "close_panna": "220"
+        },
+        "Tue": {
+          "open_panna": "677",
+          "jodi": "01",
+          "close_panna": "678"
+        },
+        "Wed": {
+          "open_panna": "470",
+          "jodi": "14",
+          "close_panna": "347"
+        },
+        "Thu": {
+          "open_panna": "680",
+          "jodi": "45",
+          "close_panna": "258"
+        },
+        "Fri": {
+          "open_panna": "468",
+          "jodi": "81",
+          "close_panna": "245"
+        },
+        "Sat": {
+          "open_panna": "150",
+          "jodi": "62",
+          "close_panna": "589"
+        }
+      },
+      {
+        "date_range": "20/07/2026 to 25/07/2026",
+        "Mon": {
+          "open_panna": "599",
+          "jodi": "31",
+          "close_panna": "579"
+        },
+        "Tue": {
+          "open_panna": "337",
+          "jodi": "31",
+          "close_panna": "290"
+        },
+        "Wed": {
+          "open_panna": "700",
+          "jodi": "78",
+          "close_panna": "260"
+        },
+        "Thu": {
+          "open_panna": "578",
+          "jodi": "00",
+          "close_panna": "226"
+        },
+        "Fri": {
+          "open_panna": "334",
+          "jodi": "04",
+          "close_panna": "130"
+        },
+        "Sat": {
+          "open_panna": "160",
+          "jodi": "74",
+          "close_panna": "239"
+        }
+      },
+      {
+        "date_range": "27/07/2026 to 01/08/2026",
+        "Mon": {
+          "open_panna": "200",
+          "jodi": "26",
+          "close_panna": "790"
+        },
+        "Tue": {
+          "open_panna": "589",
+          "jodi": "26",
+          "close_panna": "899"
+        },
+        "Wed": {
+          "open_panna": "338",
+          "jodi": "45",
+          "close_panna": "690"
+        },
+        "Thu": {
+          "open_panna": "147",
+          "jodi": "28",
+          "close_panna": "134"
+        },
+        "Fri": {
+          "open_panna": "138",
+          "jodi": "23",
+          "close_panna": "490"
+        },
+        "Sat": {
+          "open_panna": "256",
+          "jodi": "32",
+          "close_panna": "129"
+        }
+      },
+      {
+        "date_range": "03/08/2026 to 08/08/2026",
+        "Mon": {
+          "open_panna": "568",
+          "jodi": "99",
+          "close_panna": "577"
+        },
+        "Tue": {
+          "open_panna": "114",
+          "jodi": "65",
+          "close_panna": "780"
+        },
+        "Wed": {
+          "open_panna": "899",
+          "jodi": "66",
+          "close_panna": "790"
+        },
+        "Thu": {
+          "open_panna": "990",
+          "jodi": "89",
+          "close_panna": "135"
+        },
+        "Fri": {
+          "open_panna": "113",
+          "jodi": "59",
+          "close_panna": "126"
+        },
+        "Sat": {
+          "open_panna": "349",
+          "jodi": "67",
+          "close_panna": "188"
+        }
+      },
+      {
+        "date_range": "10/08/2026 to 15/08/2026",
+        "Mon": {
+          "open_panna": "138",
+          "jodi": "26",
+          "close_panna": "123"
+        },
+        "Tue": {
+          "open_panna": "459",
+          "jodi": "81",
+          "close_panna": "227"
+        },
+        "Wed": {
+          "open_panna": "346",
+          "jodi": "38",
+          "close_panna": "567"
+        },
+        "Thu": {
+          "open_panna": "670",
+          "jodi": "37",
+          "close_panna": "278"
+        },
+        "Fri": {
+          "open_panna": "688",
+          "jodi": "26",
+          "close_panna": "114"
+        },
+        "Sat": {
+          "open_panna": "***",
+          "jodi": "**",
+          "close_panna": "***"
+        }
+      },
+      {
+        "date_range": "17/08/2026 to 22/08/2026",
+        "Mon": {
+          "open_panna": "157",
+          "jodi": "33",
+          "close_panna": "689"
+        },
+        "Tue": {
+          "open_panna": "255",
+          "jodi": "20",
+          "close_panna": "578"
+        },
+        "Wed": {
+          "open_panna": "278",
+          "jodi": "73",
+          "close_panna": "247"
+        },
+        "Thu": {
+          "open_panna": "170",
+          "jodi": "88",
+          "close_panna": "369"
+        },
+        "Fri": {
+          "open_panna": "234",
+          "jodi": "99",
+          "close_panna": "135"
+        },
+        "Sat": {
+          "open_panna": "689",
+          "jodi": "31",
+          "close_panna": "128"
+        }
+      },
+      {
+        "date_range": "24/08/2026 to 29/08/2026",
+        "Mon": {
+          "open_panna": "668",
+          "jodi": "07",
+          "close_panna": "449"
+        },
+        "Tue": {
+          "open_panna": "470",
+          "jodi": "17",
+          "close_panna": "179"
+        },
+        "Wed": {
+          "open_panna": "247",
+          "jodi": "33",
+          "close_panna": "490"
+        },
+        "Thu": {
+          "open_panna": "568",
+          "jodi": "92",
+          "close_panna": "345"
+        },
+        "Fri": {
+          "open_panna": "247",
+          "jodi": "32",
+          "close_panna": "480"
+        },
+        "Sat": {
+          "open_panna": "168",
+          "jodi": "50",
+          "close_panna": "145"
+        }
+      },
+      {
+        "date_range": "31/08/2026 to 05/09/2026",
+        "Mon": {
+          "open_panna": "600",
+          "jodi": "69",
+          "close_panna": "360"
+        },
+        "Tue": {
+          "open_panna": "190",
+          "jodi": "05",
+          "close_panna": "249"
+        },
+        "Wed": {
+          "open_panna": "579",
+          "jodi": "18",
+          "close_panna": "567"
+        },
+        "Thu": {
+          "open_panna": "899",
+          "jodi": "65",
+          "close_panna": "690"
+        },
+        "Fri": {
+          "open_panna": "223",
+          "jodi": "70",
+          "close_panna": "244"
+        },
+        "Sat": {
+          "open_panna": "150",
+          "jodi": "63",
+          "close_panna": "148"
+        }
+      },
+      {
+        "date_range": "07/09/2026 to 12/09/2026",
+        "Mon": {
+          "open_panna": "450",
+          "jodi": "96",
+          "close_panna": "114"
+        },
+        "Tue": {
+          "open_panna": "359",
+          "jodi": "76",
+          "close_panna": "169"
+        },
+        "Wed": {
+          "open_panna": "589",
+          "jodi": "27",
+          "close_panna": "188"
+        },
+        "Thu": {
+          "open_panna": "579",
+          "jodi": "15",
+          "close_panna": "113"
+        },
+        "Fri": {
+          "open_panna": "780",
+          "jodi": "59",
+          "close_panna": "289"
+        },
+        "Sat": {
+          "open_panna": "560",
+          "jodi": "15",
+          "close_panna": "249"
+        }
+      },
+      {
+        "date_range": "14/09/2026 to 19/09/2026",
+        "Mon": {
+          "open_panna": "299",
+          "jodi": "00",
+          "close_panna": "136"
+        },
+        "Tue": {
+          "open_panna": "348",
+          "jodi": "58",
+          "close_panna": "800"
+        },
+        "Wed": {
+          "open_panna": "159",
+          "jodi": "50",
+          "close_panna": "235"
+        },
+        "Thu": {
+          "open_panna": "447",
+          "jodi": "58",
+          "close_panna": "233"
+        },
+        "Fri": {
+          "open_panna": "700",
+          "jodi": "73",
+          "close_panna": "238"
+        },
+        "Sat": {
+          "open_panna": "266",
+          "jodi": "43",
+          "close_panna": "247"
+        }
+      },
+      {
+        "date_range": "21/09/2026 to 26/09/2026",
+        "Mon": {
+          "open_panna": "679",
+          "jodi": "24",
+          "close_panna": "455"
+        },
+        "Tue": {
+          "open_panna": "169",
+          "jodi": "65",
+          "close_panna": "140"
+        },
+        "Wed": {
+          "open_panna": "489",
+          "jodi": "11",
+          "close_panna": "146"
+        },
+        "Thu": {
+          "open_panna": "235",
+          "jodi": "05",
+          "close_panna": "140"
+        },
+        "Fri": {
+          "open_panna": "156",
+          "jodi": "27",
+          "close_panna": "133"
+        },
+        "Sat": {
+          "open_panna": "290",
+          "jodi": "16",
+          "close_panna": "114"
+        }
+      },
+      {
+        "date_range": "28/09/2026 to 03/10/2026",
+        "Mon": {
+          "open_panna": "560",
+          "jodi": "17",
+          "close_panna": "700"
+        },
+        "Tue": {
+          "open_panna": "147",
+          "jodi": "22",
+          "close_panna": "679"
+        },
+        "Wed": {
+          "open_panna": "477",
+          "jodi": "88",
+          "close_panna": "369"
+        },
+        "Thu": {
+          "open_panna": "399",
+          "jodi": "18",
+          "close_panna": "567"
+        },
+        "Fri": {
+          "open_panna": "378",
+          "jodi": "84",
+          "close_panna": "347"
+        },
+        "Sat": {
+          "open_panna": "234",
+          "jodi": "98",
+          "close_panna": "350"
+        }
+      },
+      {
+        "date_range": "05/10/2026 to 10/10/2026",
+        "Mon": {
+          "open_panna": "678",
+          "jodi": "16",
+          "close_panna": "457"
+        },
+        "Tue": {
+          "open_panna": "167",
+          "jodi": "47",
+          "close_panna": "115"
+        },
+        "Wed": {
+          "open_panna": "456",
+          "jodi": "54",
+          "close_panna": "130"
+        },
+        "Thu": {
+          "open_panna": "258",
+          "jodi": "56",
+          "close_panna": "150"
+        },
+        "Fri": {
+          "open_panna": "490",
+          "jodi": "39",
+          "close_panna": "270"
+        },
+        "Sat": {
+          "open_panna": "359",
+          "jodi": "78",
+          "close_panna": "567"
+        }
       }
     ]
   }

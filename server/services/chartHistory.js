@@ -319,14 +319,14 @@ export async function getChartHistory(slug, weeks = 24) {
 
   const totalDays = storedDays + customDays;
 
-  // Drop LEADING weeks that have no real draw at all, so the chart starts at
-  // the first week containing data instead of a block of blank ** rows. The
-  // first week that carries any real day is kept whole (its pre-start days
-  // still render **), matching the original site. A market with no data at all
-  // keeps its weeks untouched (findIndex returns -1).
+  // Drop EVERY week that has no real draw at all - leading, trailing, or in
+  // the middle. This means gaps in history (e.g. a market with no data for a
+  // whole year) simply don't render, instead of showing a wall of ** rows.
+  // The first/last week that carries any real day is kept whole (its
+  // surrounding blank days still render **, matching the original site). A
+  // market with no data at all keeps its weeks untouched (filter drops none).
   const weekHasData = (w) => w.days.some((d) => !d.missing);
-  const firstDataIdx = weeksArr.findIndex(weekHasData);
-  const weeksOut = firstDataIdx > 0 ? weeksArr.slice(firstDataIdx) : weeksArr;
+  const weeksOut = weeksArr.filter(weekHasData);
 
   return {
     market: marketName(slugSlug, marketDoc, entries),
