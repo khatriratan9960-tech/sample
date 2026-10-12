@@ -62,7 +62,14 @@ export function revealCustom(market, openRow, closeRow, now) {
     visibleOpen = openRow ?? null;
     visibleClose = closeRow ?? null;
   }
-  // 'upcoming' -> neither half is visible yet.
+  // 'upcoming' -> today has not opened yet. If the halves passed in are
+  // TODAY's early declaration they must stay hidden (that is the whole
+  // point of the gate). But when the caller passes YESTERDAY's (or older)
+  // completed draw as the fallback, it is shown as the last result so the
+  // card never says Loading... while past history exists. Callers decide
+  // which case this is via `opts.allowLast` + date check, never here alone.
+  // 'upcoming' -> neither half is visible yet (unless opts.allowLast says
+  // these rows are a PAST draw shown as the last result).
 
   const built =
     visibleOpen || visibleClose ? buildDisplay(visibleOpen, visibleClose) : null;
