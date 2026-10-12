@@ -18,11 +18,21 @@
 
 /** Market slugs that get the yellow highlight. Edit this list to change them. */
 const FEATURED_SLUGS = new Set([
+  // Original pins.
   'milan-day',
   'kalyan',
   'main-bazar',
   'milan-night',
   'vidarb-day',
+  // Requested yellow strips: Mahalaxmi day, Kuber Day, SRIDEVI,
+  // Vidarbh. Day, Nagpur. Night (slugs verified against the live feed;
+  // 'vidarb-day' is kept alongside 'vidarbh-day' in case the provider
+  // renames the market back).
+  'mahalaxmi-day',
+  'kuber-day',
+  'sridevi',
+  'vidarbh-day',
+  'nagpur-night',
 ]);
 
 /** "10:00 PM" / "22:00" -> minutes since midnight; null when unparseable. */

@@ -118,6 +118,18 @@ check('input array not mutated', JSON.stringify(fixture) === snapshot);
 // 7. Featured (yellow) highlight still resolves by slug after sorting.
 check('featured market still highlighted', html.includes('bg-ylw') && !shown.every((s) => false));
 
+// 8. The five markets the operator asked to pin must ALL get the yellow strip.
+const pinnedFixture = [
+  { market: 'Mahalaxmi day', slug: 'mahalaxmi-day', openTime: '09:10 AM', closeTime: '11:00 AM', result: '229-33-120', jodiUrl: '#', panelUrl: '#' },
+  { market: 'Kuber Day', slug: 'kuber-day', openTime: '11:05 AM', closeTime: '12:05 PM', result: '135-90-235', jodiUrl: '#', panelUrl: '#' },
+  { market: 'SRIDEVI', slug: 'sridevi', openTime: '11:35 AM', closeTime: '12:35 PM', result: '145-04-356', jodiUrl: '#', panelUrl: '#' },
+  { market: 'Vidarbh. Day', slug: 'vidarbh-day', openTime: '01:30 PM', closeTime: '03:00 PM', result: '117-95-122', jodiUrl: '#', panelUrl: '#' },
+  { market: 'Nagpur. Night', slug: 'nagpur-night', openTime: '07:00 PM', closeTime: '08:45 PM', result: '110-22-336', jodiUrl: '#', panelUrl: '#' },
+];
+const pinnedHtml = renderToStaticMarkup(React.createElement(JodiPanels, { markets: pinnedFixture }));
+const pinnedHits = (pinnedHtml.match(/class="bg-ylw"/g) ?? []).length;
+check('all 5 requested markets get the yellow strip', pinnedHits === 5, `${pinnedHits}/5`);
+
 fs.rmSync(TMP, { force: true });
 
 console.log(`\n${total - fails}/${total} checks passed`);
