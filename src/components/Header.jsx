@@ -2,20 +2,19 @@
  * Brand header.
  *
  * Top of the page is the site's NAME banner (public/img/image.png,
- * "dpboosssss.com" with the crown logo) - shown whole (never cropped),
- * centered, capped in height so it does not push the results down.
+ * "DpBOSSSS.COM") - displayed FULL WIDTH inside its red-bordered box,
+ * edge to edge, exactly like the reference site's top strip. The image
+ * keeps its natural aspect ratio (width 100%, height auto).
  * Below it sits the original welcome bar:
  *   live-matka-laxmi.jpg  - 90x68  "Live Matka LAXMI_PICTURE"
  */
 export default function Header() {
   return (
     <>
-      {/* Site-name banner (dpboosssss.com) - the website's brand. */}
+      {/* Site-name banner (DpBOSSSS.COM) - the website's brand, full width. */}
       <div
         style={{
           marginBottom: '2px',
-          display: 'flex',
-          justifyContent: 'center',
           overflow: 'hidden',
           borderRadius: '10px',
           border: '2px solid #ff182c',
@@ -26,12 +25,11 @@ export default function Header() {
           src="/img/image.png"
           alt="dpboosssss.com - Satta Matka Fast Result"
           width="1024"
-          height="559"
+          height="332"
           style={{
             display: 'block',
-            width: 'auto',
-            maxWidth: '100%',
-            maxHeight: '240px',
+            width: '100%',
+            height: 'auto',
           }}
         />
       </div>
