@@ -1,14 +1,40 @@
 /**
  * Brand header.
  *
- * The old brand logo banner (m-icon) was removed - its artwork carried the
- * old brand name. The remaining image was extracted from the saved
- * original-homepage.html into public/img/ (no more inline base64 blobs):
+ * Top of the page is the site's NAME banner (public/img/image.png,
+ * "dpboosssss.com" with the crown logo) - shown whole (never cropped),
+ * centered, capped in height so it does not push the results down.
+ * Below it sits the original welcome bar:
  *   live-matka-laxmi.jpg  - 90x68  "Live Matka LAXMI_PICTURE"
  */
 export default function Header() {
   return (
     <>
+      {/* Site-name banner (dpboosssss.com) - the website's brand. */}
+      <div
+        style={{
+          marginBottom: '2px',
+          display: 'flex',
+          justifyContent: 'center',
+          overflow: 'hidden',
+          borderRadius: '10px',
+          border: '2px solid #ff182c',
+          boxShadow: '0 0 20px 0 rgb(0 0 0 / 40%)',
+        }}
+      >
+        <img
+          src="/img/image.png"
+          alt="dpboosssss.com - Satta Matka Fast Result"
+          width="1024"
+          height="559"
+          style={{
+            display: 'block',
+            width: 'auto',
+            maxWidth: '100%',
+            maxHeight: '240px',
+          }}
+        />
+      </div>
       <div
         style={{
           marginBottom: '1px',
