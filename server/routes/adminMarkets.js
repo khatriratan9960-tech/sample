@@ -116,6 +116,20 @@ router.post('/markets', async (req, res) => {
       createdBy: req.user._id,
     });
 
+    // CUSTOM MARKET ONLY: auto-fill its past Jodi + Panel chart history once,
+    // so the public charts work immediately without hand-entering old draws.
+    // Provider markets (ChartEntry) and push/webhook markets are never
+    // touched - the seeder itself re-checks that guard. A seeding failure
+    // must never fail market creation, so it is caught and reported only.
+    let historySeeded = 0;
+    try {
+      const { seedCustomMarketHistory } = await import('../services/customHistorySeed.js');
+      const seed = await seedCustomMarketHistory(market);
+      historySeeded = seed.seeded ?? 0;
+    } catch (e) {
+      console.error(`history seed skipped for ${market.slug}:`, e?.message ?? e);
+    }
+
     res.status(201).json({
       ok: true,
       data: {
@@ -128,6 +142,7 @@ router.post('/markets', async (req, res) => {
         closeTimeLabel: to12Hour(market.closeTime),
         active: market.active,
         offDays: market.offDays,
+        historySeeded,
       },
     });
   } catch (e) {
