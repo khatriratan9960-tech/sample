@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
  * A market YOU created and maintain yourself.
  *
  * These are merged into the public market list alongside the markets
- * returned by the paid provider, sorted by close time so they sit in the
+ * returned by the paid provider, sorted by open time so they sit in the
  * same flow as everything else (see server/services/mergeMarkets.js).
  *
  * The result is NOT stored here - results live in the Result model so a

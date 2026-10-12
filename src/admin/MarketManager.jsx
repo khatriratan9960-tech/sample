@@ -83,7 +83,7 @@ export default function MarketManager({ markets, currentUserId, isSuper, onChang
         <h2>Create a market</h2>
         <p className="adm-hint">
           It is published on the homepage immediately, sorted into place by its
-          close time so it sits naturally among the other markets.
+          open time so it sits naturally among the other markets.
         </p>
 
         {msg && <div className={msg.type === 'ok' ? 'adm-ok' : 'adm-error'}>{msg.text}</div>}

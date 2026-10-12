@@ -112,7 +112,20 @@ const normMarket = (r) => {
 // the server keeps running.
 const buildLive = () => buildLiveBoard(markets);
 
-const allMarkets = markets.map(normMarket);
+// Public list ordered by OPEN time (earliest first) - the same chronology the
+// homepage grid renders. Unparseable times sink to the end; ties break
+// alphabetically so the order never flickers between loads.
+const allMarkets = markets
+  .map(normMarket)
+  .sort((a, b) => {
+    const av = toMinutes(a.openTime);
+    const bv = toMinutes(b.openTime);
+    if (av == null && bv == null) return String(a.market).localeCompare(String(b.market));
+    if (av == null) return 1;
+    if (bv == null) return -1;
+    if (av !== bv) return av - bv;
+    return String(a.market).localeCompare(String(b.market));
+  });
 
 const send = (res, payload) => {
   res.writeHead(200, {

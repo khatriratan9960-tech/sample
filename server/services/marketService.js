@@ -57,7 +57,7 @@ export async function loadCustomMarkets() {
 
 /**
  * The merged public market list: provider markets + custom markets,
- * interleaved by close time so custom ones blend into the flow.
+ * interleaved by open time so custom ones blend into the flow.
  */
 export async function getPublicMarkets(now = nowMinutes()) {
   const [{ markets, halvesByMarket }, providerMarkets] = await Promise.all([

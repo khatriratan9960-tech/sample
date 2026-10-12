@@ -9,6 +9,11 @@
  *   MILAN DAY, KALYAN, MAIN BAZAR, MILAN NIGHT, VIDARB DAY.
  * If none of the featured slugs are present, we fall back to highlighting the
  * first card so the board always has one highlight.
+ *
+ * The grid is sorted by OPEN TIME (earliest first) regardless of the order
+ * the API returns, so every backend (Node, PHP mock, paid provider) renders
+ * the same chronology. Markets whose open time is missing/unparseable sink
+ * to the end instead of scrambling the list.
  */
 
 /** Market slugs that get the yellow highlight. Edit this list to change them. */
@@ -20,17 +25,45 @@ const FEATURED_SLUGS = new Set([
   'vidarb-day',
 ]);
 
+/** "10:00 PM" / "22:00" -> minutes since midnight; null when unparseable. */
+function openMinutes(value) {
+  const s = String(value ?? '').trim();
+  const ampm = s.match(/^(\d{1,2}):([0-5]\d)\s*([APap])\.?[Mm]?\.?$/);
+  if (ampm) {
+    let h = Number(ampm[1]) % 12;
+    if (ampm[3].toLowerCase() === 'p') h += 12;
+    return h * 60 + Number(ampm[2]);
+  }
+  const plain = s.match(/^([01]?\d|2[0-3]):([0-5]\d)$/);
+  if (plain) return Number(plain[1]) * 60 + Number(plain[2]);
+  return null;
+}
+
+/** Ascending by open time; ties break alphabetically so the order never flickers. */
+function byOpenTime(a, b) {
+  const av = openMinutes(a.openTime);
+  const bv = openMinutes(b.openTime);
+  if (av == null && bv == null) return String(a.market).localeCompare(String(b.market));
+  if (av == null) return 1; // no parseable open time -> sink to the end
+  if (bv == null) return -1;
+  if (av !== bv) return av - bv;
+  return String(a.market).localeCompare(String(b.market));
+}
+
 export default function JodiPanels({ markets }) {
   if (!markets.length) return null;
 
+  // Copy before sorting - never mutate the prop (the API payload is shared).
+  const sorted = [...markets].sort(byOpenTime);
+
   // Which indices are featured (by slug). Used for the no-match fallback below.
-  const featuredIndexes = markets
+  const featuredIndexes = sorted
     .map((m, i) => (FEATURED_SLUGS.has(m.slug) ? i : -1))
     .filter((i) => i >= 0);
 
   return (
     <div className="tkt-val" style={{ borderColor: '#aa00c0', marginBottom: '2px' }}>
-      {markets.map((m, i) => {
+      {sorted.map((m, i) => {
         const featured = FEATURED_SLUGS.has(m.slug);
         // Fallback: if the operator's list matches nothing currently on the
         // board, keep the original behaviour (first card highlighted).

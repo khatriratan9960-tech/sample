@@ -135,7 +135,7 @@ also block `/markets` and `/results` for normal admins.
 ### Your markets blend in, they don't look bolted on
 
 `server/services/mergeMarkets.js` merges provider markets with yours and sorts
-the combined list by **close time**, so a custom market lands in its natural
+the combined list by **open time**, so a custom market lands in its natural
 chronological position rather than being appended. Every market goes through
 the same shape, so the public page can't tell them apart. Verified: a market
 closing at 09:45 PM sits between MANGAL NIGHT (09:25) and MATKA KING NIGHT
@@ -299,7 +299,7 @@ server/
                         upcoming / live / closed for any market. Shared by
                         mergeMarkets and liveBoard.
   services/liveBoard.js    builds the LIVE RESULT board from the clock
-  services/mergeMarkets.js provider + custom markets interleaved by close time
+  services/mergeMarkets.js provider + custom markets interleaved by open time
 src/
   api/client.js         all fetch calls live here
   hooks/useApi.js       useApi (once) + usePolling (interval)

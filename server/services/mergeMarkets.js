@@ -64,7 +64,7 @@ function normalizeProvider(raw, now) {
     source: 'provider',
     jodiUrl: `/jodi-chart-record/${slug}.php`,
     panelUrl: `/panel-chart-record/${slug}.php`,
-    _sort: toMinutes(raw.closeTime ?? raw.close_time ?? sched?.close),
+    _sort: toMinutes(raw.openTime ?? raw.open_time ?? sched?.open),
   };
 }
 
@@ -110,7 +110,7 @@ function normalizeCustom(market, halves, now) {
       status: ok ? (ok.jodiComplete ? 'closed' : 'live') : 'pending',
       source: 'custom',
       // Internal only - stripped before the API responds.
-      _sort: closeM2 ?? closeM,
+      _sort: openM2 ?? openM,
       _marketId: String(market._id),
       jodiUrl: `/jodi-chart-record/${market.slug}.php`,
       panelUrl: `/panel-chart-record/${market.slug}.php`,
@@ -139,7 +139,7 @@ function normalizeCustom(market, halves, now) {
     isPending,
     source: 'custom',
     // Internal only - stripped before the API responds.
-    _sort: closeM,
+    _sort: openM,
     _marketId: String(market._id),
     jodiUrl: `/jodi-chart-record/${market.slug}.php`,
     panelUrl: `/panel-chart-record/${market.slug}.php`,
@@ -162,7 +162,8 @@ export function mergeMarkets(providerMarkets, customMarkets, halvesByMarket, now
 
   const all = [...provider, ...custom];
 
-  // Interleave by close time. Anything without a parseable time sinks to the
+  // Interleave by OPEN time (earliest first), matching what the public page
+  // renders. Anything without a parseable time sinks to the
   // end rather than scrambling the ordering.
   all.sort((a, b) => {
     const av = a._sort ?? Number.MAX_SAFE_INTEGER;

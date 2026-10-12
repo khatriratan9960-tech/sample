@@ -177,7 +177,30 @@ function getAllMarkets(): array
         $raw = mockMarkets();
     }
 
-    return array_map('normalizeMarket', $raw);
+    $rows = array_map('normalizeMarket', $raw);
+
+    // Public list is ordered by OPEN time (earliest first) - the same
+    // chronology the homepage grid renders. Unparseable times sink to the
+    // end; ties break alphabetically so the order never flickers.
+    usort($rows, static function (array $a, array $b): int {
+        $ta = mockToMinutes($a['openTime'] ?? null);
+        $tb = mockToMinutes($b['openTime'] ?? null);
+        if ($ta === null && $tb === null) {
+            return strcmp((string) ($a['market'] ?? ''), (string) ($b['market'] ?? ''));
+        }
+        if ($ta === null) {
+            return 1;
+        }
+        if ($tb === null) {
+            return -1;
+        }
+        if ($ta !== $tb) {
+            return $ta <=> $tb;
+        }
+        return strcmp((string) ($a['market'] ?? ''), (string) ($b['market'] ?? ''));
+    });
+
+    return $rows;
 }
 
 function getMarketBySlug(string $slug): ?array
