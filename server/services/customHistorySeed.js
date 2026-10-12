@@ -116,6 +116,10 @@ export async function seedCustomMarketHistory(marketDoc) {
       const half = session === 'open'
         ? { number: openNum, pana: openPana }
         : { number: closeNum, pana: closePana };
+      // NOTE: $setOnInsert and $set must NOT share fields - MongoDB rejects
+      // an update where the same path appears in two operators ("Updating
+      // the path 'display' would create a conflict"). Immutable keys go in
+      // $setOnInsert, everything mutable in $set.
       ops.push({
         updateOne: {
           filter: { market: marketDoc._id, date, session },
@@ -124,21 +128,14 @@ export async function seedCustomMarketHistory(marketDoc) {
               market: marketDoc._id,
               date,
               session,
-              number: half.number,
-              pana: half.pana,
-              ank: Number(half.number),
-              display: built.display,
-              jodi: built.jodi,
-              jodiComplete: true,
             },
             $set: {
-              // Keep display/jodi/ank correct even if the half somehow exists.
+              number: half.number,
+              pana: half.pana,
+              ank: Number(half.number),
               display: built.display,
               jodi: built.jodi,
               jodiComplete: true,
-              ank: Number(half.number),
-              number: half.number,
-              pana: half.pana,
             },
           },
           upsert: true,
