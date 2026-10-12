@@ -27,8 +27,8 @@ export default function Header() {
         <img
           src="/img/image.png"
           alt="dpboosssss.com - Satta Matka Fast Result"
-          width="1024"
-          height="332"
+          width="878"
+          height="284"
           style={{
             display: 'inline-block',
             width: 'auto',
