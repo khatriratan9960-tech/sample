@@ -3,6 +3,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 /**
  * Fetch once on mount.
  * Returns { data, loading, error, reload }.
+ * loading is true ONLY for the first attempt - background retries never
+ * flip the page back to a spinner (that was the "stuck on Loading..." bug:
+ * every retry set loading=true again, so the UI flickered back to the
+ * loader instead of showing data or an error).
  */
 export function useApi(fetcher, deps = []) {
   const [data, setData] = useState(null);
@@ -11,15 +15,20 @@ export function useApi(fetcher, deps = []) {
   const mounted = useRef(true);
   // Read inside the retry loop without re-triggering the effect.
   const errorRef = useRef(null);
+  const dataRef = useRef(null);
 
   errorRef.current = error;
+  dataRef.current = data;
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+  const load = useCallback(async ({ silent = false } = {}) => {
+    const isFirst = dataRef.current === null;
+    if (isFirst && !silent) setLoading(true);
     try {
       const res = await fetcher();
-      if (mounted.current) setData(res);
+      if (mounted.current) {
+        setData(res);
+        setError(null);
+      }
     } catch (e) {
       if (mounted.current) setError(e.message || 'Something went wrong');
     } finally {
@@ -42,7 +51,8 @@ export function useApi(fetcher, deps = []) {
       attempts += 1;
       await new Promise((r) => setTimeout(r, 2000 * attempts));
       if (!mounted.current) return;
-      await load();
+      // Silent background retry: never flip back to the full-page loader.
+      await load({ silent: true });
       // Still failing? Keep going, up to 5 attempts total.
       if (mounted.current && errorRef.current && attempts < 5) {
         timer = setTimeout(tick, 0);

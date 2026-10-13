@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { ChartEntry } from '../models/ChartEntry.js';
 import { Market } from '../models/Market.js';
 import { Result } from '../models/Result.js';
@@ -161,6 +162,10 @@ function isCompleteRow(row) {
 export async function syncChartHistory(rows, source = 'matka') {
   if (!rows?.length) return 0;
   if (Date.now() - lastSync < SYNC_INTERVAL_MS) return 0;
+  // Fast-fail on cold starts: without this Mongoose buffers the bulkWrite
+  // until serverSelectionTimeoutMS expires, holding the HTTP response open
+  // until Vercel times out (endless "Loading..." on the frontend).
+  if (mongoose.connection.readyState !== 1) return 0;
   lastSync = Date.now();
   const ops = [];
   for (const row of rows) {
@@ -199,13 +204,22 @@ export async function syncChartHistory(rows, source = 'matka') {
 
 /** Fire-and-forget wrapper for the live path: the board must never wait on
  *  the chart write - the promise resolves in the background between polls.
- *  Errors are already swallowed inside syncChartHistory. */
+ *  Errors are already swallowed inside syncChartHistory.
+ *  NEVER awaited by request handlers: on a Vercel cold start the DB may
+ *  still be warming and a buffered write would hold the response open
+ *  until the function times out (endless "Loading..." on the frontend). */
 export function syncChartHistoryFromCards(cards, source = 'matka') {
   if (!cards?.length) return;
-  syncChartHistory(
-    cards.map((c) => ({ slug: c.slug, market: c.market, date: c.date, ...parseDisplay(c.result) })),
-    source
-  ).catch(() => {});
+  try {
+    const p = syncChartHistory(
+      cards.map((c) => ({ slug: c.slug, market: c.market, date: c.date, ...parseDisplay(c.result) })),
+      source
+    );
+    // Swallow rejections; never let the write hold the HTTP response.
+    if (p?.catch) p.catch(() => {});
+  } catch {
+    /* non-critical */
+  }
 }
 
 /** "579-15-366" or "15" -> { open, close, jodi } row shape for the sync. */

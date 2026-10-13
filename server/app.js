@@ -66,11 +66,26 @@ export function ensureReady() {
 }
 
 // Every API request waits for the DB before touching a route - EXCEPT
-// /api/health, which must answer even when the database is unreachable
-// (on Vercel that is exactly when you need it most).
+// public reads + /api/health, which must answer even when the database is
+// unreachable (on Vercel that is exactly when you need it most).
+// PUBLIC reads never wait: the DB warms in the background and each query
+// fast-fails via readyState checks, so the page renders provider data in
+// ~1-2s even on a cold start instead of hanging until Vercel times out
+// (which the frontend showed as endless "Loading...").
+// Admin/auth routes still wait for the DB.
+const PUBLIC_GET_PREFIXES = ['/home.php', '/live-result.php', '/markets.php', '/starline.php', '/chart.php', '/health'];
 app.use('/api', (req, res, next) => {
   if (req.path === '/health') return next();
-  ensureReady().then(() => next(), next);
+  const isPublicGet =
+    req.method === 'GET' && PUBLIC_GET_PREFIXES.some((p) => req.path === p || req.path.startsWith(p));
+  if (!isPublicGet) {
+    ensureReady().then(() => next(), next);
+    return;
+  }
+  // Kick off the connection for future (warm) requests, but NEVER block
+  // this response on it. loadCustomMarkets() fast-fails when disconnected.
+  ensureReady().catch(() => {});
+  return next();
 });
 
 // Public endpoints (no auth).

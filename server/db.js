@@ -5,7 +5,10 @@ export async function connectDb() {
   mongoose.set('strictQuery', true);
   await mongoose.connect(config.mongoUrl, {
     dbName: config.dbName,
-    serverSelectionTimeoutMS: 8000,
+    // Fail fast on Vercel: the free-tier function times out at ~10s, so an
+    // 8s server-selection wait guarantees a cold-start timeout. 4.5s leaves
+    // room for the upstream call + JSON response in the same invocation.
+    serverSelectionTimeoutMS: Number(process.env.MONGO_TIMEOUT_MS || 4500),
     maxPoolSize: config.mongoMaxPool,
   });
   const { name, host } = mongoose.connection;

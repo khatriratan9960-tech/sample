@@ -11,16 +11,28 @@
 
 const BASE = '/api';
 
+// Fail fast on Vercel: a hung upstream must never leave the UI on
+// "Loading..." for 15s+ (serverless functions time out at ~10s anyway).
+const FETCH_TIMEOUT_MS = 8000;
+
 async function getJson(path) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
   let res;
   try {
     res = await fetch(`${BASE}${path}`, {
       headers: { Accept: 'application/json' },
+      signal: controller.signal,
     });
-  } catch {
-    // Network-level failure - the API is down. Surface something actionable
+  } catch (err) {
+    // Network-level failure OR our 8s timeout - surface something actionable
     // instead of the browser's bare "Failed to fetch".
+    if (err?.name === 'AbortError') {
+      throw new Error('Results server is taking too long. Showing cached content - retry shortly.');
+    }
     throw new Error('Cannot reach the results server. It may be restarting - retry shortly.');
+  } finally {
+    clearTimeout(timer);
   }
 
   if (!res.ok) {

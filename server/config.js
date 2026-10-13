@@ -33,7 +33,10 @@ export const config = {
     apiKey: process.env.PROVIDER_API_KEY || '',
     // Poll interval for syncing upstream results.
     syncMs: Number(process.env.PROVIDER_SYNC_MS || 5 * 60 * 1000),
-    timeoutMs: Number(process.env.PROVIDER_TIMEOUT_MS || 15000),
+    // Keep well under Vercel's ~10s hobby-function limit so a slow upstream
+    // fails fast instead of timing out the whole invocation (which the
+    // frontend would show as endless "Loading...").
+    timeoutMs: Number(process.env.PROVIDER_TIMEOUT_MS || 7000),
   },
 
   // Matka trial (matkaapi.com). Trial keys are domain-locked: the upstream
@@ -46,7 +49,7 @@ export const config = {
     domain: process.env.MATKA_DOMAIN || 'clone-git-main-ratan18.vercel.app',
     baseUrl: process.env.MATKA_BASE_URL || 'https://www.matkaapi.com/mapi',
     cacheMs: Number(process.env.MATKA_CACHE_MS || 45_000),
-    timeoutMs: Number(process.env.MATKA_TIMEOUT_MS || process.env.PROVIDER_TIMEOUT_MS || 15_000),
+    timeoutMs: Number(process.env.MATKA_TIMEOUT_MS || process.env.PROVIDER_TIMEOUT_MS || 7000),
   },
 };
 

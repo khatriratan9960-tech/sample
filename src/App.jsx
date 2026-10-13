@@ -57,15 +57,11 @@ export default function App() {
   const live = liveData?.data ?? home?.liveResults ?? [];
   const provider = data?.provider ?? liveData?.provider ?? null;
 
-  if (loading) {
-    return (
-      <>
-        <Header />
-        <Hero />
-        <p style={{ padding: '20px' }}>Loading...</p>
-      </>
-    );
-  }
+  // NEVER block first paint on the API: render the full page skeleton
+  // immediately (good for SEO + perceived speed on Vercel cold starts).
+  // Sections fill in as data arrives; "Loading..." only appears inside the
+  // live-results block, never as a whole-page gate.
+  const showSkeleton = loading && !home && !error;
 
   return (
     <>
@@ -82,7 +78,17 @@ export default function App() {
 
         <WhatsAppBanner />
 
-        <LiveResults results={live} onRefresh={onRefresh} updatedAt={lastUpdate} />
+        {showSkeleton ? (
+          <div className="liv-rslt">
+            <h4>☔LIVE RESULT☔</h4>
+            <div className="lv-mc">
+              <h5>Sabse Tezz Live Result Yahi Milega</h5>
+              <p style={{ padding: '12px' }}>Loading live results…</p>
+            </div>
+          </div>
+        ) : (
+          <LiveResults results={live} onRefresh={onRefresh} updatedAt={lastUpdate} />
+        )}
 
         <h4 className="flyr24"> WORLD ME SABSE FAST SATTA MATKA RESULT </h4>
 

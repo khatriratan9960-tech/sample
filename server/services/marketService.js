@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { Market } from '../models/Market.js';
 import { Result } from '../models/Result.js';
 import { fetchProviderMarkets, fetchProviderLive } from './provider.js';
@@ -23,17 +24,38 @@ export function today() {
  * from the most recent DATE that has any row. Keeping a single "latest row"
  * per market would drop the other half, which would hide the open pana or the
  * close pana from the public page.
+ *
+ * Resilient: when the public middleware lets a request through without a DB
+ * (cold start grace window), this returns empty instead of throwing - the
+ * page renders provider-only rather than hanging.
  */
 export async function loadCustomMarkets() {
-  const markets = await Market.find({ active: true }).lean();
+  // Fast-fail when the DB isn't connected: without this, Mongoose buffers
+  // the query until serverSelectionTimeoutMS expires (~4.5s+) and the
+  // Vercel function burns its whole ~10s budget on one cold start.
+  if (mongoose.connection.readyState !== 1) {
+    return { markets: [], halvesByMarket: new Map() };
+  }
+  let markets;
+  try {
+    markets = await Market.find({ active: true }).lean().maxTimeMS(2500);
+  } catch {
+    return { markets: [], halvesByMarket: new Map() };
+  }
 
   if (markets.length === 0) return { markets: [], halvesByMarket: new Map() };
 
-  const results = await Result.find({
-    market: { $in: markets.map((m) => m._id) },
-  })
-    .sort({ date: -1, createdAt: -1 })
-    .lean();
+  let results = [];
+  try {
+    results = await Result.find({
+      market: { $in: markets.map((m) => m._id) },
+    })
+      .sort({ date: -1, createdAt: -1 })
+      .maxTimeMS(2500)
+      .lean();
+  } catch {
+    return { markets, halvesByMarket: new Map() };
+  }
 
   const halvesByMarket = new Map();
   for (const r of results) {
@@ -69,7 +91,15 @@ export async function getPublicMarkets(now = nowMinutes()) {
   // chart collection growing: every completed draw becomes one ChartEntry.
   // The 5-minute throttle keeps the writes sane; upserts are keyed
   // {slug, date} so repeats are no-ops.
-  syncChartHistory(providerMarkets);
+  // Fire-and-forget (NOT awaited): on a cold start the DB isn't connected
+  // and an awaited write would buffer until Mongoose times out, holding the
+  // HTTP response open until Vercel kills it (endless "Loading...").
+  try {
+    const p = syncChartHistory(providerMarkets);
+    if (p?.catch) p.catch(() => {});
+  } catch {
+    /* non-critical */
+  }
 
   return mergeMarkets(providerMarkets, markets, halvesByMarket, now);
 }
@@ -89,12 +119,19 @@ export async function getPublicLive(date = today(), now = nowMinutes()) {
     loadCustomMarkets(),
   ]);
 
-  const declaredToday = markets.length
-    ? await Result.find({
+  let declaredToday = [];
+  if (markets.length && mongoose.connection.readyState === 1) {
+    try {
+      declaredToday = await Result.find({
         market: { $in: markets.map((m) => m._id) },
         date,
-      }).lean()
-    : [];
+      })
+        .maxTimeMS(2500)
+        .lean();
+    } catch {
+      declaredToday = [];
+    }
+  }
 
   // A market has TWO rows per draw (session 'open' and 'close'), so they are
   // collected into one entry per market. Building the map with
