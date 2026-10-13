@@ -103,7 +103,7 @@ router.post('/results', async (req, res) => {
         declaredBy: req.user._id,
       },
     },
-    { upsert: true, new: true, setDefaultsOnInsert: true }
+    { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true }
   );
 
   // Now rebuild both halves from scratch so the jodi appears automatically.
