@@ -56,6 +56,25 @@ export default function App() {
   const home = data?.data ?? null;
   const live = liveData?.data ?? home?.liveResults ?? [];
   const provider = data?.provider ?? liveData?.provider ?? null;
+  // The Jodi/Panel grid must NOT depend on /home.php alone: if home.markets
+  // is empty but /live-result.php answered (or vice versa), derive panels
+  // from whichever feed has rows. This was the "live result nahi hai to
+  // second panel bhi nahi dikhta" bug - two independent feeds gated one UI.
+  const homeMarkets = home?.markets ?? [];
+  const panelMarkets =
+    homeMarkets.length > 0
+      ? homeMarkets
+      : live
+          .filter((r) => r?.slug || r?.market)
+          .map((r) => ({
+            market: r.market ?? r.slug ?? 'Market',
+            slug: r.slug ?? String(r.market ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+            result: r.result ?? null,
+            openTime: r.openTime ?? '',
+            closeTime: r.closeTime ?? '',
+            jodiUrl: `/jodi-chart-record/${r.slug ?? ''}.php`,
+            panelUrl: `/panel-chart-record/${r.slug ?? ''}.php`,
+          }));
 
   // NEVER block first paint on the API: render the full page skeleton
   // immediately (good for SEO + perceived speed on Vercel cold starts).
@@ -92,7 +111,7 @@ export default function App() {
 
         <h4 className="flyr24"> WORLD ME SABSE FAST SATTA MATKA RESULT </h4>
 
-        <JodiPanels markets={home?.markets ?? []} />
+        <JodiPanels markets={panelMarkets} />
 
         <KeywordStrip />
 

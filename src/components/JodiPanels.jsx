@@ -60,8 +60,22 @@ function byOpenTime(a, b) {
   return String(a.market).localeCompare(String(b.market));
 }
 
-export default function JodiPanels({ markets }) {
-  if (!markets.length) return null;
+export default function JodiPanels({ markets = [] }) {
+  // Don't vanish when the API is empty/slow: keep the section visible with a
+  // placeholder so the page never looks like the "second panel" is missing.
+  // (Before this, `return null` on empty hid the whole Jodi/Panel grid
+  // whenever /home.php returned no markets, e.g. cold start + upstream hiccup.)
+  if (!markets.length) {
+    return (
+      <div className="tkt-val" style={{ borderColor: '#aa00c0', marginBottom: '2px' }}>
+        <div>
+          <h4>WORLD ME SABSE FAST SATTA MATKA RESULT</h4>
+          <span>Loading markets…</span>
+          <p>Refreshing automatically — press REFRESH below if this persists.</p>
+        </div>
+      </div>
+    );
+  }
 
   // Copy before sorting - never mutate the prop (the API payload is shared).
   const sorted = [...markets].sort(byOpenTime);
