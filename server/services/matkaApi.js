@@ -182,7 +182,12 @@ async function fetchMatka(path, kind) {
 export async function fetchMatkaMarkets() {
   const { key, cacheMs } = matkaCfg();
   if (!key) return [];
-  if (pending) return pending.promise;
+  // A request is already in flight: hand back that same promise so concurrent
+  // callers share ONE upstream hit. `pending` is the promise itself (NOT an
+  // object with a .promise field) - returning pending.promise here returned
+  // undefined on the first call after every cold start, which propagated an
+  // undefined market list and collapsed the live board.
+  if (pending) return pending;
   const now = Date.now();
   if (cache.rows && now - cache.fetchedAt < cacheMs) return cache.rows;
   pending = (async () => {
@@ -233,5 +238,5 @@ export async function fetchMatkaMarkets() {
     }
     return rows;
   })();
-  return pending.promise;
+  return pending;
 }

@@ -72,7 +72,15 @@ export async function fetchProviderMarkets() {
   if (config.matka.domainKey) {
     // Trial: cached copy of all markets + today's draws, never throws the
     // public page, rate-limit friendly (45s cache, 10s gap honoured).
-    return fetchMatkaMarkets();
+    const rows = await fetchMatkaMarkets();
+    // The trial plan is capped (matkaapi.com returns
+    // "Trial request limit reached" once total_req hits plan_limit). When the
+    // feed is empty for ANY reason (limit reached, network blip, domain lock),
+    // fall back to the bundled fixtures so the market board keeps rendering a
+    // full list instead of an endless "Loading...". Real draws resume the
+    // moment a working key/plan is available again.
+    if (Array.isArray(rows) && rows.length) return rows;
+    return fixtures().rows.map((r) => ({ ...r }));
   }
   if (!config.provider.baseUrl) {
     return fixtures().rows.map((r) => ({ ...r }));
@@ -110,7 +118,11 @@ export async function fetchProviderLive() {
     // Trial: all markets + today's draws -> the live board builds the
     // time-driven cards exactly like the fixture path.
     const rows = await fetchMatkaMarkets();
-    return buildLiveBoard(rows);
+    // Same fallback as fetchProviderMarkets: when the trial feed is empty
+    // (request cap reached, outage, domain lock), build the live board from the
+    // bundled fixtures so the LIVE RESULT cards keep populating instead of
+    // sitting on "Loading...".
+    return buildLiveBoard(Array.isArray(rows) && rows.length ? rows : fixtures().rows);
   }
   if (!config.provider.baseUrl) {
     return buildLiveBoard(fixtures().rows);
@@ -129,14 +141,18 @@ export async function fetchProviderLive() {
 }
 
 export const getSections = () => {
-  // Mock mode with bundled files: full editorial sections. Trial/paid mode
-  // or missing files: static empty shape - never throw, never touch disk.
-  if (!config.matka.domainKey && !config.provider.baseUrl) {
-    try {
-      return fixtures().sections;
-    } catch {
-      /* Vercel did not bundle php-api/data - fall through to empty */
-    }
+  // Editorial sections (Golden Ank, Final Ank, Starline tables, weekly charts,
+  // free game, day tables, pass list, link zones) are static content identical
+  // for every visitor - the bundled sections.json is the operator's source of
+  // truth for them. Prefer it in EVERY provider mode (mock, trial, paid): only
+  // the market *rows* come from the upstream. Previously trial/paid mode forced
+  // EMPTY_SECTIONS here, which blanked Final Ank, Golden Ank and the starline
+  // tables even though sections.json was bundled. Only if the file is missing
+  // (e.g. not bundled into the function) do we fall back to the empty shape.
+  try {
+    return fixtures().sections;
+  } catch {
+    /* fixtures unavailable - never throw, never touch disk */
   }
   return EMPTY_SECTIONS;
 };
