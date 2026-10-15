@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import mongoose from 'mongoose';
 import { Market } from '../models/Market.js';
 import { Result, buildDisplay } from '../models/Result.js';
 import { todayStr } from '../services/marketClock.js';
@@ -134,6 +135,18 @@ router.post('/', async (req, res) => {
       ok: true,
       ready: true,
       message: 'Maharashtra market webhook is live. Send result JSON to push.',
+    });
+  }
+
+  // DB unreachable (cold start still warming, Atlas outage): never let the
+  // queries buffer into a hang/5xx - a non-2xx here can get this webhook
+  // URL auto-disabled by the provider. Answer 200 with saved:false so the
+  // checker stays green and the operator sees the push did NOT store.
+  if (mongoose.connection.readyState !== 1) {
+    return res.status(200).json({
+      ok: false,
+      saved: false,
+      error: 'Database not ready - resend this result in a minute',
     });
   }
 

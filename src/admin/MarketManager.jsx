@@ -26,10 +26,20 @@ export default function MarketManager({ markets, currentUserId, isSuper, onChang
   // result dropdown can declare on them. Those are NOT management objects for
   // a normal admin (the server rejects hide/delete on them), so keep them out
   // of this table. A super admin can manage everything.
-  const managed = useMemo(
-    () => (isSuper ? markets : markets.filter((m) => m.owner && m.owner === currentUserId)),
-    [markets, isSuper, currentUserId]
-  );
+  // NOTE: a login stored BEFORE the backend started returning user ids has a
+  // user object with no id field (e.g. after an old cached login): then
+  // currentUserId is undefined and a strict equality check hides EVERY row,
+  // showing "No custom markets yet" even though the markets are there. So when
+  // we cannot tell who owns what, show the rows instead of an empty table.
+  const managed = useMemo(() => {
+    if (isSuper) return markets;
+    if (!currentUserId) return markets;
+    const mine = markets.filter((m) => m.owner && m.owner === currentUserId);
+    // If none of the returned rows carry an owner id we recognise (stale or
+    // partial payload), fall back to showing everything rather than an empty
+    // "no markets" table - the server still enforces edit/delete rights.
+    return mine.length > 0 ? mine : markets;
+  }, [markets, isSuper, currentUserId]);
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 

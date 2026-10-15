@@ -76,6 +76,20 @@ export function ensureReady() {
 const PUBLIC_GET_PREFIXES = ['/home.php', '/live-result.php', '/markets.php', '/starline.php', '/chart.php', '/health'];
 app.use('/api', (req, res, next) => {
   if (req.path === '/health') return next();
+  // The provider pings the webhook with GET/HEAD ("Check Now") and treats
+  // any non-2xx as failure - some providers then DISABLE the saved URL.
+  // Those probes never touch the DB, so they must answer instantly even
+  // while MongoDB is down (previously ensureReady()'s failure turned them
+  // into 500s). POST also never 500s here: on a DB outage it continues to
+  // the route, which answers 200 { saved:false } by design.
+  if (req.path === '/maharashtra-market-callback') {
+    if (req.method === 'GET' || req.method === 'HEAD') return next();
+    ensureReady().then(
+      () => next(),
+      () => next()
+    );
+    return;
+  }
   const isPublicGet =
     req.method === 'GET' && PUBLIC_GET_PREFIXES.some((p) => req.path === p || req.path.startsWith(p));
   if (!isPublicGet) {

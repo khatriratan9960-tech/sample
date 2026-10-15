@@ -155,10 +155,20 @@ function normalizeCustom(market, halves, now) {
  *                                 Injectable so the schedule can be tested.
  */
 export function mergeMarkets(providerMarkets, customMarkets, halvesByMarket, now = nowMinutes()) {
-  const provider = (providerMarkets ?? []).map((r) => normalizeProvider(r, now));
   const custom = (customMarkets ?? []).map((m) =>
     normalizeCustom(m, halvesByMarket?.get(String(m._id)), now)
   );
+
+  // Dedupe by slug: a market the operator runs himself (webhook push or
+  // admin-declared) is the source of truth for that market. A provider row
+  // with the same slug is a stale duplicate (demo fixture or an upstream
+  // copy of the same draw) and would render a SECOND card with DIFFERENT
+  // numbers - e.g. real SITA MORNING 255-24-699 next to demo 140-56-556.
+  // The custom card always wins; provider-only markets pass through.
+  const customSlugs = new Set(custom.map((c) => c.slug).filter(Boolean));
+  const provider = (providerMarkets ?? [])
+    .map((r) => normalizeProvider(r, now))
+    .filter((p) => !customSlugs.has(p.slug));
 
   const all = [...provider, ...custom];
 

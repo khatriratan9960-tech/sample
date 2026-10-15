@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { Market } from '../models/Market.js';
 import { Result } from '../models/Result.js';
 import { fetchProviderMarkets, fetchProviderLive } from './provider.js';
+import { upstreamDead } from './matkaApi.js';
 import { syncChartHistory, syncChartHistoryFromCards } from './chartHistory.js';
 import { mergeMarkets } from './mergeMarkets.js';
 import { rankLiveCards, BOARD_SIZE } from './liveBoard.js';
@@ -45,12 +46,36 @@ export async function loadCustomMarkets() {
 
   if (markets.length === 0) return { markets: [], halvesByMarket: new Map() };
 
+  // TWO cheap indexed steps instead of one giant scan. The old single query
+  // (find ALL ~14.6k result rows, sort by date+createdAt) took ~38s on Atlas
+  // free tier - it blew past the maxTimeMS cap below and intermittently
+  // returned an EMPTY map, which hid every webhook result from the public
+  // page (the "result not showing" bug). Step 1 uses $group/$max (no sort
+  // needed, ~250ms); step 2 fetches only the ~2 rows per market (~1s).
+  let latestPairs = [];
+  try {
+    // NOTE: Mongoose Aggregate has no .maxTimeMS() helper (Query does) - the
+    // cap goes through .option({ maxTimeMS }).
+    latestPairs = await Result.aggregate([
+      { $match: { market: { $in: markets.map((m) => m._id) } } },
+      { $group: { _id: '$market', date: { $max: '$date' } } },
+    ]).option({ maxTimeMS: 2500 });
+  } catch {
+    return { markets, halvesByMarket: new Map() };
+  }
+  if (latestPairs.length === 0) return { markets, halvesByMarket: new Map() };
+
+  // One date per market, but markets usually all drew on the same day, so
+  // this is a small set of dates to match on.
+  const latestDateOf = new Map(latestPairs.map((p) => [String(p._id), p.date]));
+  const dates = [...new Set(latestPairs.map((p) => p.date))];
+
   let results = [];
   try {
     results = await Result.find({
       market: { $in: markets.map((m) => m._id) },
+      date: { $in: dates },
     })
-      .sort({ date: -1, createdAt: -1 })
       .maxTimeMS(2500)
       .lean();
   } catch {
@@ -60,16 +85,15 @@ export async function loadCustomMarkets() {
   const halvesByMarket = new Map();
   for (const r of results) {
     const key = String(r.market);
-    let entry = halvesByMarket.get(key);
+    // The date filter above also matches markets whose LATEST draw is older
+    // than another market's - keep only each market's own latest date.
+    if (r.date !== latestDateOf.get(key)) continue;
 
-    // The first row seen for this market fixes which draw we describe.
+    let entry = halvesByMarket.get(key);
     if (!entry) {
       entry = { date: r.date, open: null, close: null };
       halvesByMarket.set(key, entry);
     }
-    // Ignore older draws - only the most recent date is on the public page.
-    if (r.date !== entry.date) continue;
-
     if (r.session === 'close') entry.close = r;
     else entry.open = r;
   }
@@ -82,6 +106,13 @@ export async function loadCustomMarkets() {
  * interleaved by open time so custom ones blend into the flow.
  */
 export async function getPublicMarkets(now = nowMinutes()) {
+  // ONE upstream hit per cooldown window: without this outer check the two
+  // Promise.all branches below BOTH fire at the dead upstream simultaneously
+  // (neither has seen the fatal cooldown yet), doubling every page's hang.
+  if (upstreamDead()) {
+    const { markets, halvesByMarket } = await loadCustomMarkets();
+    return mergeMarkets([], markets, halvesByMarket, now);
+  }
   const [{ markets, halvesByMarket }, providerMarkets] = await Promise.all([
     loadCustomMarkets(),
     fetchProviderMarkets(),
@@ -105,48 +136,29 @@ export async function getPublicMarkets(now = nowMinutes()) {
 }
 
 /**
- * Live-result cards.
- *
- * All custom markets are clock-gated: the result only becomes visible during
- * the market's open/close window. Push/webhook markets (pushDriven) are the
- * exception - the provider pushes the draw, so the stored halves are the
- * source of truth and the result shows as soon as it is saved. No clock gate
- * anywhere.
+ * Build the custom-markets half of the live board from already-loaded data.
+ * Shared by the fast path (upstream known-dead: no provider fetch at all)
+ * and the normal path (providerLive fetched). Keeping one function means the
+ * two paths can never drift apart.
  */
-export async function getPublicLive(date = today(), now = nowMinutes()) {
-  const [providerLive, { markets }] = await Promise.all([
-    fetchProviderLive(),
-    loadCustomMarkets(),
-  ]);
-
-  let declaredToday = [];
-  if (markets.length && mongoose.connection.readyState === 1) {
-    try {
-      declaredToday = await Result.find({
-        market: { $in: markets.map((m) => m._id) },
-        date,
-      })
-        .maxTimeMS(2500)
-        .lean();
-    } catch {
-      declaredToday = [];
-    }
-  }
-
-  // A market has TWO rows per draw (session 'open' and 'close'), so they are
-  // collected into one entry per market. Building the map with
-  // `rows.map(r => [marketId, r])` would silently drop one half, because the
-  // second row would overwrite the first.
+function buildCustomLiveCards(markets, halvesByMarket, date, now, providerLive) {
+  // Each halves entry holds a market's LATEST draw, so keeping only entries
+  // dated `date` is exactly the "declared today" set - without a second
+  // full-collection query (the old dedicated query had no usable sort path
+  // and intermittently exceeded its own cap, hiding today's halves from the
+  // LIVE cards).
   const byMarket = new Map();
-  for (const r of declaredToday) {
-    const key = String(r.market);
+  for (const m of markets) {
+    const halves = halvesByMarket.get(String(m._id));
+    if (!halves || halves.date !== date) continue;
+    const key = String(m._id);
     let entry = byMarket.get(key);
     if (!entry) {
       entry = { open: null, close: null };
       byMarket.set(key, entry);
     }
-    if (r.session === 'close') entry.close = r;
-    else entry.open = r;
+    if (halves.open) entry.open = halves.open;
+    if (halves.close) entry.close = halves.close;
   }
 
   // Split custom markets into push/webhook markets and manually-declared
@@ -221,4 +233,29 @@ export async function getPublicLive(date = today(), now = nowMinutes()) {
 
   // Drop the internal sort keys before responding.
   return ranked.slice(0, BOARD_SIZE).map(({ _open, _close, ...rest }) => rest);
+}
+
+/**
+ * Live-result cards.
+ *
+ * All custom markets are clock-gated: the result only becomes visible during
+ * the market's open/close window. Push/webhook markets (pushDriven) are the
+ * exception - the provider pushes the draw, so the stored halves are the
+ * source of truth and the result shows as soon as it is saved. No clock gate
+ * anywhere.
+ */
+export async function getPublicLive(date = today(), now = nowMinutes()) {
+  // Same single-hit guard as getPublicMarkets: the Promise.all branches
+  // would otherwise both fire at the dead upstream before either sees the
+  // fatal cooldown, doubling the page's hang.
+  if (upstreamDead()) {
+    const { markets, halvesByMarket } = await loadCustomMarkets();
+    return buildCustomLiveCards(markets, halvesByMarket, date, now, []);
+  }
+  const [providerLive, { markets, halvesByMarket }] = await Promise.all([
+    fetchProviderLive(),
+    loadCustomMarkets(),
+  ]);
+
+  return buildCustomLiveCards(markets, halvesByMarket, date, now, providerLive);
 }

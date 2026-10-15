@@ -21,9 +21,23 @@ const fmtTime = (hhmm) => {
  * close half. The jodi is never typed - it appears automatically once both
  * halves are saved.
  */
-export default function ResultDeclarer({ markets, onChanged }) {
+export default function ResultDeclarer({ markets, onChanged, currentUserId, isSuper }) {
   const api = useApiClient();
-  const active = useMemo(() => markets.filter((m) => m.active), [markets]);
+  // Same ownership guard as MarketManager: the API also returns the
+  // operator's unowned webhook markets so results can be declared on them.
+  // Prefer the admin's own markets in the dropdown, but never render an
+  // empty dropdown when ownership cannot be matched (stale login without a
+  // user id, partial payload) - fall back to all active markets instead so
+  // the form stays usable. The server still enforces declare rights.
+  const owned = useMemo(() => {
+    if (isSuper || !currentUserId) return null;
+    const mine = markets.filter((m) => m.owner && m.owner === currentUserId);
+    return mine.length > 0 ? mine : null;
+  }, [markets, isSuper, currentUserId]);
+  const active = useMemo(
+    () => (owned ?? markets).filter((m) => m.active),
+    [owned, markets]
+  );
 
   const [marketId, setMarketId] = useState('');
   const [date, setDate] = useState(todayStr());

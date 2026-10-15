@@ -56,8 +56,24 @@ const EMPTY_SECTIONS = {
 };
 /** Which upstream are we actually talking to? */
 export function providerName() {
+  if (process.env.WEBHOOK_ONLY === '1' || process.env.DISABLE_MOCK_MARKETS === '1') return 'webhook';
   if (config.matka.domainKey) return 'matka';
   return config.provider.baseUrl ? 'paid' : 'mock';
+}
+
+/**
+ * Webhook-only mode: the operator uses ONLY the matka-result-api.com push
+ * webhook (Maharashtra callback) and no pull API at all. Explicitly enabled
+ * with WEBHOOK_ONLY=1 (or DISABLE_MOCK_MARKETS=1). It is ALSO the default in
+ * production when no pull credentials are configured (no trial key, no paid
+ * base URL): the provider side stays empty and the public board is built
+ * purely from MongoDB markets (webhook pushes + admin declares). In local
+ * dev with no keys, mock fixtures still load so the stack stays testable.
+ */
+function webhookOnly() {
+  if (process.env.WEBHOOK_ONLY === '1' || process.env.DISABLE_MOCK_MARKETS === '1') return true;
+  if (config.matka.domainKey || config.provider.baseUrl) return false;
+  return config.isProd;
 }
 
 /**
@@ -69,62 +85,49 @@ export function providerName() {
  * service and this transparently switches over - no other file changes.
  */
 export async function fetchProviderMarkets() {
-  if (config.matka.domainKey) {
-    // Trial: cached copy of all markets + today's draws, never throws the
-    // public page, rate-limit friendly (45s cache, 10s gap honoured).
-    const rows = await fetchMatkaMarkets();
-    // The trial plan is capped (matkaapi.com returns
-    // "Trial request limit reached" once total_req hits plan_limit). When the
-    // feed is empty for ANY reason (limit reached, network blip, domain lock),
-    // fall back to the bundled fixtures so the market board keeps rendering a
-    // full list instead of an endless "Loading...". Real draws resume the
-    // moment a working key/plan is available again.
-    if (Array.isArray(rows) && rows.length) return rows;
-    return fixtures().rows.map((r) => ({ ...r }));
-  }
-  if (!config.provider.baseUrl) {
+  // Webhook-only (matka-result-api.com push, no pull API) is the default in
+  // production: the provider side stays empty, so the dead trial API is never
+  // hit and fake demo fixtures never render. Local dev with no keys keeps
+  // mock fixtures so the stack stays testable.
+  if (webhookOnly()) return [];
+  if (!config.matka.domainKey) {
     return fixtures().rows.map((r) => ({ ...r }));
   }
 
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), config.provider.timeoutMs);
-
-  try {
-    const res = await fetch(`${config.provider.baseUrl}/live-result`, {
-      headers: {
-        'X-API-Key': config.provider.apiKey,
-        Accept: 'application/json',
-      },
-      signal: controller.signal,
-    });
-
-    if (!res.ok) {
-      throw new Error(`Upstream returned HTTP ${res.status}`);
-    }
-
-    const body = await res.json();
-    const data = Array.isArray(body?.data) ? body.data : [];
-
-    // TODO(paid): map the vendor's field names onto our contract here.
-    // Expected: [{ market/name, open, close, jodi, openTime, closeTime, slug }]
-    return data;
-  } finally {
-    clearTimeout(timer);
-  }
+  // Trial pull branch: only reachable when a MATKA_DOMAIN_KEY *is* configured.
+  // Trial: cached copy of all markets + today's draws, never throws the
+  // public page, rate-limit friendly (45s cache, 10s gap honoured).
+  const rows = await fetchMatkaMarkets();
+  // The trial plan is capped (matkaapi.com returns
+  // "Trial request limit reached" once total_req hits plan_limit). We
+  // deliberately do NOT substitute the bundled demo fixtures here any
+  // more: a stale fixture row duplicates every REAL webhook market with
+  // fake numbers (e.g. SITA MORNING showed the demo "140-56-556" next to
+  // the real "255-24-699"), which made the public board show two
+  // conflicting results for the same market. An empty feed now means the
+  // provider side is simply empty - the operator's webhook/admin markets
+  // from MongoDB fill the board.
+  return Array.isArray(rows) ? rows : [];
 }
 
 export async function fetchProviderLive() {
+  // Webhook-only: no pull feed, so the provider slice of the live board is
+  // empty - the operator's real MongoDB markets fill it.
+  if (webhookOnly()) return [];
   if (config.matka.domainKey) {
     // Trial: all markets + today's draws -> the live board builds the
     // time-driven cards exactly like the fixture path.
     const rows = await fetchMatkaMarkets();
-    // Same fallback as fetchProviderMarkets: when the trial feed is empty
-    // (request cap reached, outage, domain lock), build the live board from the
-    // bundled fixtures so the LIVE RESULT cards keep populating instead of
-    // sitting on "Loading...".
-    return buildLiveBoard(Array.isArray(rows) && rows.length ? rows : fixtures().rows);
+    // No fixture fallback here either (see fetchProviderMarkets): demo rows
+    // would double every webhook market on the LIVE board with fake numbers.
+    // An empty feed yields an empty provider slice; the board fills with the
+    // operator's real MongoDB markets.
+    return buildLiveBoard(Array.isArray(rows) ? rows : []);
   }
-  if (!config.provider.baseUrl) {
+  // Same webhook-only default as fetchProviderMarkets: the dead trial API is
+  // never hit and demo rows never double the live board with fake numbers.
+  if (!config.matka.domainKey) {
+    if (webhookOnly()) return [];
     return buildLiveBoard(fixtures().rows);
   }
 

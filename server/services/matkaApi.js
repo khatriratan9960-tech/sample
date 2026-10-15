@@ -24,15 +24,13 @@ import { lookupSchedule } from './marketSchedule.js';
 
 const SOURCE = 'matka';
 
-/** Read live each call so tests / env reloads take effect without reboot.
- *  Defaults match server/config.js - the domain-locked trial pair for
- *  clone-git-main-ratan18, so the key always travels with its domain. */
+/** Read live each call so tests / env reloads take effect without reboot. */
 function matkaCfg() {
-  const fallbackKey = '5e3ccd445deac2c892fb84a7a9988340';
-  const fallbackDomain = 'clone-git-main-ratan18.vercel.app';
   return {
-    key: process.env.MATKA_DOMAIN_KEY || config.matka.domainKey || fallbackKey,
-    domain: process.env.MATKA_DOMAIN || config.matka.domain || fallbackDomain,
+    // Empty (default) = webhook-only install: no trial pull feed, so never
+    // call the upstream. A key present via env/config re-enables the pull.
+    key: process.env.MATKA_DOMAIN_KEY || config.matka.domainKey || '',
+    domain: process.env.MATKA_DOMAIN || config.matka.domain || '',
     baseUrl: process.env.MATKA_BASE_URL || config.matka.baseUrl || 'https://www.matkaapi.com/mapi',
     cacheMs: Number(process.env.MATKA_CACHE_MS || config.matka.cacheMs || 45_000),
     timeoutMs: Number(process.env.MATKA_TIMEOUT_MS || config.matka.timeoutMs || 15_000),
@@ -41,6 +39,22 @@ function matkaCfg() {
 
 const cache = { rows: null, fetchedAt: 0 };
 let pending = null;
+
+/**
+ * Fatal upstream answers (plan exhausted, domain-lock mismatch, bad key) do
+ * NOT change on their own - retrying every request is pure waste and each
+ * doomed fetch can hold the public page open for seconds. After one such
+ * answer, stop calling the upstream for a cooldown window and serve the last
+ * cached payload (or nothing) instantly. Transient failures (abort, network
+ * blip) keep the normal 45s cache behaviour.
+ */
+const fatal = { until: 0, message: '' };
+const FATAL_COOLDOWN_MS = Number(process.env.MATKA_COOLDOWN_MS || 5 * 60 * 1000);
+
+/** True while a final upstream answer (limit/domain/key) is in cooldown. */
+export function upstreamDead() {
+  return fatal.until > Date.now();
+}
 
 /** "11:40 AM" style -> minutes since midnight (12h clock). */
 function toMinutesLocal(value) {
@@ -175,13 +189,25 @@ async function requestMatka(path, kind) {
 async function fetchMatka(path, kind) {
   const data = await requestMatka(path, kind);
   if (data && data.status === false) {
-    throw new Error(data.message || 'matka API reported an error');
+    const message = data.message || 'matka API reported an error';
+    // status:false is an API-level answer (limit reached / domain not
+    // matched / invalid key) - the next call would get the exact same
+    // reply, so remember it and stop hammering the upstream.
+    fatal.until = Date.now() + FATAL_COOLDOWN_MS;
+    fatal.message = message;
+    const err = new Error(message);
+    err.fatalUpstream = true;
+    throw err;
   }
   return data;
 }
 export async function fetchMatkaMarkets() {
   const { key, cacheMs } = matkaCfg();
   if (!key) return [];
+  // The upstream already told us the answer is final (limit reached, domain
+  // mismatch): don't wait on another doomed HTTP round-trip - serve the last
+  // good payload (or none) immediately.
+  if (fatal.until > Date.now()) return cache.rows ?? [];
   // A request is already in flight: hand back that same promise so concurrent
   // callers share ONE upstream hit. `pending` is the promise itself (NOT an
   // object with a .promise field) - returning pending.promise here returned
@@ -226,6 +252,9 @@ export async function fetchMatkaMarkets() {
         if (!rows.some((m) => m.slug === r.slug)) rows.push(r);
       }
       cache.rows = rows;
+      // A real payload proves the upstream works again - clear any cooldown.
+      fatal.until = 0;
+      fatal.message = '';
     } catch (err) {
       // Never crash the public page: keep the last good payload (if any) and
       // retry on the next 45s tick.
