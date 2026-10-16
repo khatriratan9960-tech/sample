@@ -55,8 +55,10 @@ export function useApi(fetcher, deps = []) {
       if (!mounted.current) return;
       // Silent background retry: never flip back to the full-page loader.
       await load({ silent: true });
-      // Still failing? Keep going, up to 5 attempts total.
-      if (mounted.current && errorRef.current && attempts < 5) {
+        // Keep retrying until we have data - cold starts can take >4s on
+      // serverless, so don't give up after just 5 error retries. Retry
+      // whenever there's no successful payload yet, up to 12 attempts.
+      if (mounted.current && attempts < 12 && (errorRef.current || dataRef.current === null)) {
         timer = setTimeout(tick, 0);
       }
     };
@@ -102,10 +104,25 @@ export function usePolling(fetcher, intervalMs = 15000, deps = []) {
   useEffect(() => {
     mounted.current = true;
     load();
+
+    // Fast initial polling: every 1s for the first 5 attempts so a cold
+    // start (slow first /live-result.php) recovers inside ~5s instead of
+    // waiting the full 15s interval. Then back off to intervalMs.
+    let fastCount = 0;
+    const fastTimer = setInterval(() => {
+      if (!mounted.current || fastCount >= 5) {
+        clearInterval(fastTimer);
+        return;
+      }
+      fastCount += 1;
+      load();
+    }, 1000);
+
     const id = setInterval(load, intervalMs);
     return () => {
       mounted.current = false;
       clearInterval(id);
+      clearInterval(fastTimer);
     };
   }, [load, intervalMs]);
 
