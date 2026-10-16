@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { Market } from '../models/Market.js';
 import { Result, buildDisplay, ankOf } from '../models/Result.js';
 import { requireAuth } from '../middleware/auth.js';
-import { today } from '../services/marketService.js';
+import { today, invalidateCustomMarkets } from '../services/marketService.js';
 
 const router = Router();
 router.use(requireAuth);
@@ -109,6 +109,10 @@ router.post('/results', async (req, res) => {
   // Now rebuild both halves from scratch so the jodi appears automatically.
   const built = await recompute(market._id, drawDate);
 
+  // Public board serves a short-lived cache - drop it so the new declaration
+  // is visible immediately.
+  invalidateCustomMarkets();
+
   const openSaved = await Result.exists({ market: market._id, date: drawDate, session: 'open' });
   const closeSaved = await Result.exists({ market: market._id, date: drawDate, session: 'close' });
 
@@ -178,6 +182,9 @@ router.delete('/results/:id', async (req, res) => {
 
   // Deleting one half changes the other's display (e.g. jodi disappears).
   const built = await recompute(result.market, result.date);
+
+  // Same as above: the short-lived public cache must not serve the deleted row.
+  invalidateCustomMarkets();
 
   res.json({ ok: true, display: built?.display ?? null });
 });

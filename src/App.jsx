@@ -28,9 +28,7 @@ function Banner({ error, provider }) {
         <small>
           {error
             ? error
-              : provider === 'matka'
-                ? 'Serving the matka trial API (matkaapi.com) - every draw is streamed live and stored as chart history.'
-                : 'Serving local mock data. Set MATKA_PROVIDER=paid (or MATKA_DOMAIN_KEY) to switch to the live API.'}
+            : `Serving ${provider} mode - results from Maharashtra webhook pushes and admin declares.`}
         </small>
       </span>
     </div>

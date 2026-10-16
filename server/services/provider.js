@@ -1,7 +1,6 @@
 import { config } from '../config.js';
 import { readFileSync } from 'node:fs';
 import { buildLiveBoard } from './liveBoard.js';
-import { fetchMatkaMarkets } from './matkaApi.js';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -57,7 +56,6 @@ const EMPTY_SECTIONS = {
 /** Which upstream are we actually talking to? */
 export function providerName() {
   if (process.env.WEBHOOK_ONLY === '1' || process.env.DISABLE_MOCK_MARKETS === '1') return 'webhook';
-  if (config.matka.domainKey) return 'matka';
   return config.provider.baseUrl ? 'paid' : 'mock';
 }
 
@@ -72,7 +70,7 @@ export function providerName() {
  */
 function webhookOnly() {
   if (process.env.WEBHOOK_ONLY === '1' || process.env.DISABLE_MOCK_MARKETS === '1') return true;
-  if (config.matka.domainKey || config.provider.baseUrl) return false;
+  if (config.provider.baseUrl) return false;
   return config.isProd;
 }
 
@@ -85,62 +83,35 @@ function webhookOnly() {
  * service and this transparently switches over - no other file changes.
  */
 export async function fetchProviderMarkets() {
-  // Webhook-only (matka-result-api.com push, no pull API) is the default in
-  // production: the provider side stays empty, so the dead trial API is never
-  // hit and fake demo fixtures never render. Local dev with no keys keeps
-  // mock fixtures so the stack stays testable.
+  // Webhook-only: no pull API at all - the provider side stays empty and the
+  // operator's MongoDB markets (webhook pushes + admin declares) fill the board.
   if (webhookOnly()) return [];
-  if (!config.matka.domainKey) {
-    return fixtures().rows.map((r) => ({ ...r }));
-  }
 
-  // Trial pull branch: only reachable when a MATKA_DOMAIN_KEY *is* configured.
-  // Trial: cached copy of all markets + today's draws, never throws the
-  // public page, rate-limit friendly (45s cache, 10s gap honoured).
-  const rows = await fetchMatkaMarkets();
-  // The trial plan is capped (matkaapi.com returns
-  // "Trial request limit reached" once total_req hits plan_limit). We
-  // deliberately do NOT substitute the bundled demo fixtures here any
-  // more: a stale fixture row duplicates every REAL webhook market with
-  // fake numbers (e.g. SITA MORNING showed the demo "140-56-556" next to
-  // the real "255-24-699"), which made the public board show two
-  // conflicting results for the same market. An empty feed now means the
-  // provider side is simply empty - the operator's webhook/admin markets
-  // from MongoDB fill the board.
-  return Array.isArray(rows) ? rows : [];
+  // Mock/dev: seeded fixtures.
+  return fixtures().rows.map((r) => ({ ...r }));
 }
 
 export async function fetchProviderLive() {
-  // Webhook-only: no pull feed, so the provider slice of the live board is
-  // empty - the operator's real MongoDB markets fill it.
+  // Webhook-only: no pull feed at all - the operator's real MongoDB markets
+  // fill the live board.
   if (webhookOnly()) return [];
-  if (config.matka.domainKey) {
-    // Trial: all markets + today's draws -> the live board builds the
-    // time-driven cards exactly like the fixture path.
-    const rows = await fetchMatkaMarkets();
-    // No fixture fallback here either (see fetchProviderMarkets): demo rows
-    // would double every webhook market on the LIVE board with fake numbers.
-    // An empty feed yields an empty provider slice; the board fills with the
-    // operator's real MongoDB markets.
-    return buildLiveBoard(Array.isArray(rows) ? rows : []);
-  }
-  // Same webhook-only default as fetchProviderMarkets: the dead trial API is
-  // never hit and demo rows never double the live board with fake numbers.
-  if (!config.matka.domainKey) {
-    if (webhookOnly()) return [];
-    return buildLiveBoard(fixtures().rows);
+
+  // Paid provider: fetch live results from the commercial API.
+  if (config.provider.baseUrl) {
+    try {
+      const res = await fetch(`${config.provider.baseUrl}/live-result`, {
+        headers: { 'X-API-Key': config.provider.apiKey, Accept: 'application/json' },
+      });
+      const body = await res.json();
+      return Array.isArray(body?.data) ? body.data : [];
+    } catch {
+      // Never let an upstream outage break the public page.
+      return [];
+    }
   }
 
-  try {
-    const res = await fetch(`${config.provider.baseUrl}/live-result`, {
-      headers: { 'X-API-Key': config.provider.apiKey, Accept: 'application/json' },
-    });
-    const body = await res.json();
-    return Array.isArray(body?.data) ? body.data : [];
-  } catch {
-    // Never let an upstream outage break the public page.
-    return [];
-  }
+  // Mock/dev: seeded fixtures.
+  return buildLiveBoard(fixtures().rows);
 }
 
 export const getSections = () => {

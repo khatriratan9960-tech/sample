@@ -12,8 +12,11 @@
 const BASE = '/api';
 
 // Fail fast on Vercel: a hung upstream must never leave the UI on
-// "Loading..." for 15s+ (serverless functions time out at ~10s anyway).
-const FETCH_TIMEOUT_MS = 8000;
+// "Loading..." past the 5s budget (serverless functions time out at ~10s
+// anyway). The server serves cached rows instantly via stale-while-
+// revalidate, so anything slower than ~4.5s here is a real outage - abort
+// and let useApi's background retry pick the page back up.
+const FETCH_TIMEOUT_MS = 4500;
 
 async function getJson(path) {
   const controller = new AbortController();

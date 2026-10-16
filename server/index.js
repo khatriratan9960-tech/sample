@@ -12,7 +12,7 @@ async function start() {
   app.listen(config.port, () => {
     console.log(`[api] listening on http://localhost:${config.port}`);
     console.log(
-      `[provider] ${providerName()} - trial: ${config.matka.domainKey ? 'matka configured (domain_key set)' : 'mock (no trial key configured)'}`
+      `[provider] ${providerName()} - webhook-only: results from Maharashtra push + admin declares`,
     );
   });
 }

@@ -4,6 +4,7 @@ import { Market } from '../models/Market.js';
 import { Result, buildDisplay } from '../models/Result.js';
 import { todayStr } from '../services/marketClock.js';
 import { lookupSchedule, to24h } from '../services/marketSchedule.js';
+import { invalidateCustomMarkets } from '../services/marketService.js';
 
 const router = Router();
 
@@ -313,6 +314,10 @@ router.post('/', async (req, res) => {
     if (open) open = await Result.findById(open._id);
     if (close) close = await Result.findById(close._id);
   }
+
+  // The public board caches loadCustomMarkets() for a few seconds - drop it
+  // so this pushed draw is visible on the very next page read.
+  invalidateCustomMarkets();
 
   return res.status(200).json({
     ok: true,

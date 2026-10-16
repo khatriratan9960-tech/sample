@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 import { Market } from '../models/Market.js';
 import { Result } from '../models/Result.js';
 import { fetchProviderMarkets, fetchProviderLive } from './provider.js';
-import { upstreamDead } from './matkaApi.js';
 import { syncChartHistory, syncChartHistoryFromCards } from './chartHistory.js';
 import { mergeMarkets } from './mergeMarkets.js';
 import { rankLiveCards, BOARD_SIZE } from './liveBoard.js';
@@ -29,8 +28,20 @@ export function today() {
  * Resilient: when the public middleware lets a request through without a DB
  * (cold start grace window), this returns empty instead of throwing - the
  * page renders provider-only rather than hanging.
+ *
+ * SHORT-LIVED SHARED CACHE (~8s): /api/home.php calls this TWICE (markets +
+ * live boards) and the frontend polls /live-result.php every 15s - the
+ * Atlas free-tier round trip (~1-2.5s) used to be paid on EVERY one of those
+ * calls and ate the whole 5s page budget on its own. One shared result for
+ * ~8s makes home.php ~2x faster and polling near-instant, while staying well
+ * inside the frontend's own 15s refresh cadence (results are only declared
+ * a few times per hour anyway).
  */
-export async function loadCustomMarkets() {
+const CUSTOM_TTL_MS = Number(process.env.CUSTOM_MARKETS_TTL_MS || 8_000);
+const customCache = { data: null, fetchedAt: 0 };
+let customPending = null;
+
+async function queryCustomMarkets() {
   // Fast-fail when the DB isn't connected: without this, Mongoose buffers
   // the query until serverSelectionTimeoutMS expires (~4.5s+) and the
   // Vercel function burns its whole ~10s budget on one cold start.
@@ -102,17 +113,58 @@ export async function loadCustomMarkets() {
 }
 
 /**
+ * Cached front door for queryCustomMarkets(): concurrent callers (the two
+ * Promise.all branches of home.php) share ONE in-flight query, and repeat
+ * calls inside the TTL window are answered from memory - so the Atlas round
+ * trip is paid at most once per ~8s instead of 2-3x per request.
+ */
+export async function loadCustomMarkets() {
+  const now = Date.now();
+  if (customCache.data && now - customCache.fetchedAt < CUSTOM_TTL_MS) {
+    return customCache.data;
+  }
+  if (customPending) return customPending;
+  customPending = queryCustomMarkets()
+    .then((data) => {
+      customCache.data = data;
+      customCache.fetchedAt = Date.now();
+      return data;
+    })
+    .catch((err) => {
+      // queryCustomMarkets already fast-fails into empty payloads; this is a
+      // last-resort guard so a surprise throw (e.g. model registration race)
+      // never rejects the public page.
+      console.warn('[marketService] loadCustomMarkets failed: ' + err.message);
+      const empty = { markets: [], halvesByMarket: new Map() };
+      customCache.data = empty;
+      customCache.fetchedAt = Date.now();
+      return empty;
+    })
+    .finally(() => {
+      customPending = null;
+    });
+  return customPending;
+}
+
+/**
+ * Drop the cached custom-markets payload so the NEXT public read queries
+ * MongoDB fresh. Called by the push webhook and the admin result routes the
+ * moment a draw is written - a newly pushed result must appear on the live
+ * board immediately, never after the TTL window.
+ */
+export function invalidateCustomMarkets() {
+  customCache.data = null;
+  customCache.fetchedAt = 0;
+}
+
+/**
  * The merged public market list: provider markets + custom markets,
  * interleaved by open time so custom ones blend into the flow.
  */
 export async function getPublicMarkets(now = nowMinutes()) {
   // ONE upstream hit per cooldown window: without this outer check the two
-  // Promise.all branches below BOTH fire at the dead upstream simultaneously
-  // (neither has seen the fatal cooldown yet), doubling every page's hang.
-  if (upstreamDead()) {
-    const { markets, halvesByMarket } = await loadCustomMarkets();
-    return mergeMarkets([], markets, halvesByMarket, now);
-  }
+  // No upstream pull exists anymore (webhook-only), so the Promise.all
+  // branches below never hit a dead external API.
   const [{ markets, halvesByMarket }, providerMarkets] = await Promise.all([
     loadCustomMarkets(),
     fetchProviderMarkets(),
@@ -229,7 +281,7 @@ function buildCustomLiveCards(markets, halvesByMarket, date, now, providerLive) 
   // out). Custom markets write themselves: each declared Result row is
   // picked up by getChartHistory() on the chart pages.
   const ranked = rankLiveCards([...providerLive, ...customCards]);
-  syncChartHistoryFromCards(providerLive, 'matka');
+  syncChartHistoryFromCards(providerLive);
 
   // Drop the internal sort keys before responding.
   return ranked.slice(0, BOARD_SIZE).map(({ _open, _close, ...rest }) => rest);
@@ -245,13 +297,8 @@ function buildCustomLiveCards(markets, halvesByMarket, date, now, providerLive) 
  * anywhere.
  */
 export async function getPublicLive(date = today(), now = nowMinutes()) {
-  // Same single-hit guard as getPublicMarkets: the Promise.all branches
-  // would otherwise both fire at the dead upstream before either sees the
-  // fatal cooldown, doubling the page's hang.
-  if (upstreamDead()) {
-    const { markets, halvesByMarket } = await loadCustomMarkets();
-    return buildCustomLiveCards(markets, halvesByMarket, date, now, []);
-  }
+  // No upstream pull exists anymore (webhook-only), so there is no dead
+  // upstream to guard against.
   const [providerLive, { markets, halvesByMarket }] = await Promise.all([
     fetchProviderLive(),
     loadCustomMarkets(),

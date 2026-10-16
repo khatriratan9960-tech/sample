@@ -43,13 +43,15 @@ export function useApi(fetcher, deps = []) {
 
     // A brief API restart shouldn't leave the page permanently errored.
     // Retry with a growing delay, stopping as soon as a call succeeds.
+    // First retry fires ~1s after mount so a slow first paint (cold start)
+    // recovers well inside the 5s budget instead of waiting ~4.5s.
     let attempts = 0;
     let timer;
 
     const tick = async () => {
       if (!mounted.current) return;
       attempts += 1;
-      await new Promise((r) => setTimeout(r, 2000 * attempts));
+      await new Promise((r) => setTimeout(r, 1000 * attempts));
       if (!mounted.current) return;
       // Silent background retry: never flip back to the full-page loader.
       await load({ silent: true });
@@ -59,7 +61,7 @@ export function useApi(fetcher, deps = []) {
       }
     };
 
-    timer = setTimeout(tick, 2500);
+    timer = setTimeout(tick, 1000);
 
     return () => {
       mounted.current = false;
