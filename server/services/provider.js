@@ -66,6 +66,18 @@ function sattaApiMode() {
 }
 
 /**
+ * Ank = digit-SUM mod 10 of a panna (2+6+9=17 -> 7). The matka convention -
+ * never the panna's last digit ("269" ends in 9, its ank is 7).
+ */
+function digitSumOf(pana) {
+  const s = String(pana ?? '').trim();
+  if (!/^\d+$/.test(s)) return null;
+  let sum = 0;
+  for (const ch of s) sum += Number(ch);
+  return sum % 10;
+}
+
+/**
  * SYNC-ON-READ: chart history persists the moment a fresh upstream payload
  * lands - no cron needed. fetchSattaApi() invokes this exactly once per
  * upstream call (fleet-wide: at most once per SATTAAPI_CACHE_TTL_MS), so
@@ -132,7 +144,9 @@ export async function fetchProviderMarkets() {
         .map((r) => {
           const openPana = r.open;
           const closePana = r.jodi;
-          const jodi = String(r.close || '').padStart(2, '0');
+          // Empty stays empty (same rule as mapRow): "00" would fake a half.
+          const rawCloseMkts = String(r.close ?? '').trim();
+          const jodi = rawCloseMkts ? rawCloseMkts.padStart(2, '0') : '';
           const comp = openPana && closePana && jodi;
           return {
             market: r.name,
@@ -147,7 +161,7 @@ export async function fetchProviderMarkets() {
             close: jodi || null,
             jodi: closePana || null,
             result: comp ? `${openPana}-${jodi}-${closePana}` : null,
-            ank: comp ? Number(String(closePana).slice(-1)) : null,
+            ank: comp ? digitSumOf(closePana) : null,
             date: r.date || null,
             resultDate: r.result_date || null,
           };
@@ -176,13 +190,15 @@ export async function fetchProviderLive() {
         // (close holds the 2-digit jodi, jodi the 3-digit close panna).
         const openPana = r.open;
         const closePana = r.jodi;
-        const jodi = String(r.close ?? '').padStart(2, '0');
-        const openAnk = String(openPana || '').slice(-1);
-        const closeAnk = String(closePana || '').slice(-1);
+        // Empty stays empty (same rule as mapRow): "00" would fake a half.
+        const rawCloseLive = String(r.close ?? '').trim();
+        const jodi = rawCloseLive ? rawCloseLive.padStart(2, '0') : '';
+        const openAnk = digitSumOf(openPana);
+        const closeAnk = digitSumOf(closePana);
         const complete = openPana && closePana && jodi;
         const result = complete
           ? `${openPana}-${jodi}-${closePana}`
-          : (openPana ? `${openPana}-${openAnk}` : null);
+          : (openPana && openAnk != null ? `${openPana}-${openAnk}` : null);
 
         // Use the API's real 12h times so the live board can rank cards by
         // their actual draw window (e.g. Kalyan 4:35-6:35 PM). The old
@@ -200,7 +216,7 @@ export async function fetchProviderLive() {
           market: r.name,
           slug: slugify(r.name),
           result,
-          ank: complete ? Number(closeAnk) : (openPana ? Number(openAnk) : null),
+          ank: complete ? closeAnk : (openPana ? openAnk : null),
           source: 'provider',
           pushDriven: true,
           openTime: String(r.open_time || '').trim() || '00:00',

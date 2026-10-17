@@ -23,6 +23,19 @@ function ankOf(display) {
   return /^\d+$/.test(tail) ? Number(tail.slice(-1)) : null;
 }
 
+/**
+ * Ank of a panna = sum of its digits mod 10 ("269" -> 7, "389" -> 0).
+ * Same convention as liveBoard.panaAnk / chartHistory.ankOf - the last
+ * DIGIT of the panna ("269" -> 9) is wrong and must never be used.
+ */
+function panaAnk(pana) {
+  const s = String(pana ?? '').trim();
+  if (!/^\d+$/.test(s)) return null;
+  let sum = 0;
+  for (const ch of s) sum += Number(ch);
+  return sum % 10;
+}
+
 /** Shape a provider market to the same contract custom markets use. */
 function normalizeProvider(raw, now) {
   const name = raw.market ?? raw.name ?? '';
@@ -41,6 +54,15 @@ function normalizeProvider(raw, now) {
   else if (hasAll) display = `${open}-${close}-${jodi}`;
   else if (hasPair) display = `${open}-${close}`;
   else if (jodi != null && jodi !== '') display = String(jodi);
+  // Partial draw (open declared, close still pending): show open panna +
+  // digit-sum ank, exactly like the live board ("269-7", "389-0") - never a
+  // padded "269-00"/"389-00" stub and never a silent Loading... during the
+  // window. Full results only ever arrive with their own result string, so
+  // this branch cannot override one.
+  else if (open != null && open !== '') {
+    const ank = panaAnk(open);
+    display = ank != null ? `${open}-${ank}` : String(open);
+  }
 
   const sched = lookupSchedule(name);
   const openTimeShown = raw.openTime ?? sched?.open ?? '';
