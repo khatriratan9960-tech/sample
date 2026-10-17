@@ -5,6 +5,9 @@
       "includeFiles": "php-api/data/**"
     }
   },
+  "crons": [
+    { "path": "/api/cron/sync-results", "schedule": "* * * * *" }
+  ],
   "rewrites": [
     {
       "source": "/api/:path*",

@@ -6,7 +6,7 @@ import adminMarketRoutes from './routes/adminMarkets.js';
 import adminResultRoutes from './routes/adminResults.js';
 import adminUserRoutes from './routes/adminUsers.js';
 import publicRoutes from './routes/public.js';
-import maharashtraWebhookRoutes from './routes/maharashtraWebhook.js';
+import cronRoutes from './routes/cron.js';
 
 /**
  * The Express app, shared by both runtimes:
@@ -105,8 +105,8 @@ app.use('/api', (req, res, next) => {
 // Public endpoints (no auth).
 app.use('/api', publicRoutes);
 
-// Push webhook - external providers POST results here. No auth required.
-app.use('/api/maharashtra-market-callback', maharashtraWebhookRoutes);
+// Cron endpoint (protected by CRON_SECRET) - sattaapi results sync.
+app.use('/api/cron', cronRoutes);
 
 // Auth + admin (JWT required except login).
 app.use('/api/auth', authRoutes);

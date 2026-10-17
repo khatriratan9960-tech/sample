@@ -1,6 +1,7 @@
 import { config } from '../config.js';
 import { readFileSync } from 'node:fs';
 import { buildLiveBoard } from './liveBoard.js';
+import { fetchSattaApi, isSattaApiConfigured, slugify } from './sattaApi.js';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -55,8 +56,13 @@ const EMPTY_SECTIONS = {
 };
 /** Which upstream are we actually talking to? */
 export function providerName() {
+  if (isSattaApiConfigured()) return 'sattaapi';
   if (process.env.WEBHOOK_ONLY === '1' || process.env.DISABLE_MOCK_MARKETS === '1') return 'webhook';
   return config.provider.baseUrl ? 'paid' : 'mock';
+}
+
+function sattaApiMode() {
+  return isSattaApiConfigured();
 }
 
 /**
@@ -83,6 +89,33 @@ function webhookOnly() {
  * service and this transparently switches over - no other file changes.
  */
 export async function fetchProviderMarkets() {
+  // SattaAPI pull mode - discover markets from the API response.
+  if (sattaApiMode()) {
+    try {
+      const results = await fetchSattaApi();
+      const seen = new Set();
+      return results
+        .filter((r) => {
+          if (!r.name || seen.has(r.name)) return false;
+          seen.add(r.name);
+          return true;
+        })
+        .map((r) => ({
+          market: r.name,
+          slug: slugify(r.name),
+          source: 'provider',
+          pushDriven: true,
+          active: true,
+          openTime: '00:00',
+          closeTime: '23:59',
+          provider: 'sattaapi',
+        }));
+    } catch (err) {
+      console.error('[sattaapi] fetchProviderMarkets failed:', err.message);
+      return [];
+    }
+  }
+
   // Webhook-only: no pull API at all - the provider side stays empty and the
   // operator's MongoDB markets (webhook pushes + admin declares) fill the board.
   if (webhookOnly()) return [];
@@ -92,6 +125,41 @@ export async function fetchProviderMarkets() {
 }
 
 export async function fetchProviderLive() {
+  // SattaAPI pull mode - fetch today's results and build live cards.
+  if (sattaApiMode()) {
+    try {
+      const results = await fetchSattaApi();
+      return results.map((r) => {
+        const openPana = r.open;
+        const closePana = r.close;
+        const jodi = r.jodi.padStart(2, '0');
+        const openAnk = String(openPana).slice(-1);
+        const closeAnk = String(closePana).slice(-1);
+        const result = `${openPana}-${jodi}-${closePana}`;
+
+        return {
+          market: r.name,
+          slug: slugify(r.name),
+          result,
+          ank: Number(closeAnk),
+          source: 'provider',
+          pushDriven: true,
+          openTime: '00:00',
+          closeTime: '23:59',
+          isPending: false,
+          status: 'closed',
+          isImminent: false,
+          open: openPana,
+          close: closePana,
+          jodi,
+        };
+      });
+    } catch (err) {
+      console.error('[sattaapi] fetchProviderLive failed:', err.message);
+      return [];
+    }
+  }
+
   // Webhook-only: no pull feed at all - the operator's real MongoDB markets
   // fill the live board.
   if (webhookOnly()) return [];
@@ -112,6 +180,106 @@ export async function fetchProviderLive() {
 
   // Mock/dev: seeded fixtures.
   return buildLiveBoard(fixtures().rows);
+}
+
+/**
+ * Sync today's sattaapi results into MongoDB (Result + ChartEntry).
+ * Called by the cron endpoint. Returns { synced, skipped, total, date }.
+ */
+export async function syncSattaApiResults() {
+  if (!sattaApiMode()) {
+    return { synced: 0, skipped: 0, total: 0, error: 'sattaapi not configured' };
+  }
+
+  const { Market } = await import('../models/Market.js');
+  const { Result } = await import('../models/Result.js');
+  const { ChartEntry } = await import('../models/ChartEntry.js');
+  const { buildDisplay } = await import('../models/Result.js');
+  const { today: todayFn } = await import('./marketClock.js');
+
+  const results = await fetchSattaApi();
+  const date = todayFn();
+  let synced = 0;
+  let skipped = 0;
+
+  for (const r of results) {
+    if (!r.name || !r.open || !r.close || !r.jodi) {
+      skipped++;
+      continue;
+    }
+
+    // Find or create market by name (case-insensitive).
+    const safeName = r.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    let market = await Market.findOne({ name: { $regex: new RegExp(`^${safeName}$`, 'i') } });
+    if (!market) {
+      market = await Market.create({
+        name: r.name,
+        slug: slugify(r.name),
+        openTime: '00:00',
+        closeTime: '23:59',
+        active: true,
+        pushDriven: true,
+        source: 'sattaapi',
+      });
+    }
+
+    const openPana = r.open;
+    const closePana = r.close;
+    const openAnk = String(openPana).slice(-1);
+    const closeAnk = String(closePana).slice(-1);
+    const jodi = r.jodi.padStart(2, '0');
+
+    // Upsert open half
+    await Result.findOneAndUpdate(
+      { market: market._id, date, session: 'open' },
+      {
+        $set: {
+          number: openAnk,
+          pana: openPana,
+          ank: Number(openAnk),
+          jodi: null,
+          jodiComplete: false,
+          display: `${openPana}-${openAnk}`,
+        },
+      },
+      { upsert: true, new: true }
+    );
+
+    // Upsert close half - completes the draw
+    const disp = buildDisplay({ pana: openPana, number: openAnk }, { pana: closePana, number: closeAnk });
+    await Result.findOneAndUpdate(
+      { market: market._id, date, session: 'close' },
+      {
+        $set: {
+          number: closeAnk,
+          pana: closePana,
+          ank: Number(closeAnk),
+          jodi: disp.jodi ?? jodi,
+          jodiComplete: true,
+          display: disp.display,
+        },
+      },
+      { upsert: true, new: true }
+    );
+
+    // Upsert chart entry for chart pages
+    await ChartEntry.findOneAndUpdate(
+      { slug: market.slug, date },
+      {
+        $set: {
+          openPana,
+          closePana,
+          jodi: disp.jodi ?? jodi,
+          date,
+        },
+      },
+      { upsert: true, new: true }
+    );
+
+    synced++;
+  }
+
+  return { synced, skipped, total: results.length, date };
 }
 
 export const getSections = () => {
