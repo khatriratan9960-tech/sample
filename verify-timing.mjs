@@ -375,19 +375,22 @@ check(
   );
 }
 
-// --- 18. Real sattaapi payload -> board contract (regression guard) ---
+// --- 19. Real sattaapi payload -> FINAL board format (regression guard) ---
 // The raw API's field names are swapped vs our vocabulary:
 //   raw.open  = 3-digit open panna
 //   raw.close = 2-digit JODI         (NOT the close panna)
 //   raw.jodi  = 3-digit close panna  (NOT the jodi)
 // and partial rows can carry junk in raw.close (e.g. Milan Night "07" while
-// close is still pending). mapRow inverts raw names into an intermediate
-// contract; sattaApiToMarkets/sattaApiToLive must translate that back into
-// the board contract {close: jodi, jodi: closePanna} and must never emit
-// padded "00" halves or leak the raw jodi-half.
+// close is still pending). mapRow renames them ONCE at the API boundary into
+// the final board format the whole codebase speaks ({close: 2-digit jodi,
+// jodi: 3-digit close panna, result: 'open_pana-jodi-close_panna'}) - the
+// global cache stores exactly that format (_fmt 'board-v1').
+// sattaApiToMarkets/sattaApiToLive read it as-is, and ensureBoardRows() heals
+// rows cached by older deploys. Never a padded "00" half, never a leaked raw
+// jodi-half.
 {
   const { sattaApiToMarkets, sattaApiToLive } = await import('./server/services/provider.js');
-  const { mapRow } = await import('./server/services/sattaApi.js');
+  const { mapRow, ensureBoardRows, BOARD_FMT } = await import('./server/services/sattaApi.js');
 
   const RAW = [
     { name: 'KALYAN', open: '250', close: '77', jodi: '359', open_time: '04:35 PM', close_time: '06:35 PM' },
@@ -397,9 +400,39 @@ check(
   const rows = RAW.map((r) => mapRow(r, '2026-10-17'));
 
   check(
-    'mapRow intermediate contract: close=3-digit panna, jodi=2-digit',
-    rows[0].close === '359' && rows[0].jodi === '77',
-    `close=${rows[0].close} jodi=${rows[0].jodi}`
+    'mapRow FINAL board format: close=2-digit jodi, jodi=3-digit panna, result open-jodi-panna',
+    rows[0].close === '77' && rows[0].jodi === '359' &&
+      rows[0].result === '250-77-359' && rows[0].ank === 7 &&
+      rows[0]._fmt === BOARD_FMT,
+    `close=${rows[0].close} jodi=${rows[0].jodi} result=${rows[0].result} ank=${rows[0].ank}`
+  );
+  check(
+    'mapRow partial: junk jodi half can never leak (Milan -> 269-7, not 07)',
+    rows[1].close === '07' && rows[1].jodi === '' && rows[1].result === '269-7',
+    `close=${rows[1].close} jodi=${rows[1].jodi} result=${rows[1].result}`
+  );
+  check(
+    'mapRow empty close -> open-ank only (389-0), no padded 00',
+    rows[2].result === '389-0' && rows[2].close === '' && rows[2].jodi === '',
+    `result=${rows[2].result}`
+  );
+
+  // Legacy cache rows written by older deploys (inverse contract) must be
+  // healed into the same final format on every global-cache read.
+  const legacy = ensureBoardRows([
+    { name: 'KALYAN', open: '250', close: '359', jodi: '77' },
+    { name: 'MILAN NIGHT', open: '269', close: '', jodi: '07' },
+  ]);
+  check(
+    'global cache: legacy inverse row converts to open-jodi-closePana',
+    legacy[0].close === '77' && legacy[0].jodi === '359' &&
+      legacy[0].result === '250-77-359' && legacy[0]._fmt === BOARD_FMT,
+    `close=${legacy[0].close} jodi=${legacy[0].jodi} result=${legacy[0].result}`
+  );
+  check(
+    'global cache: legacy junk jodi still gated (Milan -> 269-7)',
+    legacy[1].jodi === '' && legacy[1].result === '269-7',
+    `jodi=${legacy[1].jodi} result=${legacy[1].result}`
   );
 
   const mkts = sattaApiToMarkets(rows);

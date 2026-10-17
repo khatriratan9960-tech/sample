@@ -136,32 +136,73 @@ async function callProvider() {
   return body?.results?.data ?? [];
 }
 
+/** Format marker carried by every row written from now on. `_fmt: 'board-v1'`
+ *  means the row is already in the FINAL public format the whole codebase
+ *  speaks: {close: 2-digit jodi, jodi: 3-digit close panna, result:
+ *  'open_pana-jodi-close_panna'}. Rows WITHOUT it were written by older
+ *  deploys in the legacy INVERSE contract and are converted on read by
+ *  ensureBoardRows(), so a stale cache row can never leak the old field order. */
+export const BOARD_FMT = 'board-v1';
+
+/** Ank of a panna = digit-SUM mod 10 ("269" -> 7, "389" -> 0). Never the
+ *  panna's last digit ("269" -> 9). */
+function ankSum(pana) {
+  const s = String(pana ?? '').trim();
+  if (!/^\d+$/.test(s)) return null;
+  let sum = 0;
+  for (const ch of s) sum += Number(ch);
+  return sum % 10;
+}
+
+/** The ONE display builder - the ONLY place a result string is assembled on
+ *  the provider path, so every layer (global cache, market list, live cards)
+ *  renders the identical `open_pana-jodi-close_panna` format:
+ *   - complete draw -> "250-77-359"
+ *   - open only     -> "269-7" (open panna + digit-sum ank; a junk jodi half
+ *                      like Milan Night's "07" can NEVER surface here because
+ *                      the full branch needs closePana too)
+ *   - nothing known -> "" */
+export function displayOf(openPana, jodi2, closePana) {
+  if (openPana && closePana && jodi2) return `${openPana}-${jodi2}-${closePana}`;
+  if (openPana) {
+    const ank = ankSum(openPana);
+    return ank != null ? `${openPana}-${ank}` : openPana;
+  }
+  return '';
+}
+
 /**
- * Normalize one upstream row into the INTERMEDIATE contract
- * syncSattaApiResults consumes: the raw API's `close` (a 2-digit jodi) is
- * passed through as `jodi`, and the raw `jodi` (the 3-digit close panna) is
- * passed through as `close`.
+ * Normalize one upstream row into the FINAL board format - the same
+ * `open_pana-jodi-close_panna` contract fixtures, the chart sync and the
+ * public site speak ({close: 2-digit jodi, jodi: 3-digit close panna} - see
+ * liveBoard.revealFor / mock.php / chartHistory.syncChartHistory).
  *
- * NOTE: this is the INVERSE of the board/fixture contract the rest of the
- * codebase speaks ({close: 2-digit jodi, jodi: 3-digit close panna} - see
- * liveBoard.revealFor / mock.php). fetchProviderMarkets and
- * fetchProviderLive translate mapRow's output back into the board contract;
- * do not read these rows as board rows.
+ * The raw API's field names are SWAPPED vs our vocabulary:
+ *   raw.open  = 3-digit open panna, raw.close = 2-digit JODI,
+ *   raw.jodi  = 3-digit close Panna - so mapRow renames them here, once, at
+ * the API boundary. The global cache stores exactly these rows (tagged
+ * _fmt board-v1), which means the persisted fleet-wide payload is already in
+ * the format the site renders; nothing downstream re-inverts anything.
  *
  * date prefers the API's result_date (night markets close after midnight IST
  * and carry yesterday's date) so chart upserts land on the correct day.
  */
 export function mapRow(r, fallbackDate) {
+  const openPana = String(r.open ?? '').trim();
+  const closePana = String(r.jodi ?? '').trim();
   // Empty stays empty: blank-padding a missing jodi to "00" would fake a
   // declared half ("389-00") and defeat partial-draw detection downstream.
-  const rawJodi = String(r.jodi ?? '').trim();
+  const rawJodi = String(r.close ?? '').trim();
   const jodi2 = rawJodi ? rawJodi.padStart(2, '0') : '';
   const resultDate = String(r.result_date ?? '').trim();
   return {
+    _fmt: BOARD_FMT,
     name: String(r.name ?? '').trim(),
-    open: String(r.open ?? '').trim(),
+    open: openPana,
     close: jodi2,
-    jodi: String(r.close ?? '').trim(),
+    jodi: closePana,
+    result: displayOf(openPana, jodi2, closePana),
+    ank: closePana && jodi2 ? ankSum(closePana) : ankSum(openPana),
     result_date: resultDate,
     open_time: String(r.open_time ?? '').trim(),
     close_time: String(r.close_time ?? '').trim(),
@@ -169,9 +210,38 @@ export function mapRow(r, fallbackDate) {
   };
 }
 
+/** Convert legacy cache rows (pre-board-v1 INVERSE contract: close held the
+ *  3-digit panna, jodi the 2-digit jodi) into the final board format, and
+ *  pass board-v1 rows through untouched. Applied on EVERY MongoDB cache read
+ *  so rows written by an older deploy are healed at the boundary instead of
+ *  being re-rendered as "250-359-77" / bare "07". */
+export function ensureBoardRows(rows) {
+  if (!Array.isArray(rows)) return rows;
+  if (rows.every((r) => r && r._fmt === BOARD_FMT)) return rows;
+  return rows.map((r) => {
+    if (!r || r._fmt === BOARD_FMT) return r;
+    const openPana = String(r.open ?? '').trim();
+    const closePana = String(r.close ?? '').trim();
+    const rawJodi = String(r.jodi ?? '').trim();
+    const jodi2 = rawJodi ? rawJodi.padStart(2, '0') : '';
+    return {
+      ...r,
+      _fmt: BOARD_FMT,
+      close: jodi2,
+      jodi: closePana,
+      result: displayOf(openPana, jodi2, closePana),
+      ank: closePana && jodi2 ? ankSum(closePana) : ankSum(openPana),
+    };
+  });
+}
+
 /**
  * Fetch today's results from sattaapi.com (two-level cache).
- * Returns [{ name, open, close, jodi, result_date, date }].
+ * Returns rows in the FINAL board format: [{ _fmt: 'board-v1', name, open,
+ * close (2-digit jodi), jodi (3-digit close panna), result ('250-77-359' or
+ * '269-7' for partials), ank, result_date, date, ... }]. Rows read back from
+ * the MongoDB cache pass through ensureBoardRows() so rows written by older
+ * deploys are healed to the same format at the boundary.
  * Serves the last-known-good payload when the upstream is down; throws only
  * when there is genuinely nothing to serve (no cache, no upstream).
  */
@@ -188,15 +258,18 @@ export async function fetchSattaApi() {
   }
 
   // L2: fleet-wide MongoDB cache - absorbs every other instance / cold start.
+  // Rows written by older deploys carry no _fmt marker and are in the legacy
+  // inverse contract; ensureBoardRows() heals them at this boundary so every
+  // consumer only ever sees the final board format.
   const g = await readGlobalCache();
   if (g?.data) {
     const at = new Date(g.fetchedAt).getTime();
     if (now - at < CACHE_TTL_MS) {
-      mem = { data: g.data, fetchedAt: at };
+      mem = { data: ensureBoardRows(g.data), fetchedAt: at };
       return mem.data;
     }
     // Stale but real: keep as the failure fallback below.
-    mem = { data: g.data, fetchedAt: at };
+    mem = { data: ensureBoardRows(g.data), fetchedAt: at };
   }
 
   // L3: refresh. Same-process callers share one upstream call; concurrent
@@ -213,7 +286,7 @@ export async function fetchSattaApi() {
           const again = await readGlobalCache();
           if (again?.data && Date.now() - new Date(again.fetchedAt).getTime() < CACHE_TTL_MS) {
             const at = new Date(again.fetchedAt).getTime();
-            mem = { data: again.data, fetchedAt: at };
+            mem = { data: ensureBoardRows(again.data), fetchedAt: at };
             return mem.data;
           }
         }

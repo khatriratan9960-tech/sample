@@ -98,12 +98,11 @@ onSattaApiFreshData((rows) => {
   return import('./chartHistory.js').then(
     (mod) =>
       mod.syncChartHistory(
-        // syncChartHistory/isCompleteRow speak the BOARD contract
-        // ({close: 2-digit jodi, jodi: 3-digit close panna}); fetchSattaApi
-        // hands us mapRow's inverse contract, so swap the two fields back
-        // here - otherwise every row fails isCompleteRow and this sync-on-read
-        // is a silent no-op.
-        rows.map((r) => ({ ...r, close: r.jodi, jodi: r.close, slug: slugify(r.name), market: r.name })),
+        // fetchSattaApi()/the global cache hand us rows in the FINAL board
+        // format (_fmt board-v1) that syncChartHistory/isCompleteRow already
+        // speak: {close: 2-digit jodi, jodi: 3-digit close panna} - no swap
+        // needed (the old swap on inverse rows was a silent no-op).
+        rows.map((r) => ({ ...r, slug: slugify(r.name), market: r.name })),
         'matka',
         { force: true }
       ),
@@ -126,11 +125,12 @@ function webhookOnly() {
   return config.isProd;
 }
 
-/** Map fetchSattaApi()/mapRow rows into MARKET rows in the BOARD contract
- *  ({close: 2-digit jodi, jodi: 3-digit close panna}); exported for tests,
- *  because the raw upstream payload uses confusingly swapped field names
- *  (raw.close = jodi, raw.jodi = close panna) and this mapping has silently
- *  regressed before (KALYAN rendered as "250-359-77"). */
+/** Map fetchSattaApi()/mapRow rows into MARKET rows. Rows arrive from
+ *  fetchSattaApi()/the global cache in the FINAL board format (_fmt
+ *  'board-v1': {close: 2-digit jodi, jodi: 3-digit close panna, result:
+ *  'open_pana-jodi-close_panna'} - see mapRow); exported for tests because
+ *  this field contract has regressed twice (KALYAN rendered as
+ *  "250-359-77", Milan Night as a bare "07"). */
 export function sattaApiToMarkets(results) {
   const seen = new Set();
   return results
@@ -140,12 +140,11 @@ export function sattaApiToMarkets(results) {
       return true;
     })
     .map((r) => {
-          // fetchSattaApi()/mapRow contract: r.close = 3-digit CLOSE PANNAS,
-          // r.jodi = 2-digit JODI (mapRow translates the API's swapped raw
-          // names: raw.close=2-digit jodi, raw.jodi=3-digit panna).
+          // Board format (mapRow / _fmt board-v1): r.close = 2-digit JODI,
+          // r.jodi = 3-digit CLOSE PANNA - the same order fixtures speak.
           const openPana = r.open;
-          const closePana = r.close;
-          const rawJodiMkts = String(r.jodi ?? '').trim();
+          const closePana = r.jodi;
+          const rawJodiMkts = String(r.close ?? '').trim();
           // A jodi is only trustworthy together with its close panna - partial
           // rows can carry junk in the jodi slot (e.g. Milan Night "07" while
           // close is still pending). Empty stays empty: "00" would fake a half.
@@ -199,15 +198,15 @@ export async function fetchProviderMarkets() {
   return fixtures().rows.map((r) => ({ ...r }));
 }
 
-/** Map fetchSattaApi()/mapRow rows into LIVE-CARD rows (board contract);
- *  exported for tests - see sattaApiToMarkets for the field-name trap. */
+/** Map fetchSattaApi()/mapRow rows into LIVE-CARD rows (final board format);
+ *  exported for tests - see sattaApiToMarkets for the field contract. */
 export function sattaApiToLive(results) {
   return results.map((r) => {
-        // mapRow contract: r.close = 3-digit close panna, r.jodi = 2-digit
-        // jodi (the raw API names are swapped: raw.close=jodi, raw.jodi=panna).
+        // Board format (mapRow / _fmt board-v1): r.close = 2-digit jodi,
+        // r.jodi = 3-digit close panna.
         const openPana = r.open;
-        const closePana = r.close;
-        const rawJodiLive = String(r.jodi ?? '').trim();
+        const closePana = r.jodi;
+        const rawJodiLive = String(r.close ?? '').trim();
         // Jodi only counts with its close panna - partial rows may carry junk
         // in the jodi slot (e.g. Milan Night "07" pre-close). Empty stays
         // empty: "00" would fake a declared half.
@@ -353,14 +352,16 @@ export async function syncSattaApiResults() {
     }
 
     const openPana = r.open;
-    const closePana = r.close;
+    // Final board format from fetchSattaApi() (_fmt board-v1): r.jodi holds
+    // the 3-digit close panna, r.close the 2-digit jodi.
+    const closePana = r.jodi;
     // Ank = digit-sum mod 10 of the panna ("269" -> 7), NEVER its last digit
     // ("9"). `number` also feeds buildDisplay's jodi as open+close digits
     // ("7"+"0" -> "70"), so a last-digit number would store both the wrong
     // ank ("269-9") and a wrong jodi.
     const openAnk = String(digitSumOf(openPana) ?? '');
     const closeAnk = String(digitSumOf(closePana) ?? '');
-    const jodi = r.jodi.padStart(2, '0');
+    const jodi = String(r.close ?? '').padStart(2, '0');
 
     // Upsert open half
     await Result.findOneAndUpdate(
