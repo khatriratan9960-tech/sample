@@ -106,6 +106,10 @@ router.get('/chart.php', async (req, res) => {
   // fully reachable. ChartPage requests enough weeks to cover the data.
   const weeksN = Math.min(Math.max(Number(weeks) || 24, 1), 520);
   const history = await getChartHistory(slug.trim(), weeksN);
+  // History only grows going forward, so a 60s edge window is safe and makes
+  // repeat opens (and the page's own background retries) instant - the DB is
+  // hit at most once a minute per market no matter how often charts open.
+  res.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=60');
   res.json({ ok: true, provider: providerName(), data: history });
 });
 

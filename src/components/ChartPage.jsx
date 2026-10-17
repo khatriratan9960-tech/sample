@@ -157,9 +157,10 @@ function LinkZone({ title, links, type, current }) {
 export default function ChartPage() {
   const { slug, type } = slugFromPath();
   const [markets, setMarkets] = useState([]);
-  // Request enough weeks to cover the full imported history (back to 2020):
-  // ~6.2 years = 320 weeks. The server clamps to its own max.
-  const { data, loading, error } = useApi(() => api.chart(slug, 320), [slug]);
+  // First paint asks for the recent window only (fast); history older than
+  // that is empty anyway until months of sync-on-read accumulate. The full
+  // range stays reachable via the weeks query param if ever needed.
+  const { data, loading, error } = useApi(() => api.chart(slug, 52), [slug]);
   // ONLY ever show real stored history. The chart API always returns a weeks
   // array (empty days render **), so we never fabricate numbers. A market with
   // no stored draws simply shows an all-empty chart instead of fake data.
