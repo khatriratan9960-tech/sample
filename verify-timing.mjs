@@ -375,6 +375,81 @@ check(
   );
 }
 
+// --- 18. Real sattaapi payload -> board contract (regression guard) ---
+// The raw API's field names are swapped vs our vocabulary:
+//   raw.open  = 3-digit open panna
+//   raw.close = 2-digit JODI         (NOT the close panna)
+//   raw.jodi  = 3-digit close panna  (NOT the jodi)
+// and partial rows can carry junk in raw.close (e.g. Milan Night "07" while
+// close is still pending). mapRow inverts raw names into an intermediate
+// contract; sattaApiToMarkets/sattaApiToLive must translate that back into
+// the board contract {close: jodi, jodi: closePanna} and must never emit
+// padded "00" halves or leak the raw jodi-half.
+{
+  const { sattaApiToMarkets, sattaApiToLive } = await import('./server/services/provider.js');
+  const { mapRow } = await import('./server/services/sattaApi.js');
+
+  const RAW = [
+    { name: 'KALYAN', open: '250', close: '77', jodi: '359', open_time: '04:35 PM', close_time: '06:35 PM' },
+    { name: 'MILAN NIGHT', open: '269', close: '07', jodi: '', open_time: '09:10 PM', close_time: '11:10 PM' },
+    { name: 'NIGHT TIME BAZAR', open: '389', close: '', jodi: '', open_time: '08:57 PM', close_time: '10:57 PM' },
+  ];
+  const rows = RAW.map((r) => mapRow(r, '2026-10-17'));
+
+  check(
+    'mapRow intermediate contract: close=3-digit panna, jodi=2-digit',
+    rows[0].close === '359' && rows[0].jodi === '77',
+    `close=${rows[0].close} jodi=${rows[0].jodi}`
+  );
+
+  const mkts = sattaApiToMarkets(rows);
+  const k = mkts.find((m) => m.market === 'KALYAN');
+  check(
+    'markets mapper: full row = open-jodi-close with digit-sum ank',
+    k?.result === '250-77-359' && k?.close === '77' && k?.jodi === '359' && k?.ank === 7,
+    `${k?.result} ank=${k?.ank}`
+  );
+  const mil = mkts.find((m) => m.market === 'MILAN NIGHT');
+  check(
+    'markets mapper: partial row carries no fake halves',
+    mil?.close === null && mil?.jodi === null && mil?.result === null,
+    JSON.stringify({ close: mil?.close, jodi: mil?.jodi, result: mil?.result })
+  );
+
+  const list = mergeMarkets(mkts, [], new Map(), 21 * 60 + 54);
+  const shown = Object.fromEntries(list.map((m) => [m.market, m.result]));
+  check('list renders KALYAN 250-77-359', shown['KALYAN'] === '250-77-359', shown['KALYAN']);
+  check(
+    'list renders MILAN NIGHT 269-7 (open half, digit-sum ank)',
+    shown['MILAN NIGHT'] === '269-7' && list.find((m) => m.market === 'MILAN NIGHT')?.ank === 7,
+    `${shown['MILAN NIGHT']} ank=${list.find((m) => m.market === 'MILAN NIGHT')?.ank}`
+  );
+  check('list renders NIGHT TIME BAZAR 389-0', shown['NIGHT TIME BAZAR'] === '389-0', shown['NIGHT TIME BAZAR']);
+  check(
+    'list KALYAN headline ank = 7 (digit-sum of 359, not 9)',
+    list.find((m) => m.market === 'KALYAN')?.ank === 7,
+    `ank=${list.find((m) => m.market === 'KALYAN')?.ank}`
+  );
+
+  const live = sattaApiToLive(rows);
+  const card = (name) => live.find((m) => m.market === name);
+  check(
+    'live KALYAN 250-77-359 closed',
+    card('KALYAN')?.result === '250-77-359' && card('KALYAN')?.status === 'closed',
+    `${card('KALYAN')?.result} ${card('KALYAN')?.status}`
+  );
+  check(
+    'live MILAN NIGHT 269-7',
+    card('MILAN NIGHT')?.result === '269-7' && card('MILAN NIGHT')?.status === 'live',
+    `${card('MILAN NIGHT')?.result} ${card('MILAN NIGHT')?.status}`
+  );
+  check(
+    'live NIGHT TIME BAZAR 389-0',
+    card('NIGHT TIME BAZAR')?.result === '389-0' && card('NIGHT TIME BAZAR')?.status === 'live',
+    `${card('NIGHT TIME BAZAR')?.result} ${card('NIGHT TIME BAZAR')?.status}`
+  );
+}
+
 const failed = results.filter(([, ok]) => !ok);
 console.log(`\n${results.length - failed.length}/${results.length} passed`);
 process.exit(failed.length ? 1 : 0);

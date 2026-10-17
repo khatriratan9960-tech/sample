@@ -137,15 +137,21 @@ async function callProvider() {
 }
 
 /**
- * Normalize one upstream row into the row contract the rest of the codebase
- * already speaks (mirrors the fixture naming the board/tests were built
- * against): close carries the 2-digit jodi, jodi the 3-digit close panna,
- * so open-close-jodi renders open-jodi-close.
+ * Normalize one upstream row into the INTERMEDIATE contract
+ * syncSattaApiResults consumes: the raw API's `close` (a 2-digit jodi) is
+ * passed through as `jodi`, and the raw `jodi` (the 3-digit close panna) is
+ * passed through as `close`.
+ *
+ * NOTE: this is the INVERSE of the board/fixture contract the rest of the
+ * codebase speaks ({close: 2-digit jodi, jodi: 3-digit close panna} - see
+ * liveBoard.revealFor / mock.php). fetchProviderMarkets and
+ * fetchProviderLive translate mapRow's output back into the board contract;
+ * do not read these rows as board rows.
  *
  * date prefers the API's result_date (night markets close after midnight IST
  * and carry yesterday's date) so chart upserts land on the correct day.
  */
-function mapRow(r, fallbackDate) {
+export function mapRow(r, fallbackDate) {
   // Empty stays empty: blank-padding a missing jodi to "00" would fake a
   // declared half ("389-00") and defeat partial-draw detection downstream.
   const rawJodi = String(r.jodi ?? '').trim();

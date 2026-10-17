@@ -15,12 +15,17 @@ import { lookupSchedule } from './marketSchedule.js';
 // Re-exported so existing callers keep working from this module.
 export { toMinutes, to12Hour };
 
-/** Last digit of a result tail, or null. */
+/** Headline ank from a result string: its LAST '-' part. A 3-digit tail is a
+ *  panna -> ank = digit-sum mod 10 ("359" -> 7); a shorter tail is already an
+ *  ank digit or a jodi half (take its final digit). The panna's last DIGIT
+ *  ("359" -> 9) is wrong. */
 function ankOf(display) {
   if (!display) return null;
   const parts = String(display).split('-').filter(Boolean);
   const tail = parts[parts.length - 1] ?? '';
-  return /^\d+$/.test(tail) ? Number(tail.slice(-1)) : null;
+  if (!/^\d+$/.test(tail)) return null;
+  if (tail.length === 3) return panaAnk(tail);
+  return Number(tail.slice(-1));
 }
 
 /**

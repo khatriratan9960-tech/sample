@@ -55,10 +55,14 @@ const resultSchema = new mongoose.Schema(
 
 resultSchema.index({ market: 1, date: 1, session: 1 }, { unique: true });
 
-/** Last digit of a panna, as a string. */
+/** Ank of a panna = digit-SUM mod 10 ("269" -> 7), never its last digit
+ *  ("9") - matches liveBoard.panaAnk, chartHistory.ankOf, fakeChart.ankOf. */
 function ankOf(pana) {
   const s = String(pana ?? '').trim();
-  return /^\d+$/.test(s) ? s.slice(-1) : null;
+  if (!/^\d+$/.test(s)) return null;
+  let sum = 0;
+  for (const ch of s) sum += Number(ch);
+  return sum % 10;
 }
 
 /**

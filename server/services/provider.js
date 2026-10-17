@@ -98,7 +98,12 @@ onSattaApiFreshData((rows) => {
   return import('./chartHistory.js').then(
     (mod) =>
       mod.syncChartHistory(
-        rows.map((r) => ({ ...r, slug: slugify(r.name), market: r.name })),
+        // syncChartHistory/isCompleteRow speak the BOARD contract
+        // ({close: 2-digit jodi, jodi: 3-digit close panna}); fetchSattaApi
+        // hands us mapRow's inverse contract, so swap the two fields back
+        // here - otherwise every row fails isCompleteRow and this sync-on-read
+        // is a silent no-op.
+        rows.map((r) => ({ ...r, close: r.jodi, jodi: r.close, slug: slugify(r.name), market: r.name })),
         'matka',
         { force: true }
       ),
@@ -121,32 +126,30 @@ function webhookOnly() {
   return config.isProd;
 }
 
-/**
- * Fetch markets from the upstream provider.
- *
- * When no credentials are configured this returns the seeded fixtures, so the
- * whole stack (admin, custom markets, merge, frontend) is fully testable
- * before the paid API is purchased. Point PROVIDER_BASE_URL at the real
- * service and this transparently switches over - no other file changes.
- */
-export async function fetchProviderMarkets() {
-  // SattaAPI pull mode - discover markets from the API response.
-  if (sattaApiMode()) {
-    try {
-      const results = await fetchSattaApi();
-      const seen = new Set();
-      return results
-        .filter((r) => {
-          if (!r.name || seen.has(r.name)) return false;
-          seen.add(r.name);
-          return true;
-        })
-        .map((r) => {
+/** Map fetchSattaApi()/mapRow rows into MARKET rows in the BOARD contract
+ *  ({close: 2-digit jodi, jodi: 3-digit close panna}); exported for tests,
+ *  because the raw upstream payload uses confusingly swapped field names
+ *  (raw.close = jodi, raw.jodi = close panna) and this mapping has silently
+ *  regressed before (KALYAN rendered as "250-359-77"). */
+export function sattaApiToMarkets(results) {
+  const seen = new Set();
+  return results
+    .filter((r) => {
+      if (!r.name || seen.has(r.name)) return false;
+      seen.add(r.name);
+      return true;
+    })
+    .map((r) => {
+          // fetchSattaApi()/mapRow contract: r.close = 3-digit CLOSE PANNAS,
+          // r.jodi = 2-digit JODI (mapRow translates the API's swapped raw
+          // names: raw.close=2-digit jodi, raw.jodi=3-digit panna).
           const openPana = r.open;
-          const closePana = r.jodi;
-          // Empty stays empty (same rule as mapRow): "00" would fake a half.
-          const rawCloseMkts = String(r.close ?? '').trim();
-          const jodi = rawCloseMkts ? rawCloseMkts.padStart(2, '0') : '';
+          const closePana = r.close;
+          const rawJodiMkts = String(r.jodi ?? '').trim();
+          // A jodi is only trustworthy together with its close panna - partial
+          // rows can carry junk in the jodi slot (e.g. Milan Night "07" while
+          // close is still pending). Empty stays empty: "00" would fake a half.
+          const jodi = closePana && rawJodiMkts ? rawJodiMkts.padStart(2, '0') : '';
           const comp = openPana && closePana && jodi;
           return {
             market: r.name,
@@ -165,7 +168,23 @@ export async function fetchProviderMarkets() {
             date: r.date || null,
             resultDate: r.result_date || null,
           };
-        });
+    });
+}
+
+/**
+ * Fetch markets from the upstream provider.
+ *
+ * When no credentials are configured this returns the seeded fixtures, so the
+ * whole stack (admin, custom markets, merge, frontend) is fully testable
+ * before the paid API is purchased. Point PROVIDER_BASE_URL at the real
+ * service and this transparently switches over - no other file changes.
+ * SattaAPI mode delegates to sattaApiToMarkets (exported for tests).
+ */
+export async function fetchProviderMarkets() {
+  // SattaAPI pull mode - discover markets from the API response.
+  if (sattaApiMode()) {
+    try {
+      return sattaApiToMarkets(await fetchSattaApi());
     } catch (err) {
       console.error('[sattaapi] fetchProviderMarkets failed:', err.message);
       return [];
@@ -180,19 +199,19 @@ export async function fetchProviderMarkets() {
   return fixtures().rows.map((r) => ({ ...r }));
 }
 
-export async function fetchProviderLive() {
-  // SattaAPI pull mode - fetch today's results and build live cards.
-  if (sattaApiMode()) {
-    try {
-      const results = await fetchSattaApi();
-      return results.map((r) => {
-        // Rows from fetchSattaApi() already follow the board's row contract
-        // (close holds the 2-digit jodi, jodi the 3-digit close panna).
+/** Map fetchSattaApi()/mapRow rows into LIVE-CARD rows (board contract);
+ *  exported for tests - see sattaApiToMarkets for the field-name trap. */
+export function sattaApiToLive(results) {
+  return results.map((r) => {
+        // mapRow contract: r.close = 3-digit close panna, r.jodi = 2-digit
+        // jodi (the raw API names are swapped: raw.close=jodi, raw.jodi=panna).
         const openPana = r.open;
-        const closePana = r.jodi;
-        // Empty stays empty (same rule as mapRow): "00" would fake a half.
-        const rawCloseLive = String(r.close ?? '').trim();
-        const jodi = rawCloseLive ? rawCloseLive.padStart(2, '0') : '';
+        const closePana = r.close;
+        const rawJodiLive = String(r.jodi ?? '').trim();
+        // Jodi only counts with its close panna - partial rows may carry junk
+        // in the jodi slot (e.g. Milan Night "07" pre-close). Empty stays
+        // empty: "00" would fake a declared half.
+        const jodi = closePana && rawJodiLive ? rawJodiLive.padStart(2, '0') : '';
         const openAnk = digitSumOf(openPana);
         const closeAnk = digitSumOf(closePana);
         const complete = openPana && closePana && jodi;
@@ -229,7 +248,15 @@ export async function fetchProviderLive() {
           jodi: closePana,
           resultDate: r.result_date || null,
         };
-      });
+  });
+}
+
+/** SattaAPI branch of fetchProviderLive: raw rows -> sattaApiToLive. */
+export async function fetchProviderLive() {
+  // SattaAPI pull mode - fetch today's results and build live cards.
+  if (sattaApiMode()) {
+    try {
+      return sattaApiToLive(await fetchSattaApi());
     } catch (err) {
       console.error('[sattaapi] fetchProviderLive failed:', err.message);
       return [];
@@ -327,8 +354,12 @@ export async function syncSattaApiResults() {
 
     const openPana = r.open;
     const closePana = r.close;
-    const openAnk = String(openPana).slice(-1);
-    const closeAnk = String(closePana).slice(-1);
+    // Ank = digit-sum mod 10 of the panna ("269" -> 7), NEVER its last digit
+    // ("9"). `number` also feeds buildDisplay's jodi as open+close digits
+    // ("7"+"0" -> "70"), so a last-digit number would store both the wrong
+    // ank ("269-9") and a wrong jodi.
+    const openAnk = String(digitSumOf(openPana) ?? '');
+    const closeAnk = String(digitSumOf(closePana) ?? '');
     const jodi = r.jodi.padStart(2, '0');
 
     // Upsert open half
