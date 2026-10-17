@@ -1,7 +1,7 @@
 import { config } from '../config.js';
 import { readFileSync } from 'node:fs';
 import { buildLiveBoard } from './liveBoard.js';
-import { fetchSattaApi, isSattaApiConfigured, slugify } from './sattaApi.js';
+import { fetchSattaApi, isSattaApiConfigured, onSattaApiFreshData, slugify } from './sattaApi.js';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -64,6 +64,35 @@ export function providerName() {
 function sattaApiMode() {
   return isSattaApiConfigured();
 }
+
+/**
+ * SYNC-ON-READ: chart history persists the moment a fresh upstream payload
+ * lands - no cron needed. fetchSattaApi() invokes this exactly once per
+ * upstream call (fleet-wide: at most once per SATTAAPI_CACHE_TTL_MS), so
+ * write volume stays bounded however many instances serve traffic.
+ *
+ * ChartEntry ONLY, never Market/Result: provider markets render from the
+ * live fetch, and stored halves would ALSO surface them as push-driven
+ * custom cards - every market twice. Upserts are keyed {slug, date}, so
+ * repeats and restarts are no-ops. Awaited by the fetch (not
+ * fire-and-forget) so the row lands before the response leaves; the sync
+ * itself fast-fails off-DB, so a cold start never hangs the request.
+ */
+onSattaApiFreshData((rows) => {
+  if (!Array.isArray(rows) || rows.length === 0) return Promise.resolve(0);
+  // Lazy import: chartHistory pulls in models + the market clock; loading it
+  // only on a real fetch keeps cold starts lean and avoids import cycles
+  // (marketService -> provider -> chartHistory is one-directional this way).
+  return import('./chartHistory.js').then(
+    (mod) =>
+      mod.syncChartHistory(
+        rows.map((r) => ({ ...r, slug: slugify(r.name), market: r.name })),
+        'matka',
+        { force: true }
+      ),
+    () => 0
+  );
+});
 
 /**
  * Webhook-only mode: the operator uses ONLY the matka-result-api.com push
@@ -130,9 +159,11 @@ export async function fetchProviderLive() {
     try {
       const results = await fetchSattaApi();
       return results.map((r) => {
+        // Rows from fetchSattaApi() already follow the board's row contract
+        // (close holds the 2-digit jodi, jodi the 3-digit close panna).
         const openPana = r.open;
-        const closePana = r.close;
-        const jodi = r.jodi.padStart(2, '0');
+        const closePana = r.jodi;
+        const jodi = String(r.close ?? '').padStart(2, '0');
         const openAnk = String(openPana).slice(-1);
         const closeAnk = String(closePana).slice(-1);
         const result = `${openPana}-${jodi}-${closePana}`;
@@ -162,8 +193,8 @@ export async function fetchProviderLive() {
           status: 'closed',
           isImminent: false,
           open: openPana,
-          close: closePana,
-          jodi,
+          close: jodi,
+          jodi: closePana,
           resultDate: r.result_date || null,
         };
       });

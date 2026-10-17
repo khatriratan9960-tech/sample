@@ -159,9 +159,11 @@ function isCompleteRow(row) {
 /** Store completed draws. 5-minute throttle, idempotent upserts keyed
  *  {slug, date}. NOTE: the field contract carries close=jodi and
  *  jodi=closePana (matches the fixture naming trap), so map accordingly. */
-export async function syncChartHistory(rows, source = 'matka') {
+export async function syncChartHistory(rows, source = 'matka', opts = {}) {
   if (!rows?.length) return 0;
-  if (Date.now() - lastSync < SYNC_INTERVAL_MS) return 0;
+  // Sync-on-read forces every fresh upstream fetch through; the politeness
+  // throttle only gates the opportunistic page-load callers.
+  if (!opts.force && Date.now() - lastSync < SYNC_INTERVAL_MS) return 0;
   // Fast-fail on cold starts: without this Mongoose buffers the bulkWrite
   // until serverSelectionTimeoutMS expires, holding the HTTP response open
   // until Vercel times out (endless "Loading..." on the frontend).

@@ -15,6 +15,7 @@ router.get('/home.php', async (req, res) => {
     Promise.resolve(getSections()),
   ]);
 
+  res.set('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=30');
   res.json({
     ok: true,
     provider: providerName(),
@@ -45,6 +46,10 @@ router.get('/home.php', async (req, res) => {
 /** GET /api/live-result.php - polled every 15s by the frontend. */
 router.get('/live-result.php', async (req, res) => {
   const live = await getPublicLive();
+  // Edge-cache the board: the payload is already server-cached per TTL, so a
+  // 30s shared-cache window only ever serves seconds-old data while
+  // collapsing concurrent polls into one function invocation.
+  res.set('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=30');
   res.json({ ok: true, provider: providerName(), updatedAt: new Date().toISOString(), data: live });
 });
 
