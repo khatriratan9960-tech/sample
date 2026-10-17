@@ -129,16 +129,29 @@ export async function fetchProviderMarkets() {
           seen.add(r.name);
           return true;
         })
-        .map((r) => ({
-          market: r.name,
-          slug: slugify(r.name),
-          source: 'provider',
-          pushDriven: true,
-          active: true,
-          openTime: '00:00',
-          closeTime: '23:59',
-          provider: 'sattaapi',
-        }));
+        .map((r) => {
+          const openPana = r.open;
+          const closePana = r.jodi;
+          const jodi = String(r.close || '').padStart(2, '0');
+          const comp = openPana && closePana && jodi;
+          return {
+            market: r.name,
+            slug: slugify(r.name),
+            source: 'provider',
+            pushDriven: true,
+            active: true,
+            openTime: String(r.open_time || '').trim() || '00:00',
+            closeTime: String(r.close_time || '').trim() || '23:59',
+            provider: 'sattaapi',
+            open: openPana || null,
+            close: jodi || null,
+            jodi: closePana || null,
+            result: comp ? `${openPana}-${jodi}-${closePana}` : null,
+            ank: comp ? Number(String(closePana).slice(-1)) : null,
+            date: r.date || null,
+            resultDate: r.result_date || null,
+          };
+        });
     } catch (err) {
       console.error('[sattaapi] fetchProviderMarkets failed:', err.message);
       return [];
@@ -164,9 +177,12 @@ export async function fetchProviderLive() {
         const openPana = r.open;
         const closePana = r.jodi;
         const jodi = String(r.close ?? '').padStart(2, '0');
-        const openAnk = String(openPana).slice(-1);
-        const closeAnk = String(closePana).slice(-1);
-        const result = `${openPana}-${jodi}-${closePana}`;
+        const openAnk = String(openPana || '').slice(-1);
+        const closeAnk = String(closePana || '').slice(-1);
+        const complete = openPana && closePana && jodi;
+        const result = complete
+          ? `${openPana}-${jodi}-${closePana}`
+          : (openPana ? `${openPana}-${openAnk}` : null);
 
         // Use the API's real 12h times so the live board can rank cards by
         // their actual draw window (e.g. Kalyan 4:35-6:35 PM). The old
@@ -184,13 +200,13 @@ export async function fetchProviderLive() {
           market: r.name,
           slug: slugify(r.name),
           result,
-          ank: Number(closeAnk),
+          ank: complete ? Number(closeAnk) : (openPana ? Number(openAnk) : null),
           source: 'provider',
           pushDriven: true,
-          openTime: to24h(r.open_time) || '00:00',
-          closeTime: to24h(r.close_time) || '23:59',
-          isPending: false,
-          status: 'closed',
+          openTime: String(r.open_time || '').trim() || '00:00',
+          closeTime: String(r.close_time || '').trim() || '23:59',
+          isPending: !result,
+          status: complete ? 'closed' : (openPana ? 'live' : 'pending'),
           isImminent: false,
           open: openPana,
           close: jodi,
