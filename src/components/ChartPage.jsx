@@ -194,7 +194,17 @@ export default function ChartPage() {
         {upper} {type === 'panel' ? 'PANEL' : 'JODI'} CHART
       </div>
 
-      {error && !data && (
+      {loading && !data && (
+        <div className="chp-loading" role="status" aria-live="polite">
+          <p>
+            Loading {type === 'panel' ? 'panel' : 'jodi'} history for{' '}
+            {upper}…
+          </p>
+          <p>Fetching chart records from the database — please wait.</p>
+        </div>
+      )}
+
+      {error && !data && !loading && (
         <div className="chp-error">
           <p>
             Could not load {type === 'panel' ? 'panel' : 'jodi'} history for{' '}

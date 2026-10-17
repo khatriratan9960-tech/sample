@@ -56,6 +56,21 @@
   text-decoration: none;
 }
 
+/* --- Chart loading banner (shown while history is being fetched) --- */
+.chp-loading {
+  border: 1px solid #003db6;
+  background: #e8f3ff;
+  color: #00008f;
+  padding: 12px;
+  margin-bottom: 2px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 700;
+}
+.chp-loading p {
+  margin: 4px 0;
+}
+
 /* --- Chart load error banner --- */
 .chp-error {
   border: 1px solid #a00;
