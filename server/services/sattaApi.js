@@ -146,7 +146,10 @@ async function callProvider() {
  * and carry yesterday's date) so chart upserts land on the correct day.
  */
 function mapRow(r, fallbackDate) {
-  const jodi2 = String(r.jodi ?? '').trim().padStart(2, '0');
+  // Empty stays empty: blank-padding a missing jodi to "00" would fake a
+  // declared half ("389-00") and defeat partial-draw detection downstream.
+  const rawJodi = String(r.jodi ?? '').trim();
+  const jodi2 = rawJodi ? rawJodi.padStart(2, '0') : '';
   const resultDate = String(r.result_date ?? '').trim();
   return {
     name: String(r.name ?? '').trim(),

@@ -31,10 +31,14 @@ function normalizeProvider(raw, now) {
   const jodi = raw.jodi ?? null;
 
   const hasAll = open != null && close != null && jodi != null && jodi !== '';
-  const hasPair = open != null && close != null && !hasAll;
+  const hasPair = open != null && close != null && close !== '' && !hasAll;
 
   let display = null;
-  if (hasAll) display = `${open}-${close}-${jodi}`;
+  // Prefer the provider's own precomputed result string when present - it is
+  // already in open-jodi-close order and handles partials ("269-9") without
+  // reassembling stale field pairs ("269-07").
+  if (typeof raw.result === 'string' && raw.result.includes('-')) display = raw.result;
+  else if (hasAll) display = `${open}-${close}-${jodi}`;
   else if (hasPair) display = `${open}-${close}`;
   else if (jodi != null && jodi !== '') display = String(jodi);
 
