@@ -18,9 +18,15 @@ const BASE = '/api';
 // and let useApi's background retry pick the page back up.
 const FETCH_TIMEOUT_MS = 4500;
 
-async function getJson(path) {
+// Chart pages build a 52-week grid from MongoDB - on a cold serverless
+// function the DB warm-up alone can exceed the 4.5s live-board budget, so
+// chart reads get their own generous timeout. The page already shows a
+// Loading banner meanwhile and retries silently in the background.
+const CHART_TIMEOUT_MS = 20000;
+
+async function getJson(path, timeoutMs = FETCH_TIMEOUT_MS) {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
   let res;
   try {
     res = await fetch(`${BASE}${path}`, {
@@ -71,5 +77,5 @@ export const api = {
    * as soon as the trial API has stored a draw for a market.
    */
   chart: (slug, weeks = 24) =>
-    getJson(`/chart.php?slug=${encodeURIComponent(slug)}${weeks !== 24 ? `&weeks=${weeks}` : ''}`),
+    getJson(`/chart.php?slug=${encodeURIComponent(slug)}${weeks !== 24 ? `&weeks=${weeks}` : ''}`, CHART_TIMEOUT_MS),
 };
