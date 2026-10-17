@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useRef } from 'react';
 import { api } from './api/client.js';
 import { useApi, usePolling } from './hooks/useApi.js';
 
@@ -74,6 +74,15 @@ export default function App() {
             panelUrl: `/panel-chart-record/${r.slug ?? ''}.php`,
           }));
 
+  // Keep the last good panelMarkets so the Jodi/Panel grid never flickers
+  // between "Loading markets…" and full markets as home.php and live-result.php
+  // load at different times (cold starts, Vercel retries, slow upstream).
+  const panelMarketsRef = useRef(panelMarkets);
+  if (panelMarkets.length > 0) {
+    panelMarketsRef.current = panelMarkets;
+  }
+  const stablePanelMarkets = panelMarketsRef.current;
+
   // NEVER block first paint on the API: render the full page skeleton
   // immediately (good for SEO + perceived speed on Vercel cold starts).
   // Sections fill in as data arrives; "Loading..." only appears inside the
@@ -109,7 +118,7 @@ export default function App() {
 
         <h4 className="flyr24"> WORLD ME SABSE FAST SATTA MATKA RESULT </h4>
 
-        <JodiPanels markets={panelMarkets} />
+        <JodiPanels markets={stablePanelMarkets} />
 
         <KeywordStrip />
 
