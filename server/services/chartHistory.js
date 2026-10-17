@@ -243,47 +243,60 @@ export async function getChartHistory(slug, weeks = 24) {
 
   // Provider history (matka / mock) - the trial API stores every completed
   // draw, so the last 24 weeks of real data are at hand.
-  // Cold-start guard: the chart page aborts at ~4.5s, and without a cap a
-  // slow Atlas round-trip blows that budget (the endless "taking too long"
-  // error). 2.5s per query keeps even a cold function inside it.
-  const entries = mongoose.connection.readyState === 1
-    ? await ChartEntry.find({
-        slug: slugSlug,
-        date: { $gte: rangeStart, $lte: rangeEnd },
-      })
+  // LATENCY BUDGET: the chart page aborts at ~4.5s. The old sequential
+  // chain (entries -> market -> offDays -> results) could stack 4 slow
+  // round-trips and always blew that budget on a cold function. Two
+  // parallel waves with 1.5s caps keep the worst case near ~3s total.
+  const dbUp = mongoose.connection.readyState === 1;
+  const entriesPromise = dbUp
+    ? ChartEntry.find({ slug: slugSlug, date: { $gte: rangeStart, $lte: rangeEnd } })
         .sort({ date: 1 })
         .lean()
-        .maxTimeMS(2500)
+        .maxTimeMS(1500)
         .catch(() => [])
-    : [];
+    : Promise.resolve([]);
+  const marketPromise = dbUp
+    ? Market.findOne({ slug: slugSlug }).lean().maxTimeMS(1500).catch(() => null)
+    : Promise.resolve(null);
+  const [entries, marketDoc] = await Promise.all([entriesPromise, marketPromise]);
   const byDate = new Map();
   for (const e of entries) byDate.set(e.date, e);
 
   // Operator-declared custom markets: their halves live in Result (session
   // open/close). Those rows are the public API for custom draws.
-  let marketDoc = null;
-  try {
-    marketDoc = mongoose.connection.readyState === 1
-      ? await Market.findOne({ slug: slugSlug }).lean().maxTimeMS(2500)
-      : null;
-  } catch {
-    /* non-critical */
-  }
   const custom = new Map();
   let customDays = 0;
   // Market off-days (0=Sun..6=Sat). Chart cells that fall on an off-day and
   // have no stored entry render ** instead of blank.
-  const offDaySlots = marketDoc ? await getMarketOffDays(slugSlug) : null;
+  // Second wave: off-days lookup and the halves query only make sense when
+  // a Market doc exists, and they are independent of each other. Provider
+  // markets (ChartEntry rows, no stored halves) skip the Result scan
+  // entirely - that scan was pure waste for them on every chart open.
+  const needCustom = Boolean(marketDoc && !marketDoc.pushDriven);
+  const [offDaySlots, results] = await Promise.all([
+    marketDoc && dbUp
+      ? Market.findOne({ slug: slugSlug }).lean().maxTimeMS(1500).then(
+          (m) => {
+            const days = m?.offDays ?? [];
+            return days.length ? new Set(days) : null;
+          },
+          () => null
+        )
+      : Promise.resolve(null),
+    needCustom && dbUp
+      ? Result.find({
+          market: marketDoc._id,
+          date: { $gte: rangeStart, $lte: rangeEnd },
+          jodiComplete: true,
+        })
+          .sort({ date: 1 })
+          .lean()
+          .maxTimeMS(1500)
+          .catch(() => [])
+      : Promise.resolve([]),
+  ]);
   if (marketDoc) {
     try {
-      const results = await Result.find({
-        market: marketDoc._id,
-        date: { $gte: rangeStart, $lte: rangeEnd },
-        jodiComplete: true,
-      })
-        .sort({ date: 1 })
-        .lean()
-        .maxTimeMS(2500);
       // Group the two session rows (open + close) per date. The old code
       // used one row's pana for BOTH open and close, so every webhook
       // market showed e.g. open=680 close=680 instead of 223 / 680.
