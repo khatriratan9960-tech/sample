@@ -376,12 +376,13 @@ check(
 }
 
 // --- 19. Real sattaapi payload -> FINAL board format (regression guard) ---
-// The raw API's field names are swapped vs our vocabulary:
+// The raw API's field names use the natural vocabulary:
 //   raw.open  = 3-digit open panna
-//   raw.close = 2-digit JODI         (NOT the close panna)
-//   raw.jodi  = 3-digit close panna  (NOT the jodi)
-// and partial rows can carry junk in raw.close (e.g. Milan Night "07" while
-// close is still pending). mapRow renames them ONCE at the API boundary into
+//   raw.close = 3-digit close panna
+//   raw.jodi  = 2-digit JODI         (verified against the live API: KALYAN
+//                                     arrives as close=359, jodi=77)
+// and partial rows can carry junk in raw.jodi (e.g. Milan Night "07" while
+// close is still pending). mapRow re-orders them ONCE at the API boundary into
 // the final board format the whole codebase speaks ({close: 2-digit jodi,
 // jodi: 3-digit close panna, result: 'open_pana-jodi-close_panna'}) - the
 // global cache stores exactly that format (_fmt 'board-v1').
@@ -393,8 +394,8 @@ check(
   const { mapRow, ensureBoardRows, BOARD_FMT } = await import('./server/services/sattaApi.js');
 
   const RAW = [
-    { name: 'KALYAN', open: '250', close: '77', jodi: '359', open_time: '04:35 PM', close_time: '06:35 PM' },
-    { name: 'MILAN NIGHT', open: '269', close: '07', jodi: '', open_time: '09:10 PM', close_time: '11:10 PM' },
+    { name: 'KALYAN', open: '250', close: '359', jodi: '77', open_time: '04:35 PM', close_time: '06:35 PM' },
+    { name: 'MILAN NIGHT', open: '269', close: '', jodi: '07', open_time: '09:10 PM', close_time: '11:10 PM' },
     { name: 'NIGHT TIME BAZAR', open: '389', close: '', jodi: '', open_time: '08:57 PM', close_time: '10:57 PM' },
   ];
   const rows = RAW.map((r) => mapRow(r, '2026-10-17'));

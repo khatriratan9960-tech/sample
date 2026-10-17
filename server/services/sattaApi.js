@@ -177,9 +177,9 @@ export function displayOf(openPana, jodi2, closePana) {
  * public site speak ({close: 2-digit jodi, jodi: 3-digit close panna} - see
  * liveBoard.revealFor / mock.php / chartHistory.syncChartHistory).
  *
- * The raw API's field names are SWAPPED vs our vocabulary:
- *   raw.open  = 3-digit open panna, raw.close = 2-digit JODI,
- *   raw.jodi  = 3-digit close Panna - so mapRow renames them here, once, at
+ * The raw API's field names use the natural vocabulary:
+ *   raw.open  = 3-digit open panna, raw.close = 3-digit close Panna,
+ *   raw.jodi  = 2-digit JODI - mapRow re-orders them once here, at the API
  * the API boundary. The global cache stores exactly these rows (tagged
  * _fmt board-v1), which means the persisted fleet-wide payload is already in
  * the format the site renders; nothing downstream re-inverts anything.
@@ -189,10 +189,10 @@ export function displayOf(openPana, jodi2, closePana) {
  */
 export function mapRow(r, fallbackDate) {
   const openPana = String(r.open ?? '').trim();
-  const closePana = String(r.jodi ?? '').trim();
+  const closePana = String(r.close ?? '').trim();
   // Empty stays empty: blank-padding a missing jodi to "00" would fake a
   // declared half ("389-00") and defeat partial-draw detection downstream.
-  const rawJodi = String(r.close ?? '').trim();
+  const rawJodi = String(r.jodi ?? '').trim();
   const jodi2 = rawJodi ? rawJodi.padStart(2, '0') : '';
   const resultDate = String(r.result_date ?? '').trim();
   return {
