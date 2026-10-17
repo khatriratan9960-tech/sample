@@ -36,8 +36,9 @@ function Banner({ error, provider }) {
 }
 
 export default function App() {
-  const { data, loading, error } = useApi(() => api.home(), []);
+  const { data, loading, error, reload: reloadHome } = useApi(() => api.home(), []);
   const [tick, setTick] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
 
   // Live cards poll independently so a slow endpoint never blocks first paint.
   const { data: liveData, error: liveError, lastUpdate, reload } = usePolling(
@@ -47,9 +48,13 @@ export default function App() {
   );
 
   const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    // Refresh both feeds: home.php (markets, starline, etc.) and live-result.php
+    reloadHome();
     setTick((t) => t + 1);
-    reload();
-  }, [reload]);
+    // Auto-reset refreshing state after data fetch completes (~3s budget)
+    setTimeout(() => setRefreshing(false), 3000);
+  }, [reloadHome]);
 
   const home = data?.data ?? null;
   const live = liveData?.data ?? home?.liveResults ?? [];
@@ -178,8 +183,8 @@ export default function App() {
         <i>Live Matka App</i>
       </a>
 
-      <button type="button" onClick={onRefresh} className="clk1-rld btm-clk1-f">
-        REFRESH
+      <button type="button" onClick={onRefresh} className="clk1-rld btm-clk1-f" disabled={refreshing}>
+        {refreshing ? 'Refreshing…' : 'REFRESH'}
       </button>
 
       <PremiumPopup />
