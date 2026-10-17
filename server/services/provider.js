@@ -137,6 +137,18 @@ export async function fetchProviderLive() {
         const closeAnk = String(closePana).slice(-1);
         const result = `${openPana}-${jodi}-${closePana}`;
 
+        // Use the API's real 12h times so the live board can rank cards by
+        // their actual draw window (e.g. Kalyan 4:35-6:35 PM). The old
+        // 00:00/23:59 placeholder made every market look "live" all day.
+        const to24h = (t12) => {
+          if (!t12) return null;
+          const m = String(t12).trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+          if (!m) return null;
+          let h = Number(m[1]) % 12;
+          if (m[3].toUpperCase() === 'PM') h += 12;
+          return `${String(h).padStart(2, '0')}:${m[2]}`;
+        };
+
         return {
           market: r.name,
           slug: slugify(r.name),
@@ -144,14 +156,15 @@ export async function fetchProviderLive() {
           ank: Number(closeAnk),
           source: 'provider',
           pushDriven: true,
-          openTime: '00:00',
-          closeTime: '23:59',
+          openTime: to24h(r.open_time) || '00:00',
+          closeTime: to24h(r.close_time) || '23:59',
           isPending: false,
           status: 'closed',
           isImminent: false,
           open: openPana,
           close: closePana,
           jodi,
+          resultDate: r.result_date || null,
         };
       });
     } catch (err) {
@@ -195,10 +208,10 @@ export async function syncSattaApiResults() {
   const { Result } = await import('../models/Result.js');
   const { ChartEntry } = await import('../models/ChartEntry.js');
   const { buildDisplay } = await import('../models/Result.js');
-  const { today: todayFn } = await import('./marketClock.js');
+  const { todayStr: todayFn } = await import('./marketClock.js');
 
   const results = await fetchSattaApi();
-  const date = todayFn();
+  const fallbackDate = todayFn();
   let synced = 0;
   let skipped = 0;
 
@@ -208,19 +221,45 @@ export async function syncSattaApiResults() {
       continue;
     }
 
+    // Use the API's result_date when available: night markets (Kalyan Night,
+    // Milan Night, etc.) carry YESTERDAY's date because their draw closes
+    // after midnight IST. Storing them under today would overwrite today's
+    // pending row and hide the result from the correct chart day.
+    const date = /^\d{4}-\d{2}-\d{2}$/.test(r.result_date || '') ? r.result_date : fallbackDate;
+
     // Find or create market by name (case-insensitive).
     const safeName = r.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     let market = await Market.findOne({ name: { $regex: new RegExp(`^${safeName}$`, 'i') } });
+
+    // The API provides real 12h times ("11:40 AM") - store them in 24h so the
+    // live board / market clock can gate results by open/close window instead
+    // of the placeholder 00:00-23:59 that made everything look "live" all day.
+    const to24h = (t12) => {
+      if (!t12) return null;
+      const m = String(t12).trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+      if (!m) return null;
+      let h = Number(m[1]) % 12;
+      if (m[3].toUpperCase() === 'PM') h += 12;
+      return `${String(h).padStart(2, '0')}:${m[2]}`;
+    };
+    const openTime24 = to24h(r.open_time) || '00:00';
+    const closeTime24 = to24h(r.close_time) || '23:59';
+
     if (!market) {
       market = await Market.create({
         name: r.name,
         slug: slugify(r.name),
-        openTime: '00:00',
-        closeTime: '23:59',
+        openTime: openTime24,
+        closeTime: closeTime24,
         active: true,
         pushDriven: true,
         source: 'sattaapi',
       });
+    } else if (market.openTime === '00:00' && market.closeTime === '23:59' && (r.open_time || r.close_time)) {
+      // Backfill real times on markets created before the API times were stored.
+      await Market.updateOne({ _id: market._id }, { $set: { openTime: openTime24, closeTime: closeTime24 } });
+      market.openTime = openTime24;
+      market.closeTime = closeTime24;
     }
 
     const openPana = r.open;
@@ -279,7 +318,7 @@ export async function syncSattaApiResults() {
     synced++;
   }
 
-  return { synced, skipped, total: results.length, date };
+  return { synced, skipped, total: results.length, date: fallbackDate };
 }
 
 export const getSections = () => {
