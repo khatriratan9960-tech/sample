@@ -19,17 +19,13 @@ import WeeklyCharts from './components/WeeklyCharts.jsx';
 import FreeGameZone from './components/FreeGameZone.jsx';
 import DayTables from './components/DayTables.jsx';
 
-function Banner({ error, provider }) {
-  if (!error && !provider) return null;
+function Banner({ error }) {
+  if (!error) return null;
   return (
     <div className="kalyan-notice" style={{ margin: '6px 0' }}>
-      <span className="notice-badge">{error ? 'API Error' : `Provider: ${provider}`}</span>{' '}
+      <span className="notice-badge">API Error</span>{' '}
       <span className="notice-text">
-        <small>
-          {error
-            ? error
-            : `Serving ${provider} mode - results from Maharashtra webhook pushes and admin declares.`}
-        </small>
+        <small>{error}</small>
       </span>
     </div>
   );
@@ -100,7 +96,7 @@ export default function App() {
       <Hero />
 
       <div role="main">
-        <Banner error={error || liveError} provider={provider} />
+        <Banner error={error || liveError} />
 
         <LuckyNumber
           goldenAnk={home?.todayLuckyNumber?.goldenAnk ?? '0-5-2-7'}
