@@ -243,12 +243,19 @@ export async function getChartHistory(slug, weeks = 24) {
 
   // Provider history (matka / mock) - the trial API stores every completed
   // draw, so the last 24 weeks of real data are at hand.
-  const entries = await ChartEntry.find({
-    slug: slugSlug,
-    date: { $gte: rangeStart, $lte: rangeEnd },
-  })
-    .sort({ date: 1 })
-    .lean();
+  // Cold-start guard: the chart page aborts at ~4.5s, and without a cap a
+  // slow Atlas round-trip blows that budget (the endless "taking too long"
+  // error). 2.5s per query keeps even a cold function inside it.
+  const entries = mongoose.connection.readyState === 1
+    ? await ChartEntry.find({
+        slug: slugSlug,
+        date: { $gte: rangeStart, $lte: rangeEnd },
+      })
+        .sort({ date: 1 })
+        .lean()
+        .maxTimeMS(2500)
+        .catch(() => [])
+    : [];
   const byDate = new Map();
   for (const e of entries) byDate.set(e.date, e);
 
@@ -256,7 +263,9 @@ export async function getChartHistory(slug, weeks = 24) {
   // open/close). Those rows are the public API for custom draws.
   let marketDoc = null;
   try {
-    marketDoc = await Market.findOne({ slug: slugSlug }).lean();
+    marketDoc = mongoose.connection.readyState === 1
+      ? await Market.findOne({ slug: slugSlug }).lean().maxTimeMS(2500)
+      : null;
   } catch {
     /* non-critical */
   }
@@ -273,7 +282,8 @@ export async function getChartHistory(slug, weeks = 24) {
         jodiComplete: true,
       })
         .sort({ date: 1 })
-        .lean();
+        .lean()
+        .maxTimeMS(2500);
       // Group the two session rows (open + close) per date. The old code
       // used one row's pana for BOTH open and close, so every webhook
       // market showed e.g. open=680 close=680 instead of 223 / 680.
