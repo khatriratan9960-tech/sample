@@ -225,6 +225,16 @@ function buildCustomLiveCards(markets, halvesByMarket, date, now, providerLive) 
     else manualMarkets.push(m);
   }
 
+  // Fresh complete provider results outrank stored halves for the same
+  // provider-derived market (see mergeMarkets): without this a stale
+  // partial sorts as "live" above today's full "closed" result.
+  const providerFreshSlugs = new Set(
+    (providerLive ?? [])
+      .filter((c) => c?.slug && /^\d{3}-\d{2}-\d{3}$/.test(String(c?.result ?? '')))
+      .map((c) => c.slug)
+  );
+  const livePushMarkets = pushMarkets.filter((m) => !(m.slug && providerFreshSlugs.has(m.slug)));
+
   const customCards = [];
 
   // Manual custom markets: gate the result by the clock.
@@ -251,7 +261,7 @@ function buildCustomLiveCards(markets, halvesByMarket, date, now, providerLive) 
 
   // Push/webhook markets: the provider pushed the draw, so the stored halves
   // are the source of truth and the result shows as soon as it is saved.
-  for (const m of pushMarkets) {
+  for (const m of livePushMarkets) {
     const sched = (m.openTime === '00:00' && m.closeTime === '23:59') ? lookupSchedule(m.name) : null;
     const openMin = toMinutes(sched?.open ?? m.openTime);
     const closeMin = toMinutes(sched?.close ?? m.closeTime);

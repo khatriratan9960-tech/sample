@@ -154,8 +154,33 @@ function normalizeCustom(market, halves, now) {
  *                                 timezone; defaults to the real clock.
  *                                 Injectable so the schedule can be tested.
  */
+/** Slug a provider row the same way normalizeProvider does. */
+function providerSlug(raw) {
+  if (raw.slug) return raw.slug;
+  const name = raw.market ?? raw.name ?? '';
+  return String(name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+/** True when a provider row carries a fresh, complete 3-part result. */
+function providerFresh(raw) {
+  if (!raw) return false;
+  if (/^\d{3}-\d{2}-\d{3}$/.test(String(raw.result ?? ''))) return true;
+  return Boolean(raw.open && raw.close && raw.jodi);
+}
+
 export function mergeMarkets(providerMarkets, customMarkets, halvesByMarket, now = nowMinutes()) {
-  const custom = (customMarkets ?? []).map((m) =>
+  // The provider is the source of truth for ITS OWN markets: a pushDriven
+  // custom doc only mirrors a provider draw, so when the provider carries a
+  // fresh complete result the stored (possibly stale or partial) halves must
+  // not shadow it - otherwise a stale "579-1" hides today's "579-11-146".
+  // Manually-declared markets are operator-authored and always win.
+  const freshSlugs = new Set(
+    (providerMarkets ?? []).filter(providerFresh).map(providerSlug).filter(Boolean)
+  );
+  const liveCustoms = (customMarkets ?? []).filter(
+    (m) => !(m?.pushDriven && m.slug && freshSlugs.has(m.slug))
+  );
+  const custom = liveCustoms.map((m) =>
     normalizeCustom(m, halvesByMarket?.get(String(m._id)), now)
   );
 
