@@ -159,7 +159,7 @@ export default function ChartPage() {
   const [markets, setMarkets] = useState([]);
   // Request enough weeks to cover the full imported history (back to 2020):
   // ~6.2 years = 320 weeks. The server clamps to its own max.
-  const { data } = useApi(() => api.chart(slug, 320), [slug]);
+  const { data, loading, error } = useApi(() => api.chart(slug, 320), [slug]);
   // ONLY ever show real stored history. The chart API always returns a weeks
   // array (empty days render **), so we never fabricate numbers. A market with
   // no stored draws simply shows an all-empty chart instead of fake data.
@@ -193,6 +193,19 @@ export default function ChartPage() {
       <div className="chp-title">
         {upper} {type === 'panel' ? 'PANEL' : 'JODI'} CHART
       </div>
+
+      {error && !data && (
+        <div className="chp-error">
+          <p>
+            Could not load {type === 'panel' ? 'panel' : 'jodi'} history for{' '}
+            {upper}.
+          </p>
+          <p>{error}</p>
+          <button type="button" className="gm-clk" onClick={() => window.location.reload()}>
+            Retry
+          </button>
+        </div>
+      )}
 
       <div className="chp-desc">
         <h4>

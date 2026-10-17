@@ -56,6 +56,23 @@
   text-decoration: none;
 }
 
+/* --- Chart load error banner --- */
+.chp-error {
+  border: 1px solid #a00;
+  background: #ffe6e6;
+  padding: 6px 8px;
+  margin: 6px 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #600;
+}
+.chp-error p {
+  margin: 0 0 4px 0;
+}
+.chp-error button {
+  margin-top: 4px;
+}
+
 /* --- Result box (market name + open-jodi-close + refresh) --- */
 .chp-result {
   outline: 0;
