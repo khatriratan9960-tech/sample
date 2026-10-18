@@ -138,7 +138,10 @@ function normalizeCustom(market, halves, now) {
       openTime: to12Hour(openM2 ?? openM),
       closeTime: to12Hour(closeM2 ?? closeM),
       ank: ok?.ank ?? null,
-      status: ok ? (ok.jodiComplete ? 'closed' : 'live') : 'pending',
+      // Push webhooks may deliver only the open half; do not flag 'live'
+      // before the declared close window. Mirrors buildCustomLiveCards in
+      // marketService.js so the grid and live board agree on partials.
+      status: ok && !ok.jodiComplete && now <= closeM2 ? 'live' : (ok ? 'closed' : 'pending'),
       source: 'custom',
       // Internal only - stripped before the API responds.
       _sort: openM2 ?? openM,

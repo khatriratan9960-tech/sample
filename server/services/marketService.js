@@ -126,8 +126,15 @@ export async function loadCustomMarkets() {
   if (customPending) return customPending;
   customPending = queryCustomMarkets()
     .then((data) => {
-      customCache.data = data;
-      customCache.fetchedAt = Date.now();
+      // A cold-start fast-fail returns an empty payload that would be cached as
+      // "no custom markets" for the whole CUSTOM_TTL_MS window, silently hiding
+      // custom markets from the grid on every new serverless instance. Only
+      // cache when the DB is actually up; the DB warms through ensureReady()
+      // and the next call will retry with fresh data.
+      if (mongoose.connection.readyState === 1) {
+        customCache.data = data;
+        customCache.fetchedAt = Date.now();
+      }
       return data;
     })
     .catch((err) => {
@@ -269,13 +276,18 @@ function buildCustomLiveCards(markets, halvesByMarket, date, now, providerLive) 
     const halves = byMarket.get(String(m._id)) ?? { open: null, close: null };
     const disp = halves.open || halves.close ? buildDisplay(halves.open, halves.close) : null;
     const ok = disp && !disp.error ? disp : null;
+    // Push markets are result-driven (show the open half the moment it lands),
+    // but a partial (open only) must NOT be tagged "LIVE" after its declared
+    // close window has passed - otherwise a missing close half leaves a stale
+    // "257-4"/"890-7" mark at the top of the board for hours/days.
+    const partialStillLive = ok && !ok.jodiComplete && now <= closeMin;
     customCards.push({
       market: m.name,
       slug: m.slug,
       result: ok?.display ?? null,
       ank: ok?.ank ?? null,
       isPending: !ok,
-      status: ok ? (ok.jodiComplete ? 'closed' : 'live') : 'pending',
+      status: ok ? (ok.jodiComplete ? 'closed' : (partialStillLive ? 'live' : 'closed')) : 'pending',
       isImminent: false,
       openTime: to12Hour(openMin),
       closeTime: to12Hour(closeMin),
