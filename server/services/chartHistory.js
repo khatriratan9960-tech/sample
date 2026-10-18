@@ -3,6 +3,7 @@ import { ChartEntry } from '../models/ChartEntry.js';
 import { Market } from '../models/Market.js';
 import { Result } from '../models/Result.js';
 import { todayStr as today } from './marketClock.js';
+import { waitForDb } from './dbWait.js';
 
 /**
  * DAILY CHART HISTORY FOR THE TRIAL API.
@@ -243,22 +244,21 @@ export async function getChartHistory(slug, weeks = 24) {
 
   // Provider history (matka / mock) - the trial API stores every completed
   // draw, so the last 24 weeks of real data are at hand.
-  // LATENCY BUDGET: the chart page aborts at ~4.5s. The old sequential
-  // chain (entries -> market -> offDays -> results) could stack 4 slow
-  // round-trips and always blew that budget on a cold function. Two
-  // parallel waves with 1.5s caps keep the worst case near ~3s total.
-  const dbUp = mongoose.connection.readyState === 1;
-  const entriesPromise = dbUp
+  // COLD START: public chart routes must not instantly fast-fail to empty
+  // (it froze chart pages at zero data for minute at a time). Atlas typically
+  // connects in <2s, so wait a bounded moment first. If the DB is genuinely
+  // down beyond the budget, the guards below catch the resulting nulls and
+  // degrade gracefully to an empty chart (never a hang).
+  // LATENCY BUDGET: the chart page aborts at ~4.5s. Two parallel waves with
+  // 1.5s caps keep the worst case near ~3s total, plus the bounded wait.
+  const entriesPromise = waitForDb(1200)
     ? ChartEntry.find({ slug: slugSlug, date: { $gte: rangeStart, $lte: rangeEnd } })
         .sort({ date: 1 })
         .lean()
         .maxTimeMS(1500)
         .catch(() => [])
     : Promise.resolve([]);
-  const marketPromise = dbUp
-    ? Market.findOne({ slug: slugSlug }).lean().maxTimeMS(1500).catch(() => null)
-    : Promise.resolve(null);
-  const [entries, marketDoc] = await Promise.all([entriesPromise, marketPromise]);
+  const [entries] = await Promise.all([entriesPromise]);
   const byDate = new Map();
   for (const e of entries) byDate.set(e.date, e);
 
@@ -268,22 +268,22 @@ export async function getChartHistory(slug, weeks = 24) {
   let customDays = 0;
   // Market off-days (0=Sun..6=Sat). Chart cells that fall on an off-day and
   // have no stored entry render ** instead of blank.
-  // Second wave: off-days lookup and the halves query only make sense when
-  // a Market doc exists, and they are independent of each other. Provider
-  // markets (ChartEntry rows, no stored halves) skip the Result scan
-  // entirely - that scan was pure waste for them on every chart open.
+  // Single market lookup: fetch once and reuse for offDays and the Result
+  // scan - the old code hit Market.findOne() TWICE per chart open (once
+  // with entries, once with the halves), a pure waste of the latency budget.
+  let marketDoc = null;
+  let offDaySlots = null;
+  if (waitForDb(1200)) {
+    marketDoc = await Market.findOne({ slug: slugSlug }).lean().maxTimeMS(1500).catch(() => null);
+    if (marketDoc) {
+      const days = marketDoc.offDays ?? [];
+      offDaySlots = days.length ? new Set(days) : null;
+    }
+  }
+
   const needCustom = Boolean(marketDoc && !marketDoc.pushDriven);
-  const [offDaySlots, results] = await Promise.all([
-    marketDoc && dbUp
-      ? Market.findOne({ slug: slugSlug }).lean().maxTimeMS(1500).then(
-          (m) => {
-            const days = m?.offDays ?? [];
-            return days.length ? new Set(days) : null;
-          },
-          () => null
-        )
-      : Promise.resolve(null),
-    needCustom && dbUp
+  const [results] = await Promise.all([
+    needCustom && marketDoc
       ? Result.find({
           market: marketDoc._id,
           date: { $gte: rangeStart, $lte: rangeEnd },

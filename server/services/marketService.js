@@ -9,6 +9,7 @@ import { revealCustom } from './customReveal.js';
 import { toMinutes, to12Hour, nowMinutes, isImminent } from './marketClock.js';
 import { buildDisplay } from '../models/Result.js';
 import { lookupSchedule } from './marketSchedule.js';
+import { waitForDb } from './dbWait.js';
 
 /** Today's date in YYYY-MM-DD using the server's local timezone. */
 export function today() {
@@ -42,9 +43,18 @@ const customCache = { data: null, fetchedAt: 0 };
 let customPending = null;
 
 async function queryCustomMarkets() {
-  // Fast-fail when the DB isn't connected: without this, Mongoose buffers
-  // the query until serverSelectionTimeoutMS expires (~4.5s+) and the
-  // Vercel function burns its whole ~10s budget on one cold start.
+  // On a Vercel cold start the public middleware does NOT wait for the DB
+  // (by design), so instantly fast-failing here made every cold response
+  // PROVIDER-ONLY: custom markets vanished from the grid and live board for
+  // that request, and the frontend - polling every 15s across many
+  // instances - saw them flicker in and out (and a single cold home.php
+  // hit left the homepage lower list without customs for the whole
+  // session). Wait a BOUNDED moment for Atlas first (typically <2s), then
+  // fast-fail only when the DB is genuinely unreachable - never let
+  // Mongoose buffer to serverSelectionTimeoutMS.
+  if (mongoose.connection.readyState !== 1) {
+    await waitForDb(2000);
+  }
   if (mongoose.connection.readyState !== 1) {
     return { markets: [], halvesByMarket: new Map() };
   }

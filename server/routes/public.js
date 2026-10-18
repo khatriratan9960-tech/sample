@@ -109,7 +109,10 @@ router.get('/chart.php', async (req, res) => {
   // History only grows going forward, so a 60s edge window is safe and makes
   // repeat opens (and the page's own background retries) instant - the DB is
   // hit at most once a minute per market no matter how often charts open.
-  res.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=60');
+  // Empty responses must never be edge-frozen: a cold-start empty chart
+  // freezing for a minute would hide all chart data until the next deploy.
+  const cacheHeader = history.data?.length || history.weeks?.length ? 'public, s-maxage=60, stale-while-revalidate=60' : 'no-store';
+  res.set('Cache-Control', cacheHeader);
   res.json({ ok: true, provider: providerName(), data: history });
 });
 
