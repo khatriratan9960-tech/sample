@@ -113,9 +113,14 @@ function normalizeProvider(raw, now) {
  *                  -> live      -> the OPEN half only (e.g. "257-7")
  *                  -> closed    -> everything declared for that draw (e.g. "257-72-369")
  */
-function normalizeCustom(market, halves, now) {
+function normalizeCustom(market, halves, now, opts = {}) {
   const openM = toMinutes(market.openTime);
   const closeM = toMinutes(market.closeTime);
+
+  // LOWER-PANEL FALLBACK: showing the latest PAST draw until today declares.
+  // Render it as a closed past result straight away - the clock gate must not
+  // hide it as "upcoming" (that is what caused Loading...). Live board never
+  // takes this path.
 
   // Push/webhook markets (pushDriven) show the result as soon as the provider
   // pushes the draw: the stored halves are the source of truth and there is no
@@ -149,6 +154,35 @@ function normalizeCustom(market, halves, now) {
       jodiUrl: `/jodi-chart-record/${market.slug}.php`,
       panelUrl: `/panel-chart-record/${market.slug}.php`,
     };
+  }
+
+  // LOWER-PANEL FALLBACK (opts.fallbackDate): halves are a PAST draw, so
+  // render them as the closed last result straight away - before open time
+  // this reads as yesterday's result, never Loading.... The live board never
+  // passes fallbackDate, so its gating is untouched.
+  if (opts?.fallbackDate) {
+    const fbBuilt = halves?.open || halves?.close ? buildDisplay(halves?.open ?? null, halves?.close ?? null) : null;
+    const fbOk = fbBuilt && !fbBuilt.error ? fbBuilt : null;
+    if (fbOk) {
+      return {
+        market: market.name,
+        slug: market.slug,
+        open: halves?.open?.pana ?? null,
+        close: halves?.close?.pana ?? null,
+        jodi: fbOk?.jodi ?? null,
+        result: fbOk?.display ?? null,
+        openTime: to12Hour(openM),
+        closeTime: to12Hour(closeM),
+        ank: fbOk?.ank ?? null,
+        status: 'closed',
+        isPending: false,
+        source: 'custom',
+        _sort: openM,
+        _marketId: String(market._id),
+        jodiUrl: `/jodi-chart-record/${market.slug}.php`,
+        panelUrl: `/panel-chart-record/${market.slug}.php`,
+      };
+    }
   }
 
   // Manually-declared custom market: gate the result by the clock.
@@ -202,7 +236,7 @@ function providerFresh(raw) {
   return Boolean(raw.open && raw.close && raw.jodi);
 }
 
-export function mergeMarkets(providerMarkets, customMarkets, halvesByMarket, now = nowMinutes()) {
+export function mergeMarkets(providerMarkets, customMarkets, halvesByMarket, now = nowMinutes(), opts = {}) {
   // The provider is the source of truth for ITS OWN markets: a pushDriven
   // custom doc only mirrors a provider draw, so when the provider carries a
   // fresh complete result the stored (possibly stale or partial) halves must
@@ -214,9 +248,19 @@ export function mergeMarkets(providerMarkets, customMarkets, halvesByMarket, now
   const liveCustoms = (customMarkets ?? []).filter(
     (m) => !(m?.pushDriven && m.slug && freshSlugs.has(m.slug))
   );
-  const custom = liveCustoms.map((m) =>
-    normalizeCustom(m, halvesByMarket?.get(String(m._id)), now)
-  );
+  // LOWER-PANEL FALLBACK: a custom market with NO halves for its latest draw
+  // (today undeclared) shows its latest PAST draw until today's lands - the
+  // same carry-forward provider rows already have. The live board never sees
+  // this (it reads halvesByMarket directly), and revealCustom's upcoming gate
+  // still hides a TODAY early declaration.
+  const fallbackByMarket = opts?.fallbackByMarket;
+  const custom = liveCustoms.map((m) => {
+    const key = String(m._id);
+    const todayHalves = halvesByMarket?.get(key);
+    const fb = fallbackByMarket?.get(key);
+    const useFb = (!todayHalves || (!todayHalves.open && !todayHalves.close)) && fb && (fb.open || fb.close);
+    return normalizeCustom(m, useFb ? fb : todayHalves, now, useFb ? { fallbackDate: fb.date } : undefined);
+  });
 
   // Dedupe by slug: a market the operator runs himself (webhook push or
   // admin-declared) is the source of truth for that market. A provider row

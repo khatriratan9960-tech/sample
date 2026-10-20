@@ -67,59 +67,63 @@ async function queryCustomMarkets() {
 
   if (markets.length === 0) return { markets: [], halvesByMarket: new Map() };
 
-  // TWO cheap indexed steps instead of one giant scan. The old single query
-  // (find ALL ~14.6k result rows, sort by date+createdAt) took ~38s on Atlas
-  // free tier - it blew past the maxTimeMS cap below and intermittently
-  // returned an EMPTY map, which hid every webhook result from the public
-  // page (the "result not showing" bug). Step 1 uses $group/$max (no sort
-  // needed, ~250ms); step 2 fetches only the ~2 rows per market (~1s).
-  let latestPairs = [];
-  try {
-    // NOTE: Mongoose Aggregate has no .maxTimeMS() helper (Query does) - the
-    // cap goes through .option({ maxTimeMS }).
-    latestPairs = await Result.aggregate([
-      { $match: { market: { $in: markets.map((m) => m._id) } } },
-      { $group: { _id: '$market', date: { $max: '$date' } } },
-    ]).option({ maxTimeMS: 2500 });
-  } catch {
-    return { markets, halvesByMarket: new Map() };
-  }
-  if (latestPairs.length === 0) return { markets, halvesByMarket: new Map() };
-
-  // One date per market, but markets usually all drew on the same day, so
-  // this is a small set of dates to match on.
-  const latestDateOf = new Map(latestPairs.map((p) => [String(p._id), p.date]));
-  const dates = [...new Set(latestPairs.map((p) => p.date))];
-
+  // LOWER-PANEL FALLBACK: until today's draw is declared, show the latest
+  // PAST result - never "Loading...". One bounded window query (today + last
+  // 14 days), grouped per market in memory. halvesByMarket = today only
+  // (live board untouched); fallbackByMarket = latest past draw per market
+  // (lower grid only).
+  const ids = markets.map((m) => m._id);
+  const todayStr = today();
+  const back = new Date();
+  back.setDate(back.getDate() - 14);
+  const pad2 = (n) => String(n).padStart(2, '0');
+  const windowStart = `${back.getFullYear()}-${pad2(back.getMonth() + 1)}-${pad2(back.getDate())}`;
   let results = [];
   try {
     results = await Result.find({
-      market: { $in: markets.map((m) => m._id) },
-      date: { $in: dates },
+      market: { $in: ids },
+      date: { $gte: windowStart, $lte: todayStr },
     })
-      .maxTimeMS(2500)
+      .maxTimeMS(4000)
       .lean();
   } catch {
-    return { markets, halvesByMarket: new Map() };
+    return { markets, halvesByMarket: new Map(), fallbackByMarket: new Map() };
   }
 
   const halvesByMarket = new Map();
+  const pastByMarket = new Map();
   for (const r of results) {
     const key = String(r.market);
-    // The date filter above also matches markets whose LATEST draw is older
-    // than another market's - keep only each market's own latest date.
-    if (r.date !== latestDateOf.get(key)) continue;
-
-    let entry = halvesByMarket.get(key);
-    if (!entry) {
-      entry = { date: r.date, open: null, close: null };
-      halvesByMarket.set(key, entry);
+    if (r.date === todayStr) {
+      let entry = halvesByMarket.get(key);
+      if (!entry) {
+        entry = { date: r.date, open: null, close: null };
+        halvesByMarket.set(key, entry);
+      }
+      if (r.session === 'close') entry.close = r;
+      else entry.open = r;
+    } else {
+      let byDate = pastByMarket.get(key);
+      if (!byDate) {
+        byDate = new Map();
+        pastByMarket.set(key, byDate);
+      }
+      let entry = byDate.get(r.date);
+      if (!entry) {
+        entry = { open: null, close: null };
+        byDate.set(r.date, entry);
+      }
+      if (r.session === 'close') entry.close = r;
+      else entry.open = r;
     }
-    if (r.session === 'close') entry.close = r;
-    else entry.open = r;
+  }
+  const fallbackByMarket = new Map();
+  for (const [key, byDate] of pastByMarket) {
+    const latestPast = [...byDate.keys()].sort().pop();
+    if (latestPast) fallbackByMarket.set(key, { ...byDate.get(latestPast), date: latestPast });
   }
 
-  return { markets, halvesByMarket };
+  return { markets, halvesByMarket, fallbackByMarket };
 }
 
 /**
@@ -182,7 +186,7 @@ export async function getPublicMarkets(now = nowMinutes()) {
   // ONE upstream hit per cooldown window: without this outer check the two
   // No upstream pull exists anymore (webhook-only), so the Promise.all
   // branches below never hit a dead external API.
-  const [{ markets, halvesByMarket }, providerMarkets] = await Promise.all([
+  const [{ markets, halvesByMarket, fallbackByMarket }, providerMarkets] = await Promise.all([
     loadCustomMarkets(),
     fetchProviderMarkets(),
   ]);
@@ -201,7 +205,7 @@ export async function getPublicMarkets(now = nowMinutes()) {
     /* non-critical */
   }
 
-  return mergeMarkets(providerMarkets, markets, halvesByMarket, now);
+  return mergeMarkets(providerMarkets, markets, halvesByMarket, now, { fallbackByMarket });
 }
 
 /**
