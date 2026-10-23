@@ -6,16 +6,22 @@ import { syncChartHistory, syncChartHistoryFromCards } from './chartHistory.js';
 import { mergeMarkets } from './mergeMarkets.js';
 import { rankLiveCards, BOARD_SIZE } from './liveBoard.js';
 import { revealCustom } from './customReveal.js';
-import { toMinutes, to12Hour, nowMinutes, isImminent } from './marketClock.js';
+import { toMinutes, to12Hour, nowMinutes, isImminent, todayStr } from './marketClock.js';
 import { buildDisplay } from '../models/Result.js';
 import { lookupSchedule } from './marketSchedule.js';
 import { waitForDb } from './dbWait.js';
 
-/** Today's date in YYYY-MM-DD using the server's local timezone. */
+/**
+ * Today's date in YYYY-MM-DD in the MARKET timezone (Asia/Kolkata).
+ *
+ * This must be the SAME "today" the webhook push and the chart history use
+ * (marketClock.todayStr). The old version read the SERVER's local date, so on
+ * a UTC host (Vercel) the admin panel declared a result under the UTC date
+ * while the board looked for the IST date - the declaration was invisible and
+ * the card sat on "Loading..." all day.
+ */
 export function today() {
-  const d = new Date();
-  const pad = (n) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  return todayStr();
 }
 
 /**

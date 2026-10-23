@@ -127,6 +127,37 @@ function normalizeCustom(market, halves, now, opts = {}) {
   // clock to wait for. Manually-declared markets are clock-gated: a result the
   // operator declared early must not appear until the market's open/close
   // window opens.
+  // LOWER-PANEL FALLBACK (opts.fallbackDate): halves are a PAST draw, so
+  // render them as the closed last result straight away - before open time
+  // this reads as yesterday's result, never Loading.... The live board never
+  // passes fallbackDate, so its gating is untouched. The fallback ALSO covers
+  // a TODAY row hidden by the upcoming gate (declared early): until the
+  // window opens, the reader sees the past result rather than Loading....
+  // Applies to BOTH manual and pushDriven markets.
+  if (opts?.fallbackDate) {
+    const fbBuilt = halves?.open || halves?.close ? buildDisplay(halves?.open ?? null, halves?.close ?? null) : null;
+    const fbOk = fbBuilt && !fbBuilt.error ? fbBuilt : null;
+    if (fbOk) {
+      return {
+        market: market.name,
+        slug: market.slug,
+        open: halves?.open?.pana ?? null,
+        close: halves?.close?.pana ?? null,
+        jodi: fbOk?.jodi ?? null,
+        result: fbOk?.display ?? null,
+        openTime: to12Hour(openM),
+        closeTime: to12Hour(closeM),
+        ank: fbOk?.ank ?? null,
+        status: 'closed',
+        isPending: false,
+        source: 'custom',
+        _sort: openM,
+        _marketId: String(market._id),
+        jodiUrl: `/jodi-chart-record/${market.slug}.php`,
+        panelUrl: `/panel-chart-record/${market.slug}.php`,
+      };
+    }
+  }
   if (market.pushDriven) {
     const sched2 = (market.openTime === '00:00' && market.closeTime === '23:59') ? lookupSchedule(market.name) : null;
     const openM2 = toMinutes(sched2?.open ?? market.openTime);
@@ -156,24 +187,32 @@ function normalizeCustom(market, halves, now, opts = {}) {
     };
   }
 
-  // LOWER-PANEL FALLBACK (opts.fallbackDate): halves are a PAST draw, so
-  // render them as the closed last result straight away - before open time
-  // this reads as yesterday's result, never Loading.... The live board never
-  // passes fallbackDate, so its gating is untouched.
-  if (opts?.fallbackDate) {
-    const fbBuilt = halves?.open || halves?.close ? buildDisplay(halves?.open ?? null, halves?.close ?? null) : null;
+  // Manually-declared custom market: gate the result by the clock.
+  const { status, result, jodi, ank, isPending, openRow, closeRow } = revealCustom(
+    market,
+    halves?.open ?? null,
+    halves?.close ?? null,
+    now
+  );
+
+  // THE CLOCK GATE HID TODAY'S DRAW (declared early, before the window
+  // opened). Today's numbers must NOT leak early, but the panel must not
+  // say "Loading..." either - show the latest PAST draw instead.
+  if (isPending && opts?.fallback && (opts.fallback.open || opts.fallback.close)) {
+    const f = opts.fallback;
+    const fbBuilt = buildDisplay(f.open ?? null, f.close ?? null);
     const fbOk = fbBuilt && !fbBuilt.error ? fbBuilt : null;
     if (fbOk) {
       return {
         market: market.name,
         slug: market.slug,
-        open: halves?.open?.pana ?? null,
-        close: halves?.close?.pana ?? null,
-        jodi: fbOk?.jodi ?? null,
-        result: fbOk?.display ?? null,
+        open: f.open?.pana ?? null,
+        close: f.close?.pana ?? null,
+        jodi: fbOk.jodi ?? null,
+        result: fbOk.display ?? null,
         openTime: to12Hour(openM),
         closeTime: to12Hour(closeM),
-        ank: fbOk?.ank ?? null,
+        ank: fbOk.ank ?? null,
         status: 'closed',
         isPending: false,
         source: 'custom',
@@ -184,14 +223,6 @@ function normalizeCustom(market, halves, now, opts = {}) {
       };
     }
   }
-
-  // Manually-declared custom market: gate the result by the clock.
-  const { status, result, jodi, ank, isPending, openRow, closeRow } = revealCustom(
-    market,
-    halves?.open ?? null,
-    halves?.close ?? null,
-    now
-  );
 
   return {
     market: market.name,
@@ -259,7 +290,13 @@ export function mergeMarkets(providerMarkets, customMarkets, halvesByMarket, now
     const todayHalves = halvesByMarket?.get(key);
     const fb = fallbackByMarket?.get(key);
     const useFb = (!todayHalves || (!todayHalves.open && !todayHalves.close)) && fb && (fb.open || fb.close);
-    return normalizeCustom(m, useFb ? fb : todayHalves, now, useFb ? { fallbackDate: fb.date } : undefined);
+    return normalizeCustom(m, useFb ? fb : todayHalves, now, {
+      fallbackDate: useFb ? fb.date : undefined,
+      // Always hand the latest past draw through so normalizeCustom can show
+      // it when the clock gate hides today's early declaration (the case
+      // useFb above misses, because today's halves DO exist).
+      fallback: fb && (fb.open || fb.close) ? fb : undefined,
+    });
   });
 
   // Dedupe by slug: a market the operator runs himself (webhook push or
